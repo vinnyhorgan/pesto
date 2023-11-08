@@ -1,0 +1,10 @@
+site_name: Pesto Docs
+site_author: Vinny Horgan
+copyright: Copyright © 2023 Vinny Horgan
+theme:
+  name: material
+  favicon: assets/favicon.png
+  palette:
+    scheme: slate
+    primary: green
+    accent: green
