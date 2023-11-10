@@ -6,20 +6,16 @@
 #include <lualib.h>
 
 #include "modules/pesto.h"
-
-#define PESTO_VERSION_MAJOR 0
-#define PESTO_VERSION_MINOR 1
-#define PESTO_VERSION_PATCH 0
-#define PESTO_VERSION_CODENAME "Saucy Serenade"
+#include "version.h"
 
 int main(int argc, char* argv[])
 {
+    int retval = 0;
+
     if (argc > 1 && (strcmp(argv[1], "--version") == 0 || strcmp(argv[1], "-v") == 0)) {
         printf("Pesto %d.%d.%d (%s)\n", PESTO_VERSION_MAJOR, PESTO_VERSION_MINOR, PESTO_VERSION_PATCH, PESTO_VERSION_CODENAME);
         return 0;
     }
-
-    int retval = 0;
 
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
@@ -42,6 +38,7 @@ int main(int argc, char* argv[])
     lua_getglobal(L, "require");
     lua_pushstring(L, "pesto");
     lua_call(L, 1, 1);
+    lua_pop(L, 1);
 
     lua_getglobal(L, "require");
     lua_pushstring(L, "pesto.boot");
@@ -53,6 +50,8 @@ int main(int argc, char* argv[])
         retval = (int)lua_tonumber(L, -1);
 
     lua_close(L);
+
+    printf("Return value: %d\n", retval);
 
     return retval;
 }
