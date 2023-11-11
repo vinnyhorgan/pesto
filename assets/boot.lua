@@ -1,5 +1,9 @@
 function pesto.init()
     print("Hello from init")
+
+    require("pesto.filesystem")
+
+    print(pesto.filesystem.create())
 end
 
 function pesto.run()

@@ -5,6 +5,22 @@
 #include <lualib.h>
 
 #include "../version.h"
+#include "filesystem.h"
+
+static int luaopen_boot(lua_State* L)
+{
+    if (luaL_loadfile(L, ASSETS_PATH "boot.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+static const luaL_Reg modules[] = {
+    { "pesto.filesystem", luaopen_filesystem },
+    { "pesto.boot", luaopen_boot },
+    { NULL, NULL }
+};
 
 static int getVersion(lua_State* L)
 {
@@ -18,31 +34,19 @@ static int getVersion(lua_State* L)
 
 int luaopen_pesto(lua_State* L)
 {
-    lua_getglobal(L, "pesto");
-
-    if (!lua_istable(L, -1)) {
-        lua_pop(L, 1);
-        lua_newtable(L);
-        lua_pushvalue(L, -1);
-        lua_setglobal(L, "pesto");
-    } // mmh figure out why i need this
+    lua_newtable(L);
+    lua_pushvalue(L, -1);
+    lua_setglobal(L, "pesto");
 
     lua_pushcfunction(L, getVersion);
     lua_setfield(L, -2, "getVersion");
 
-    lua_getglobal(L, "package");
-    lua_getfield(L, -1, "preload");
-    lua_pushcfunction(L, luaopen_boot);
-    lua_setfield(L, -2, "pesto.boot");
-    lua_pop(L, 2);
-
-    return 1;
-}
-
-int luaopen_boot(lua_State* L)
-{
-    if (luaL_loadfile(L, ASSETS_PATH "boot.lua") == 0) {
-        lua_call(L, 0, 1);
+    for (int i = 0; modules[i].name; i++) {
+        lua_getglobal(L, "package");
+        lua_getfield(L, -1, "preload");
+        lua_pushcfunction(L, modules[i].func);
+        lua_setfield(L, -2, modules[i].name);
+        lua_pop(L, 2);
     }
 
     return 1;
