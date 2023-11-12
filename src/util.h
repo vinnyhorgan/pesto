@@ -6,4 +6,6 @@
 #define PESTO_VERSION_PATCH 0
 #define PESTO_VERSION_CODENAME "Saucy Serenade"
 
+void generateHeaders();
+
 #endif

@@ -10,6 +10,8 @@
 
 int main(int argc, char* argv[])
 {
+    generateHeaders();
+
     int retval = 0;
 
     if (argc > 1 && (strcmp(argv[1], "--version") == 0 || strcmp(argv[1], "-v") == 0)) {
