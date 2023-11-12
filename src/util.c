@@ -26,9 +26,37 @@ void generateHeaders()
 
     // Lua libraries
 
+    int bumpSize;
+    unsigned char* bump = LoadFileData(PROJECT_PATH "src/lib/lua/bump.lua", &bumpSize);
+    ExportDataAsCode(bump, bumpSize, PROJECT_PATH "src/lib/lua/bump.lua.h");
+
     int classicSize;
     unsigned char* classic = LoadFileData(PROJECT_PATH "src/lib/lua/classic.lua", &classicSize);
     ExportDataAsCode(classic, classicSize, PROJECT_PATH "src/lib/lua/classic.lua.h");
+
+    int fluxSize;
+    unsigned char* flux = LoadFileData(PROJECT_PATH "src/lib/lua/flux.lua", &fluxSize);
+    ExportDataAsCode(flux, fluxSize, PROJECT_PATH "src/lib/lua/flux.lua.h");
+
+    int inspectSize;
+    unsigned char* inspect = LoadFileData(PROJECT_PATH "src/lib/lua/inspect.lua", &inspectSize);
+    ExportDataAsCode(inspect, inspectSize, PROJECT_PATH "src/lib/lua/inspect.lua.h");
+
+    int jsonSize;
+    unsigned char* json = LoadFileData(PROJECT_PATH "src/lib/lua/json.lua", &jsonSize);
+    ExportDataAsCode(json, jsonSize, PROJECT_PATH "src/lib/lua/json.lua.h");
+
+    int lumeSize;
+    unsigned char* lume = LoadFileData(PROJECT_PATH "src/lib/lua/lume.lua", &lumeSize);
+    ExportDataAsCode(lume, lumeSize, PROJECT_PATH "src/lib/lua/lume.lua.h");
+
+    int tickSize;
+    unsigned char* tick = LoadFileData(PROJECT_PATH "src/lib/lua/tick.lua", &tickSize);
+    ExportDataAsCode(tick, tickSize, PROJECT_PATH "src/lib/lua/tick.lua.h");
+
+    int tinySize;
+    unsigned char* tiny = LoadFileData(PROJECT_PATH "src/lib/lua/tiny.lua", &tinySize);
+    ExportDataAsCode(tiny, tinySize, PROJECT_PATH "src/lib/lua/tiny.lua.h");
 
     // Luasocket
 

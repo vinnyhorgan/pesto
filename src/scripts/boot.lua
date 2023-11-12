@@ -26,6 +26,10 @@ function pesto.init()
     http = require("socket.http")
     print(http.request("http://info.cern.ch/"))
 
+    pesto.inspect = require("inspect")
+
+    print(pesto.inspect(arg))
+
     pesto.window.init(800, 600, "Hello pesto")
 end
 

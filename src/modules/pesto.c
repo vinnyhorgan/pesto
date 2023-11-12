@@ -24,7 +24,14 @@ static const luaL_Reg modules[] = {
     { "pesto.filesystem", luaopen_filesystem },
     { "pesto.window", luaopen_window },
     // Lua libraries
+    { "bump", luaopen_bump },
     { "classic", luaopen_classic },
+    { "flux", luaopen_flux },
+    { "inspect", luaopen_inspect },
+    { "json", luaopen_json },
+    { "lume", luaopen_lume },
+    { "tick", luaopen_tick },
+    { "tiny", luaopen_tiny },
     // Luasocket (C core)
     { "socket.core", luaopen_socket_core },
     { "mime.core", luaopen_mime_core },
