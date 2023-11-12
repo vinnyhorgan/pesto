@@ -1,15 +1,38 @@
 function pesto.init()
     print("Hello from init")
 
+    require("pesto.window")
     require("pesto.filesystem")
 
-    print(pesto.filesystem.create())
+    pesto.Object = require("classic")
+
+    Cat = pesto.Object:extend()
+
+    function Cat:new(name)
+        self.name = name
+    end
+
+    local dude = Cat("Dude")
+    local dudette = Cat("Dudette")
+
+    print(dude.name)
+    print(dudette.name)
+
+    pesto.window.init(800, 600, "Hello pesto")
 end
 
 function pesto.run()
     print("Hello from run")
 
     -- error("Test error")
+
+    while not pesto.window.shouldClose() do
+        pesto.window.beginDrawing()
+
+        pesto.window.endDrawing()
+    end
+
+    pesto.window.close()
 end
 
 local function errorHandler(msg)

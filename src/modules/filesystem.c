@@ -4,15 +4,18 @@
 #include <lua.h>
 #include <lualib.h>
 
-static int create(lua_State* L)
+#include <raylib.h>
+
+static int exists(lua_State* L)
 {
-    lua_pushinteger(L, 26072004);
+    const char* filename = luaL_checkstring(L, 1);
+    lua_pushboolean(L, FileExists(filename));
 
     return 1;
 }
 
 static const luaL_Reg functions[] = {
-    { "create", create },
+    { "exists", exists },
     { NULL, NULL }
 };
 

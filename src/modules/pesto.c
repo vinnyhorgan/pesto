@@ -6,6 +6,16 @@
 
 #include "../version.h"
 #include "filesystem.h"
+#include "window.h"
+
+static int luaopen_classic(lua_State* L)
+{
+    if (luaL_loadfile(L, ASSETS_PATH "classic.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
 
 static int luaopen_boot(lua_State* L)
 {
@@ -17,7 +27,9 @@ static int luaopen_boot(lua_State* L)
 }
 
 static const luaL_Reg modules[] = {
+    { "pesto.window", luaopen_window },
     { "pesto.filesystem", luaopen_filesystem },
+    { "classic", luaopen_classic },
     { "pesto.boot", luaopen_boot },
     { NULL, NULL }
 };
