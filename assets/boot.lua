@@ -18,6 +18,12 @@ function pesto.init()
     print(dude.name)
     print(dudette.name)
 
+    socket = require("socket")
+    print(socket._VERSION)
+
+    http = require("socket.http")
+    print(http.request("http://info.cern.ch/"))
+
     pesto.window.init(800, 600, "Hello pesto")
 end
 

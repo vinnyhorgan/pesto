@@ -5,8 +5,8 @@
 #include <lua.h>
 #include <lualib.h>
 
-#include "modules/pesto.h"
-#include "version.h"
+#include "modules/api.h"
+#include "util.h"
 
 int main(int argc, char* argv[])
 {

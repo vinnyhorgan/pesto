@@ -36,4 +36,4 @@ if(APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
 endif()
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+target_compile_definitions(${PROJECT_NAME} PUBLIC PROJECT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
