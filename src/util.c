@@ -2,11 +2,29 @@
 
 #include <raylib.h>
 
+void preload(lua_State* L, lua_CFunction f, const char* name)
+{
+    lua_getglobal(L, "package");
+    lua_getfield(L, -1, "preload");
+    lua_pushcfunction(L, f);
+    lua_setfield(L, -2, name);
+    lua_pop(L, 2);
+}
+
+void require(lua_State* L, const char* name)
+{
+    lua_getglobal(L, "require");
+    lua_pushstring(L, name);
+    lua_call(L, 1, 1);
+}
+
 void generateHeaders()
 {
     int bootSize;
     unsigned char* boot = LoadFileData(PROJECT_PATH "src/scripts/boot.lua", &bootSize);
     ExportDataAsCode(boot, bootSize, PROJECT_PATH "src/scripts/boot.lua.h");
+
+    // Lua libraries
 
     int classicSize;
     unsigned char* classic = LoadFileData(PROJECT_PATH "src/lib/lua/classic.lua", &classicSize);

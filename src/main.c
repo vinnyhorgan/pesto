@@ -10,7 +10,7 @@
 
 int main(int argc, char* argv[])
 {
-    generateHeaders();
+    generateHeaders(); // Remove before release
 
     int retval = 0;
 
@@ -22,6 +22,7 @@ int main(int argc, char* argv[])
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
+    // arg table
     lua_newtable(L);
 
     for (int i = 1; i < argc; i++) {
@@ -31,29 +32,20 @@ int main(int argc, char* argv[])
 
     lua_setglobal(L, "arg");
 
-    lua_getglobal(L, "package");
-    lua_getfield(L, -1, "preload");
-    lua_pushcfunction(L, luaopen_pesto);
-    lua_setfield(L, -2, "pesto");
-    lua_pop(L, 2);
+    // setup pesto module
+    preload(L, luaopen_pesto, "pesto");
+    require(L, "pesto");
 
-    lua_getglobal(L, "require");
-    lua_pushstring(L, "pesto");
-    lua_call(L, 1, 1);
-    lua_pop(L, 1);
-
-    lua_getglobal(L, "require");
-    lua_pushstring(L, "pesto.boot");
-    lua_call(L, 1, 1);
+    // run boot.lua
+    require(L, "pesto.boot");
 
     lua_call(L, 0, 1);
 
+    // get return value
     if (lua_isnumber(L, -1))
         retval = (int)lua_tonumber(L, -1);
 
     lua_close(L);
-
-    printf("Return value: %d\n", retval);
 
     return retval;
 }

@@ -6,6 +6,8 @@ function pesto.init()
 
     pesto.Object = require("classic")
 
+    print(pesto.getVersion())
+
     Cat = pesto.Object:extend()
 
     function Cat:new(name)
