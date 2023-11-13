@@ -10,6 +10,7 @@
 
 void preload(lua_State* L, lua_CFunction f, const char* name);
 void require(lua_State* L, const char* name);
-void generateHeaders();
+void generateBootHeader();
+void generateLibHeaders();
 
 #endif

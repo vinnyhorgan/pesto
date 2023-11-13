@@ -18,14 +18,15 @@ void require(lua_State* L, const char* name)
     lua_call(L, 1, 1);
 }
 
-void generateHeaders()
+void generateBootHeader()
 {
     int bootSize;
     unsigned char* boot = LoadFileData(PROJECT_PATH "src/scripts/boot.lua", &bootSize);
     ExportDataAsCode(boot, bootSize, PROJECT_PATH "src/scripts/boot.lua.h");
+}
 
-    // Lua libraries
-
+void generateLibHeaders()
+{
     int bumpSize;
     unsigned char* bump = LoadFileData(PROJECT_PATH "src/lib/lua/bump.lua", &bumpSize);
     ExportDataAsCode(bump, bumpSize, PROJECT_PATH "src/lib/lua/bump.lua.h");

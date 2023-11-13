@@ -1,43 +1,16 @@
 function pesto.init()
-    print("Hello from init")
-
-    require("pesto.window")
+    require("pesto.log")
     require("pesto.filesystem")
+    require("pesto.window")
 
-    pesto.Object = require("classic")
+    pesto.log.level("warn")
 
-    print(pesto.getVersion())
+    local major, minor, patch, codename = pesto.getVersion()
 
-    Cat = pesto.Object:extend()
-
-    function Cat:new(name)
-        self.name = name
-    end
-
-    local dude = Cat("Dude")
-    local dudette = Cat("Dudette")
-
-    print(dude.name)
-    print(dudette.name)
-
-    socket = require("socket")
-    print(socket._VERSION)
-
-    http = require("socket.http")
-    print(http.request("http://info.cern.ch/"))
-
-    pesto.inspect = require("inspect")
-
-    print(pesto.inspect(arg))
-
-    pesto.window.init(800, 600, "Hello pesto")
+    pesto.window.init(800, 600, "Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename)
 end
 
 function pesto.run()
-    print("Hello from run")
-
-    -- error("Test error")
-
     while not pesto.window.shouldClose() do
         pesto.window.beginDrawing()
 

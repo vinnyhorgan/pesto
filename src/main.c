@@ -10,7 +10,7 @@
 
 int main(int argc, char* argv[])
 {
-    generateHeaders(); // Remove before release
+    generateBootHeader(); // Remove before release
 
     int retval = 0;
 
