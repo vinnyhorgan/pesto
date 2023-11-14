@@ -1,10 +1,27 @@
 #include "api.h"
 
+#include <stdio.h>
+#include <time.h>
+
 #include <lauxlib.h>
 #include <lua.h>
 #include <lualib.h>
 
 #include <raylib.h>
+
+static int trace(lua_State* L)
+{
+    TraceLog(LOG_TRACE, lua_tostring(L, 1));
+
+    return 0;
+}
+
+static int debug(lua_State* L)
+{
+    TraceLog(LOG_DEBUG, lua_tostring(L, 1));
+
+    return 0;
+}
 
 static int info(lua_State* L)
 {
@@ -34,25 +51,15 @@ static int fatal(lua_State* L)
     return 0;
 }
 
-static int debug(lua_State* L)
-{
-    TraceLog(LOG_DEBUG, lua_tostring(L, 1));
-
-    return 0;
-}
-
-static int trace(lua_State* L)
-{
-    TraceLog(LOG_TRACE, lua_tostring(L, 1));
-
-    return 0;
-}
-
 static int level(lua_State* L)
 {
     const char* level = lua_tostring(L, 1);
 
-    if (TextIsEqual(level, "info")) {
+    if (TextIsEqual(level, "trace")) {
+        SetTraceLogLevel(LOG_TRACE);
+    } else if (TextIsEqual(level, "debug")) {
+        SetTraceLogLevel(LOG_DEBUG);
+    } else if (TextIsEqual(level, "info")) {
         SetTraceLogLevel(LOG_INFO);
     } else if (TextIsEqual(level, "warn")) {
         SetTraceLogLevel(LOG_WARNING);
@@ -60,10 +67,6 @@ static int level(lua_State* L)
         SetTraceLogLevel(LOG_ERROR);
     } else if (TextIsEqual(level, "fatal")) {
         SetTraceLogLevel(LOG_FATAL);
-    } else if (TextIsEqual(level, "debug")) {
-        SetTraceLogLevel(LOG_DEBUG);
-    } else if (TextIsEqual(level, "trace")) {
-        SetTraceLogLevel(LOG_TRACE);
     } else {
         return luaL_error(L, "Invalid log level");
     }
@@ -72,18 +75,56 @@ static int level(lua_State* L)
 }
 
 static const luaL_Reg functions[] = {
+    { "trace", trace },
+    { "debug", debug },
     { "info", info },
     { "warn", warn },
     { "error", error },
     { "fatal", fatal },
-    { "debug", debug },
-    { "trace", trace },
     { "level", level },
     { NULL, NULL }
 };
 
+void customLog(int msgType, const char* text, va_list args)
+{
+    char timeStr[64] = { 0 };
+    time_t now = time(NULL);
+    struct tm* tm_info = localtime(&now);
+
+    strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
+    printf("[%s] ", timeStr);
+
+    switch (msgType) {
+    case LOG_TRACE:
+        printf("[\x1b[34mTRACE\x1b[0m]: ");
+        break;
+    case LOG_DEBUG:
+        printf("[\x1b[36mDEBUG\x1b[0m]: ");
+        break;
+    case LOG_INFO:
+        printf("[\x1b[32mINFO\x1b[0m] : ");
+        break;
+    case LOG_WARNING:
+        printf("[\x1b[33mWARN\x1b[0m] : ");
+        break;
+    case LOG_ERROR:
+        printf("[\x1b[31mERROR\x1b[0m]: ");
+        break;
+    case LOG_FATAL:
+        printf("[\x1b[35mFATAL\x1b[0m]: ");
+        break;
+    default:
+        break;
+    }
+
+    vprintf(text, args);
+    printf("\n");
+}
+
 int luaopen_log(lua_State* L)
 {
+    SetTraceLogCallback(customLog);
+
     lua_getglobal(L, "pesto");
 
     lua_newtable(L);

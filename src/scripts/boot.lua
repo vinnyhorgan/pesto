@@ -3,7 +3,13 @@ function pesto.init()
     require("pesto.filesystem")
     require("pesto.window")
 
-    pesto.log.level("warn")
+    pesto.log.level("trace")
+    pesto.log.trace("This is a trace log")
+    pesto.log.debug("This is a debug log")
+    pesto.log.info("This is an info log")
+    pesto.log.warn("This is a warning log")
+    pesto.log.error("This is an error log")
+    pesto.log.fatal("This is a fatal log")
 
     local major, minor, patch, codename = pesto.getVersion()
 
