@@ -6,16 +6,136 @@
 
 #include <raylib.h>
 
-static int exists(lua_State* L)
+static int fileExists(lua_State* L)
 {
     const char* filename = luaL_checkstring(L, 1);
-    lua_pushboolean(L, FileExists(filename));
+    bool result = FileExists(filename);
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int directoryExists(lua_State* L)
+{
+    const char* dirpath = luaL_checkstring(L, 1);
+    bool result = DirectoryExists(dirpath);
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int isFileExtension(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+    const char* ext = luaL_checkstring(L, 2);
+    bool result = IsFileExtension(filename, ext);
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int getFileLength(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+    int result = GetFileLength(filename);
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getFileExtension(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+    const char* result = GetFileExtension(filename);
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
+static int getFileName(lua_State* L)
+{
+    const char* filepath = luaL_checkstring(L, 1);
+    const char* result = GetFileName(filepath);
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
+static int getFileNameWithoutExt(lua_State* L)
+{
+    const char* filepath = luaL_checkstring(L, 1);
+    const char* result = GetFileNameWithoutExt(filepath);
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
+static int getDirectoryPath(lua_State* L)
+{
+    const char* filepath = luaL_checkstring(L, 1);
+    const char* result = GetDirectoryPath(filepath);
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
+static int getPrevDirectoryPath(lua_State* L)
+{
+    const char* dirpath = luaL_checkstring(L, 1);
+    const char* result = GetPrevDirectoryPath(dirpath);
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
+static int getWorkingDirectory(lua_State* L)
+{
+    const char* result = GetWorkingDirectory();
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
+static int getApplicationDirectory(lua_State* L)
+{
+    const char* result = GetApplicationDirectory();
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
+static int changeDirectory(lua_State* L)
+{
+    const char* dir = luaL_checkstring(L, 1);
+    bool result = ChangeDirectory(dir);
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int isPathFile(lua_State* L)
+{
+    const char* path = luaL_checkstring(L, 1);
+    bool result = IsPathFile(path);
+    lua_pushboolean(L, result);
 
     return 1;
 }
 
 static const luaL_Reg functions[] = {
-    { "exists", exists },
+    { "fileExists", fileExists },
+    { "directoryExists", directoryExists },
+    { "isFileExtension", isFileExtension },
+    { "getFileLength", getFileLength },
+    { "getFileExtension", getFileExtension },
+    { "getFileName", getFileName },
+    { "getFileNameWithoutExt", getFileNameWithoutExt },
+    { "getDirectoryPath", getDirectoryPath },
+    { "getPrevDirectoryPath", getPrevDirectoryPath },
+    { "getWorkingDirectory", getWorkingDirectory },
+    { "getApplicationDirectory", getApplicationDirectory },
+    { "changeDirectory", changeDirectory },
+    { "isPathFile", isPathFile },
     { NULL, NULL }
 };
 
