@@ -1,7 +1,11 @@
 #ifndef API_H
 #define API_H
 
+#include <lauxlib.h>
 #include <lua.h>
+#include <lualib.h>
+
+#include <raylib.h>
 
 // Pesto modules
 int luaopen_pesto(lua_State* L);

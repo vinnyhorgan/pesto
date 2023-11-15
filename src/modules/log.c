@@ -3,12 +3,6 @@
 #include <stdio.h>
 #include <time.h>
 
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
-
-#include <raylib.h>
-
 static int trace(lua_State* L)
 {
     TraceLog(LOG_TRACE, lua_tostring(L, 1));

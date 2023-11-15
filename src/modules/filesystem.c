@@ -1,10 +1,32 @@
 #include "api.h"
 
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
+static int loadFileText(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
 
-#include <raylib.h>
+    char* text = LoadFileText(filename);
+
+    if (text != NULL) {
+        lua_pushstring(L, text);
+        UnloadFileText(text);
+
+        return 1;
+    } else {
+        lua_pushnil(L);
+
+        return 1;
+    }
+}
+
+static int saveFileText(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+    const char* text = luaL_checkstring(L, 2);
+    bool result = SaveFileText(filename, text);
+    lua_pushboolean(L, result);
+
+    return 1;
+}
 
 static int fileExists(lua_State* L)
 {
@@ -123,6 +145,8 @@ static int isPathFile(lua_State* L)
 }
 
 static const luaL_Reg functions[] = {
+    { "loadFileText", loadFileText },
+    { "saveFileText", saveFileText },
     { "fileExists", fileExists },
     { "directoryExists", directoryExists },
     { "isFileExtension", isFileExtension },

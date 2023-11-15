@@ -1,9 +1,5 @@
 #include "api.h"
 
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
-
 #include "../lib/lua/bump.lua.h"
 #include "../lib/lua/classic.lua.h"
 #include "../lib/lua/flux.lua.h"

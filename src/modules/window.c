@@ -1,11 +1,5 @@
 #include "api.h"
 
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
-
-#include <raylib.h>
-
 static int init(lua_State* L)
 {
     int width = (int)luaL_checkinteger(L, 1);

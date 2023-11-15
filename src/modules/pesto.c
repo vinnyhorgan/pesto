@@ -1,9 +1,5 @@
 #include "api.h"
 
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
-
 #include "../lib/luasocket/luasocket.h"
 #include "../lib/luasocket/mime.h"
 
