@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[])
 {
-    generateBootHeader(); // Remove before release
+    generateHeader("src/scripts/boot.lua"); // Remove before release
 
     int retval = 0;
 

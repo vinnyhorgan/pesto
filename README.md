@@ -16,16 +16,6 @@ The word "Pesto" originates from my favorite Italian sauce, the country i'm from
 - **Readable Source Code**: Emphasizes readability and simplicity intentionally for educational purposes and easy understanding.
 - **Inspired by Love2D**: Draws inspiration from Love2D's ease of use while aiming to be more self-contained.
 
-## Why Choose Pesto Over Love2D?
-
-- **Lightweight & Simplified**: While Love2D is a robust framework, Pesto aims to be more streamlined and less reliant on additional third-party libraries.
-- **Maintained Ecosystem**: Leveraging modern libraries, Pesto harnesses the existing ecosystem, staying current with contemporary development practices.
-- **Self-Contained Functionality**: Strives to offer a more comprehensive feature set without the need for excessive external dependencies.
-
-## Contribution
-
-Contributions to Pesto are welcome! Feel free to contribute by submitting bug reports, feature requests, or pull requests. Please adhere to the project's guidelines when contributing to maintain consistency and ease of integration.
-
 ## Getting Started
 
 To start using Pesto, grab the latest release and refer to the documentation available on the [Pesto website](https://vinnyhorgan.github.io/pesto).
@@ -49,3 +39,13 @@ cd build
 cmake ..
 cmake --build .
 ```
+
+## Differences with Love2D
+
+- **Lightweight & Simplified**: While Love2D is a robust framework, Pesto aims to be more streamlined and less reliant on additional third-party libraries.
+- **Maintained Ecosystem**: Leveraging modern libraries, Pesto harnesses the existing ecosystem, staying current with contemporary development practices.
+- **Self-Contained Functionality**: Strives to offer a more comprehensive feature set without the need for excessive external dependencies.
+
+## Contribution
+
+Contributions to Pesto are welcome! Feel free to contribute by submitting bug reports, feature requests, or pull requests. Please adhere to the project's guidelines when contributing to maintain consistency and ease of integration.

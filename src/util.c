@@ -18,86 +18,33 @@ void require(lua_State* L, const char* name)
     lua_call(L, 1, 1);
 }
 
-void generateBootHeader()
+void generateHeader(const char* filename)
 {
-    int bootSize;
-    unsigned char* boot = LoadFileData(PROJECT_PATH "src/scripts/boot.lua", &bootSize);
-    ExportDataAsCode(boot, bootSize, PROJECT_PATH "src/scripts/boot.lua.h");
+    unsigned int size;
+    unsigned char* data = LoadFileData(TextFormat("%s%s", PROJECT_PATH, filename), &size);
+    ExportDataAsCode(data, size, TextFormat("%s%s.h", PROJECT_PATH, filename));
 }
 
-void generateLibHeaders()
+void generateHeaders()
 {
-    int bumpSize;
-    unsigned char* bump = LoadFileData(PROJECT_PATH "src/lib/lua/bump.lua", &bumpSize);
-    ExportDataAsCode(bump, bumpSize, PROJECT_PATH "src/lib/lua/bump.lua.h");
+    generateHeader("src/scripts/boot.lua");
+    generateHeader("src/lib/lua/bump.lua");
+    generateHeader("src/lib/lua/classic.lua");
+    generateHeader("src/lib/lua/flux.lua");
+    generateHeader("src/lib/lua/inspect.lua");
+    generateHeader("src/lib/lua/json.lua");
+    generateHeader("src/lib/lua/lume.lua");
+    generateHeader("src/lib/lua/tick.lua");
+    generateHeader("src/lib/lua/tiny.lua");
 
-    int classicSize;
-    unsigned char* classic = LoadFileData(PROJECT_PATH "src/lib/lua/classic.lua", &classicSize);
-    ExportDataAsCode(classic, classicSize, PROJECT_PATH "src/lib/lua/classic.lua.h");
-
-    int fluxSize;
-    unsigned char* flux = LoadFileData(PROJECT_PATH "src/lib/lua/flux.lua", &fluxSize);
-    ExportDataAsCode(flux, fluxSize, PROJECT_PATH "src/lib/lua/flux.lua.h");
-
-    int inspectSize;
-    unsigned char* inspect = LoadFileData(PROJECT_PATH "src/lib/lua/inspect.lua", &inspectSize);
-    ExportDataAsCode(inspect, inspectSize, PROJECT_PATH "src/lib/lua/inspect.lua.h");
-
-    int jsonSize;
-    unsigned char* json = LoadFileData(PROJECT_PATH "src/lib/lua/json.lua", &jsonSize);
-    ExportDataAsCode(json, jsonSize, PROJECT_PATH "src/lib/lua/json.lua.h");
-
-    int lumeSize;
-    unsigned char* lume = LoadFileData(PROJECT_PATH "src/lib/lua/lume.lua", &lumeSize);
-    ExportDataAsCode(lume, lumeSize, PROJECT_PATH "src/lib/lua/lume.lua.h");
-
-    int tickSize;
-    unsigned char* tick = LoadFileData(PROJECT_PATH "src/lib/lua/tick.lua", &tickSize);
-    ExportDataAsCode(tick, tickSize, PROJECT_PATH "src/lib/lua/tick.lua.h");
-
-    int tinySize;
-    unsigned char* tiny = LoadFileData(PROJECT_PATH "src/lib/lua/tiny.lua", &tinySize);
-    ExportDataAsCode(tiny, tinySize, PROJECT_PATH "src/lib/lua/tiny.lua.h");
-
-    // Luasocket
-
-    int ftpSize;
-    unsigned char* ftp = LoadFileData(PROJECT_PATH "src/lib/luasocket/ftp.lua", &ftpSize);
-    ExportDataAsCode(ftp, ftpSize, PROJECT_PATH "src/lib/luasocket/ftp.lua.h");
-
-    int headersSize;
-    unsigned char* headers = LoadFileData(PROJECT_PATH "src/lib/luasocket/headers.lua", &headersSize);
-    ExportDataAsCode(headers, headersSize, PROJECT_PATH "src/lib/luasocket/headers.lua.h");
-
-    int httpSize;
-    unsigned char* http = LoadFileData(PROJECT_PATH "src/lib/luasocket/http.lua", &httpSize);
-    ExportDataAsCode(http, httpSize, PROJECT_PATH "src/lib/luasocket/http.lua.h");
-
-    int ltn12Size;
-    unsigned char* ltn12 = LoadFileData(PROJECT_PATH "src/lib/luasocket/ltn12.lua", &ltn12Size);
-    ExportDataAsCode(ltn12, ltn12Size, PROJECT_PATH "src/lib/luasocket/ltn12.lua.h");
-
-    int mboxSize;
-    unsigned char* mbox = LoadFileData(PROJECT_PATH "src/lib/luasocket/mbox.lua", &mboxSize);
-    ExportDataAsCode(mbox, mboxSize, PROJECT_PATH "src/lib/luasocket/mbox.lua.h");
-
-    int mimeSize;
-    unsigned char* mime = LoadFileData(PROJECT_PATH "src/lib/luasocket/mime.lua", &mimeSize);
-    ExportDataAsCode(mime, mimeSize, PROJECT_PATH "src/lib/luasocket/mime.lua.h");
-
-    int smtpSize;
-    unsigned char* smtp = LoadFileData(PROJECT_PATH "src/lib/luasocket/smtp.lua", &smtpSize);
-    ExportDataAsCode(smtp, smtpSize, PROJECT_PATH "src/lib/luasocket/smtp.lua.h");
-
-    int socketSize;
-    unsigned char* socket = LoadFileData(PROJECT_PATH "src/lib/luasocket/socket.lua", &socketSize);
-    ExportDataAsCode(socket, socketSize, PROJECT_PATH "src/lib/luasocket/socket.lua.h");
-
-    int tpSize;
-    unsigned char* tp = LoadFileData(PROJECT_PATH "src/lib/luasocket/tp.lua", &tpSize);
-    ExportDataAsCode(tp, tpSize, PROJECT_PATH "src/lib/luasocket/tp.lua.h");
-
-    int urlSize;
-    unsigned char* url = LoadFileData(PROJECT_PATH "src/lib/luasocket/url.lua", &urlSize);
-    ExportDataAsCode(url, urlSize, PROJECT_PATH "src/lib/luasocket/url.lua.h");
+    generateHeader("src/lib/luasocket/ftp.lua");
+    generateHeader("src/lib/luasocket/headers.lua");
+    generateHeader("src/lib/luasocket/http.lua");
+    generateHeader("src/lib/luasocket/ltn12.lua");
+    generateHeader("src/lib/luasocket/mbox.lua");
+    generateHeader("src/lib/luasocket/mime.lua");
+    generateHeader("src/lib/luasocket/smtp.lua");
+    generateHeader("src/lib/luasocket/socket.lua");
+    generateHeader("src/lib/luasocket/tp.lua");
+    generateHeader("src/lib/luasocket/url.lua");
 }
