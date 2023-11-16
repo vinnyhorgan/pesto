@@ -2,6 +2,13 @@
 
 #include <raylib.h>
 
+static void generateHeader(const char* filename)
+{
+    unsigned int size;
+    unsigned char* data = LoadFileData(TextFormat("%s%s", PROJECT_PATH, filename), &size);
+    ExportDataAsCode(data, size, TextFormat("%s%s.h", PROJECT_PATH, filename));
+}
+
 void preload(lua_State* L, lua_CFunction f, const char* name)
 {
     lua_getglobal(L, "package");
@@ -18,16 +25,12 @@ void require(lua_State* L, const char* name)
     lua_call(L, 1, 1);
 }
 
-void generateHeader(const char* filename)
-{
-    unsigned int size;
-    unsigned char* data = LoadFileData(TextFormat("%s%s", PROJECT_PATH, filename), &size);
-    ExportDataAsCode(data, size, TextFormat("%s%s.h", PROJECT_PATH, filename));
-}
-
 void generateHeaders()
 {
+    SetTraceLogLevel(LOG_NONE);
+
     generateHeader("src/scripts/boot.lua");
+
     generateHeader("src/lib/lua/bump.lua");
     generateHeader("src/lib/lua/classic.lua");
     generateHeader("src/lib/lua/flux.lua");
@@ -47,4 +50,6 @@ void generateHeaders()
     generateHeader("src/lib/luasocket/socket.lua");
     generateHeader("src/lib/luasocket/tp.lua");
     generateHeader("src/lib/luasocket/url.lua");
+
+    SetTraceLogLevel(LOG_INFO);
 }

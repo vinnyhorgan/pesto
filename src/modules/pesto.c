@@ -17,8 +17,8 @@ static int luaopen_boot(lua_State* L)
 
 static const luaL_Reg modules[] = {
     // Pesto modules
-    { "pesto.log", luaopen_log },
     { "pesto.filesystem", luaopen_filesystem },
+    { "pesto.log", luaopen_log },
     { "pesto.window", luaopen_window },
     // Lua libraries
     { "bump", luaopen_bump },
@@ -61,11 +61,9 @@ static int getVersion(lua_State* L)
 int luaopen_pesto(lua_State* L)
 {
     lua_newtable(L);
-    lua_pushvalue(L, -1);
-    lua_setglobal(L, "pesto");
-
     lua_pushcfunction(L, getVersion);
     lua_setfield(L, -2, "getVersion");
+    lua_setglobal(L, "pesto");
 
     for (int i = 0; modules[i].name; i++) {
         preload(L, modules[i].func, modules[i].name);

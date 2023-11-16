@@ -56,7 +56,5 @@ int luaopen_window(lua_State* L)
     luaL_setfuncs(L, functions, 0);
     lua_setfield(L, -2, "window");
 
-    lua_pop(L, 1);
-
     return 1;
 }

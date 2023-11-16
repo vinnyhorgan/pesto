@@ -3,6 +3,42 @@
 #include <stdio.h>
 #include <time.h>
 
+static void customLog(int msgType, const char* text, va_list args)
+{
+    char timeStr[64] = { 0 };
+    time_t now = time(NULL);
+    struct tm* tm_info = localtime(&now);
+
+    strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
+    printf("[%s] ", timeStr);
+
+    switch (msgType) {
+    case LOG_TRACE:
+        printf("[\x1b[34mTRACE\x1b[0m]: ");
+        break;
+    case LOG_DEBUG:
+        printf("[\x1b[36mDEBUG\x1b[0m]: ");
+        break;
+    case LOG_INFO:
+        printf("[\x1b[32mINFO\x1b[0m] : ");
+        break;
+    case LOG_WARNING:
+        printf("[\x1b[33mWARN\x1b[0m] : ");
+        break;
+    case LOG_ERROR:
+        printf("[\x1b[31mERROR\x1b[0m]: ");
+        break;
+    case LOG_FATAL:
+        printf("[\x1b[35mFATAL\x1b[0m]: ");
+        break;
+    default:
+        break;
+    }
+
+    vprintf(text, args);
+    printf("\n");
+}
+
 static int trace(lua_State* L)
 {
     TraceLog(LOG_TRACE, lua_tostring(L, 1));
@@ -79,42 +115,6 @@ static const luaL_Reg functions[] = {
     { NULL, NULL }
 };
 
-void customLog(int msgType, const char* text, va_list args)
-{
-    char timeStr[64] = { 0 };
-    time_t now = time(NULL);
-    struct tm* tm_info = localtime(&now);
-
-    strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
-    printf("[%s] ", timeStr);
-
-    switch (msgType) {
-    case LOG_TRACE:
-        printf("[\x1b[34mTRACE\x1b[0m]: ");
-        break;
-    case LOG_DEBUG:
-        printf("[\x1b[36mDEBUG\x1b[0m]: ");
-        break;
-    case LOG_INFO:
-        printf("[\x1b[32mINFO\x1b[0m] : ");
-        break;
-    case LOG_WARNING:
-        printf("[\x1b[33mWARN\x1b[0m] : ");
-        break;
-    case LOG_ERROR:
-        printf("[\x1b[31mERROR\x1b[0m]: ");
-        break;
-    case LOG_FATAL:
-        printf("[\x1b[35mFATAL\x1b[0m]: ");
-        break;
-    default:
-        break;
-    }
-
-    vprintf(text, args);
-    printf("\n");
-}
-
 int luaopen_log(lua_State* L)
 {
     SetTraceLogCallback(customLog);
@@ -124,8 +124,6 @@ int luaopen_log(lua_State* L)
     lua_newtable(L);
     luaL_setfuncs(L, functions, 0);
     lua_setfield(L, -2, "log");
-
-    lua_pop(L, 1);
 
     return 1;
 }

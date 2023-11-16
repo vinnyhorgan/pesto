@@ -171,7 +171,5 @@ int luaopen_filesystem(lua_State* L)
     luaL_setfuncs(L, functions, 0);
     lua_setfield(L, -2, "filesystem");
 
-    lua_pop(L, 1);
-
     return 1;
 }

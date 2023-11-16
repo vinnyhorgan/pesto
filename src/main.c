@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[])
 {
-    generateHeader("src/scripts/boot.lua"); // Remove before release
+    generateHeaders(); // Remove before release
 
     int retval = 0;
 
@@ -18,7 +18,6 @@ int main(int argc, char* argv[])
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
-    // arg table
     lua_newtable(L);
 
     for (int i = 1; i < argc; i++) {
@@ -28,16 +27,13 @@ int main(int argc, char* argv[])
 
     lua_setglobal(L, "arg");
 
-    // setup pesto module
     preload(L, luaopen_pesto, "pesto");
     require(L, "pesto");
 
-    // run boot.lua
     require(L, "pesto.boot");
 
     lua_call(L, 0, 1);
 
-    // get return value
     if (lua_isnumber(L, -1))
         retval = (int)lua_tonumber(L, -1);
 
