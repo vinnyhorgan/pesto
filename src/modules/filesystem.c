@@ -144,6 +144,15 @@ static int isPathFile(lua_State* L)
     return 1;
 }
 
+static int getFileModTime(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+    long result = GetFileModTime(filename);
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
 static const luaL_Reg functions[] = {
     { "loadFileText", loadFileText },
     { "saveFileText", saveFileText },
@@ -160,6 +169,7 @@ static const luaL_Reg functions[] = {
     { "getApplicationDirectory", getApplicationDirectory },
     { "changeDirectory", changeDirectory },
     { "isPathFile", isPathFile },
+    { "getFileModTime", getFileModTime },
     { NULL, NULL }
 };
 

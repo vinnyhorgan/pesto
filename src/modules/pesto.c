@@ -18,6 +18,7 @@ static int luaopen_boot(lua_State* L)
 static const luaL_Reg modules[] = {
     // Pesto modules
     { "pesto.filesystem", luaopen_filesystem },
+    { "pesto.graphics", luaopen_graphics },
     { "pesto.log", luaopen_log },
     { "pesto.window", luaopen_window },
     // Lua libraries

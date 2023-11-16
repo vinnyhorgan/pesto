@@ -11,6 +11,7 @@ int luaopen_pesto(lua_State* L);
 
 // Pesto modules
 int luaopen_filesystem(lua_State* L);
+int luaopen_graphics(lua_State* L);
 int luaopen_log(lua_State* L);
 int luaopen_window(lua_State* L);
 

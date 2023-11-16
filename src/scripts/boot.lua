@@ -1,17 +1,13 @@
 function pesto.init()
-    require("pesto.log")
     require("pesto.filesystem")
+    require("pesto.graphics")
+    require("pesto.log")
     require("pesto.window")
 
-    pesto.update = function() end
-    pesto.draw = function() end
-
     if pesto.filesystem.fileExists("main.lua") then
-        pesto.log.info("Found main.lua!")
-
         require("main")
     else
-        pesto.log.warn("No main.lua found!")
+        error("No main.lua found!")
     end
 
     pesto.log.level("warn") -- Disable raylib's wall of info logs :)
@@ -20,27 +16,47 @@ function pesto.init()
 
     pesto.window.init(800, 600, "Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename)
 
-    pesto.log.level("info") -- Return to info level
+    pesto.log.level("info")
 end
 
 function pesto.run()
     while not pesto.window.shouldClose() do
-        pesto.update()
+        if pesto.update then pesto.update() end
 
         pesto.window.beginDrawing()
 
-        pesto.draw()
+        if pesto.draw then pesto.draw() end
 
         pesto.window.endDrawing()
     end
 
-    pesto.log.level("warn") -- Same
+    pesto.log.level("warn")
 
     pesto.window.close()
 end
 
 local function errorHandler(msg)
     pesto.log.error(msg)
+
+    pesto.log.level("warn")
+
+    pesto.window.init(800, 600, "Pesto Error")
+
+    pesto.log.level("info")
+
+    while not pesto.window.shouldClose() do
+        pesto.window.beginDrawing()
+
+        pesto.graphics.clear(119, 173, 120)
+
+        pesto.graphics.text("Error: " .. msg, 10, 10)
+
+        pesto.window.endDrawing()
+    end
+
+    pesto.log.level("warn")
+
+    pesto.window.close()
 end
 
 return function()
