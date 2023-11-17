@@ -33,7 +33,6 @@ end
 You can build Pesto from source using CMake. Make sure to clone the project and its submodules, and then follow these steps:
 
 ```console
-git clone https://github.com/vinnyhorgan/pesto
 mkdir build
 cd build
 cmake ..
@@ -49,3 +48,7 @@ cmake --build .
 ## Contribution
 
 Contributions to Pesto are welcome! Feel free to contribute by submitting bug reports, feature requests, or pull requests. Please adhere to the project's guidelines when contributing to maintain consistency and ease of integration.
+
+## License
+
+Pesto is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

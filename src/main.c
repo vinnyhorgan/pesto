@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 
 #include "modules/api.h"
 #include "util.h"
@@ -10,7 +9,7 @@ int main(int argc, char* argv[])
 
     int retval = 0;
 
-    if (argc > 1 && (strcmp(argv[1], "--version") == 0 || strcmp(argv[1], "-v") == 0)) {
+    if (argc > 1 && (TextIsEqual(argv[1], "--version") || TextIsEqual(argv[1], "-v"))) {
         printf("Pesto %d.%d.%d (%s)\n", PESTO_VERSION_MAJOR, PESTO_VERSION_MINOR, PESTO_VERSION_PATCH, PESTO_VERSION_CODENAME);
         return 0;
     }
