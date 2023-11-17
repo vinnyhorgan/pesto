@@ -2,9 +2,9 @@
 
 static int clear(lua_State* L)
 {
-    int r = (int)luaL_checkinteger(L, 1);
-    int g = (int)luaL_checkinteger(L, 2);
-    int b = (int)luaL_checkinteger(L, 3);
+    int r = (int)luaL_optinteger(L, 1, 0);
+    int g = (int)luaL_optinteger(L, 2, 0);
+    int b = (int)luaL_optinteger(L, 3, 0);
     int a = (int)luaL_optinteger(L, 4, 255);
 
     ClearBackground((Color) { r, g, b, a });

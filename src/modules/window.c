@@ -11,6 +11,13 @@ static int init(lua_State* L)
     return 0;
 }
 
+static int isReady(lua_State* L)
+{
+    lua_pushboolean(L, IsWindowReady());
+
+    return 1;
+}
+
 static int close(lua_State* L)
 {
     CloseWindow();
@@ -39,12 +46,39 @@ static int endDrawing(lua_State* L)
     return 0;
 }
 
+static int setTargetFPS(lua_State* L)
+{
+    int fps = (int)luaL_checkinteger(L, 1);
+
+    SetTargetFPS(fps);
+
+    return 0;
+}
+
+static int getDelta(lua_State* L)
+{
+    lua_pushnumber(L, GetFrameTime());
+
+    return 1;
+}
+
+static int getFPS(lua_State* L)
+{
+    lua_pushnumber(L, GetFPS());
+
+    return 1;
+}
+
 static const luaL_Reg functions[] = {
     { "init", init },
+    { "isReady", isReady },
     { "close", close },
     { "shouldClose", shouldClose },
     { "beginDrawing", beginDrawing },
     { "endDrawing", endDrawing },
+    { "setTargetFPS", setTargetFPS },
+    { "getDelta", getDelta },
+    { "getFPS", getFPS },
     { NULL, NULL }
 };
 
