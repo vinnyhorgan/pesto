@@ -1,8 +1,22 @@
 function pesto.init()
+    -- Pesto modules
     require("pesto.filesystem")
     require("pesto.graphics")
     require("pesto.log")
+    require("pesto.mouse")
     require("pesto.window")
+
+    -- Lua libraries
+    pesto.collision = require("bump")
+    pesto.Object = require("classic")
+    pesto.tween = require("flux")
+    pesto.inspect = require("inspect")
+    pesto.json = require("json")
+    pesto.util = require("lume")
+    pesto.timer = require("tick")
+    pesto.ecs = require("tiny")
+
+    -- Luasocket is left as is for now
 
     local directory = arg[1]
 
@@ -17,6 +31,17 @@ function pesto.init()
     package.path = package.path .. ";" .. directory .. "/?.lua"
 
     if pesto.filesystem.fileExists(directory .. "/main.lua") then
+        -- Initializing window here to allow loading textures
+
+        pesto.log.level("warn") -- Disable raylib's wall of info logs :)
+
+        local major, minor, patch, codename = pesto.getVersion()
+
+        pesto.window.init(800, 600, "Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename)
+        pesto.window.setTargetFPS(60)
+
+        pesto.log.level("info")
+
         require("main")
     else
         error("No main.lua found!")
@@ -24,21 +49,17 @@ function pesto.init()
 end
 
 function pesto.run()
-    pesto.log.level("warn") -- Disable raylib's wall of info logs :)
-
-    local major, minor, patch, codename = pesto.getVersion()
-
-    pesto.window.init(800, 600, "Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename)
-    pesto.window.setTargetFPS(60)
-
-    pesto.log.level("info")
-
     while not pesto.window.shouldClose() do
         pesto.window.beginDrawing()
 
         pesto.graphics.clear()
 
-        if pesto.step then pesto.step(pesto.window.getDelta()) end
+        local dt = pesto.window.getDelta()
+
+        pesto.tween.update(dt)
+        pesto.timer.update(dt)
+
+        if pesto.step then pesto.step(dt) end
 
         pesto.window.endDrawing()
     end

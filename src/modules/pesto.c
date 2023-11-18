@@ -20,6 +20,7 @@ static const luaL_Reg modules[] = {
     { "pesto.filesystem", luaopen_filesystem },
     { "pesto.graphics", luaopen_graphics },
     { "pesto.log", luaopen_log },
+    { "pesto.mouse", luaopen_mouse },
     { "pesto.window", luaopen_window },
     // Lua libraries
     { "bump", luaopen_bump },

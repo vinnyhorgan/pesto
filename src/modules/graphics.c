@@ -23,14 +23,68 @@ static int text(lua_State* L)
     return 0;
 }
 
+static int loadTexture(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+
+    Texture2D result = LoadTexture(filename);
+
+    void* ud = lua_newuserdata(L, sizeof(Texture2D));
+    memcpy(ud, &result, sizeof(Texture2D));
+
+    luaL_setmetatable(L, "Texture2D");
+
+    return 1;
+}
+
+static int drawTexture(lua_State* L)
+{
+    Texture2D img = *(Texture2D*)luaL_checkudata(L, 1, "Texture2D");
+    int x = (int)luaL_checknumber(L, 2);
+    int y = (int)luaL_checknumber(L, 3);
+
+    DrawTexture(img, x, y, WHITE);
+
+    return 0;
+}
+
 static const luaL_Reg functions[] = {
     { "clear", clear },
     { "text", text },
+    { "loadTexture", loadTexture },
+    { "drawTexture", drawTexture },
     { NULL, NULL }
 };
 
+// Metatable functions
+static int indexTexture2D(lua_State* L)
+{
+    Texture2D img = *(Texture2D*)luaL_checkudata(L, 1, "Texture2D");
+    const char* key = luaL_checkstring(L, 2);
+
+    if (!strcmp(key, "width"))
+        lua_pushinteger(L, img.width);
+    else if (!strcmp(key, "height"))
+        lua_pushinteger(L, img.height);
+    else if (!strcmp(key, "mipmaps"))
+        lua_pushinteger(L, img.mipmaps);
+    else if (!strcmp(key, "format"))
+        lua_pushinteger(L, img.format);
+    else if (!strcmp(key, "id"))
+        lua_pushinteger(L, img.id);
+    else
+        return 0;
+
+    return 1;
+}
+
 int luaopen_graphics(lua_State* L)
 {
+    luaL_newmetatable(L, "Texture2D");
+    lua_pushcfunction(L, &indexTexture2D);
+    lua_setfield(L, -2, "__index");
+    lua_pop(L, 1);
+
     lua_getglobal(L, "pesto");
 
     lua_newtable(L);
