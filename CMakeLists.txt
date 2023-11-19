@@ -11,10 +11,9 @@ if(MSVC)
 endif()
 
 add_subdirectory(deps/raylib)
+add_subdirectory(deps/luajit)
 
-add_subdirectory(deps/luajit luajit)
-set_target_properties(luajit PROPERTIES EXCLUDE_FROM_ALL 1)
-include_directories(deps/luajit/src ${CMAKE_BINARY_DIR}/luajit)
+include_directories(deps/luajit/src)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.c")
 

@@ -1,6 +1,6 @@
 # Pesto 🍃
 
-Pesto is a tiny, lightweight, and fast game framework written entirely in C, utilizing Lua for scripting. It's designed to be cross-platform and is dependent on two main libraries: Raylib, an exceptional C library for graphics and input, and Lua. Pesto's architecture and design principles are heavily influenced by the fantastic Love2D framework.
+Pesto is a tiny, lightweight, and fast game framework written entirely in C, utilizing Lua for scripting. It's designed to be cross-platform and is dependent on two main libraries: Raylib, an exceptional C library for graphics and input, and LuaJIT, a high-performance implementation of Lua. Pesto's architecture and design principles are heavily influenced by the fantastic Love2D framework.
 
 ## Introduction
 

@@ -29,6 +29,11 @@ void generateHeaders()
 {
     SetTraceLogLevel(LOG_NONE);
 
+    // Icon
+    Image icon = LoadImage(PROJECT_PATH "assets/icon.png");
+    ExportImageAsCode(icon, PROJECT_PATH "assets/icon.png.h");
+    UnloadImage(icon);
+
     generateHeader("src/scripts/boot.lua");
 
     generateHeader("src/lib/lua/bump.lua");

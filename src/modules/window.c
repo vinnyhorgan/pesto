@@ -1,5 +1,7 @@
 #include "api.h"
 
+#include "../../assets/icon.png.h"
+
 static int init(lua_State* L)
 {
     int width = (int)luaL_checkinteger(L, 1);
@@ -7,6 +9,16 @@ static int init(lua_State* L)
     const char* title = luaL_checkstring(L, 3);
 
     InitWindow(width, height, title);
+
+    Image icon = {
+        .data = ICON_DATA,
+        .width = ICON_WIDTH,
+        .height = ICON_HEIGHT,
+        .format = ICON_FORMAT,
+        .mipmaps = 1
+    };
+
+    SetWindowIcon(icon);
 
     return 0;
 }
