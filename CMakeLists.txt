@@ -11,7 +11,10 @@ if(MSVC)
 endif()
 
 add_subdirectory(deps/raylib)
-add_subdirectory(deps/lua)
+
+add_subdirectory(deps/luajit luajit)
+set_target_properties(luajit PROPERTIES EXCLUDE_FROM_ALL 1)
+include_directories(deps/luajit/src ${CMAKE_BINARY_DIR}/luajit)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.c")
 
@@ -31,7 +34,7 @@ endif()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} raylib lua_static)
+target_link_libraries(${PROJECT_NAME} raylib libluajit)
 
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} ws2_32)
