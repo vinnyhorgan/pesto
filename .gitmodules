@@ -1,9 +1,6 @@
 [submodule "deps/raylib"]
 	path = deps/raylib
 	url = https://github.com/raysan5/raylib.git
-[submodule "deps/lua"]
-	path = deps/lua
-	url = https://github.com/walterschell/Lua.git
 [submodule "deps/luajit"]
 	path = deps/luajit
 	url = https://github.com/WohlSoft/LuaJIT
