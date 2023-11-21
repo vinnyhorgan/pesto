@@ -1,5 +1,7 @@
 #include "api.h"
 
+#include <string.h>
+
 static int clear(lua_State* L)
 {
     int r = (int)luaL_optinteger(L, 1, 0);
@@ -62,15 +64,15 @@ static int indexTexture2D(lua_State* L)
     Texture2D img = *(Texture2D*)luaL_checkudata(L, 1, "Texture2D");
     const char* key = luaL_checkstring(L, 2);
 
-    if (!strcmp(key, "width"))
+    if (TextIsEqual(key, "width"))
         lua_pushinteger(L, img.width);
-    else if (!strcmp(key, "height"))
+    else if (TextIsEqual(key, "height"))
         lua_pushinteger(L, img.height);
-    else if (!strcmp(key, "mipmaps"))
+    else if (TextIsEqual(key, "mipmaps"))
         lua_pushinteger(L, img.mipmaps);
-    else if (!strcmp(key, "format"))
+    else if (TextIsEqual(key, "format"))
         lua_pushinteger(L, img.format);
-    else if (!strcmp(key, "id"))
+    else if (TextIsEqual(key, "id"))
         lua_pushinteger(L, img.id);
     else
         return 0;

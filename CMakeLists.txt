@@ -7,12 +7,13 @@ set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE)
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)
-    add_compile_options(/wd4018 /wd4090 /wd4244 /wd4267)
+    add_compile_options(/wd4018 /wd4090)
 endif()
 
+set(OPENGL_VERSION 4.3 CACHE STRING "")
 add_subdirectory(deps/raylib)
-add_subdirectory(deps/luajit)
 
+add_subdirectory(deps/luajit)
 include_directories(deps/luajit/src)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.c")
