@@ -1,6 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
-*.lua text eol=lf # Ensure that lua headers are not regenerated if their line endings change
+# Ensure that lua headers are not regenerated if their line endings change
+*.lua text eol=lf
 *.png binary
 *.ttf binary
