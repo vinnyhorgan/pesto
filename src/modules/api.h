@@ -17,12 +17,14 @@ int luaopen_mouse(lua_State* L);
 int luaopen_window(lua_State* L);
 
 // Lua libraries
+int luaopen_brinevector(lua_State* L);
 int luaopen_bump(lua_State* L);
 int luaopen_classic(lua_State* L);
 int luaopen_flux(lua_State* L);
 int luaopen_inspect(lua_State* L);
 int luaopen_json(lua_State* L);
 int luaopen_lume(lua_State* L);
+int luaopen_signal(lua_State* L);
 int luaopen_tick(lua_State* L);
 int luaopen_tiny(lua_State* L);
 

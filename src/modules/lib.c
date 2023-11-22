@@ -1,11 +1,13 @@
 #include "api.h"
 
+#include "../lib/lua/brinevector.lua.h"
 #include "../lib/lua/bump.lua.h"
 #include "../lib/lua/classic.lua.h"
 #include "../lib/lua/flux.lua.h"
 #include "../lib/lua/inspect.lua.h"
 #include "../lib/lua/json.lua.h"
 #include "../lib/lua/lume.lua.h"
+#include "../lib/lua/signal.lua.h"
 #include "../lib/lua/tick.lua.h"
 #include "../lib/lua/tiny.lua.h"
 
@@ -21,6 +23,15 @@
 #include "../lib/luasocket/url.lua.h"
 
 // Lua libraries
+int luaopen_brinevector(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)BRINEVECTOR_DATA, sizeof(BRINEVECTOR_DATA), "brinevector.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
 int luaopen_bump(lua_State* L)
 {
     if (luaL_loadbuffer(L, (const char*)BUMP_DATA, sizeof(BUMP_DATA), "bump.lua") == 0) {
@@ -69,6 +80,15 @@ int luaopen_json(lua_State* L)
 int luaopen_lume(lua_State* L)
 {
     if (luaL_loadbuffer(L, (const char*)LUME_DATA, sizeof(LUME_DATA), "lume.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_signal(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)SIGNAL_DATA, sizeof(SIGNAL_DATA), "signal.lua") == 0) {
         lua_call(L, 0, 1);
     }
 

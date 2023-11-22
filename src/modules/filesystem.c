@@ -3,12 +3,11 @@
 static int loadFileText(lua_State* L)
 {
     const char* filename = luaL_checkstring(L, 1);
+    char* result = LoadFileText(filename);
 
-    char* text = LoadFileText(filename);
-
-    if (text != NULL) {
-        lua_pushstring(L, text);
-        UnloadFileText(text);
+    if (result != NULL) {
+        lua_pushstring(L, result);
+        UnloadFileText(result);
 
         return 1;
     } else {
@@ -144,6 +143,84 @@ static int isPathFile(lua_State* L)
     return 1;
 }
 
+static int loadDirectoryFiles(lua_State* L)
+{
+    const char* dirpath = luaL_checkstring(L, 1);
+    FilePathList result = LoadDirectoryFiles(dirpath);
+
+    if (result.count > 0) {
+        lua_newtable(L);
+
+        for (int i = 0; i < (int)result.count; i++) {
+            lua_pushstring(L, result.paths[i]);
+            lua_rawseti(L, -2, i + 1);
+        }
+
+        UnloadDirectoryFiles(result);
+
+        return 1;
+    } else {
+        lua_pushnil(L);
+
+        return 1;
+    }
+}
+
+static int loadDirectoryFilesEx(lua_State* L)
+{
+    const char* basepath = luaL_checkstring(L, 1);
+    const char* filter = luaL_checkstring(L, 2);
+    bool scanSubdirs = lua_toboolean(L, 3);
+    FilePathList result = LoadDirectoryFilesEx(basepath, filter, scanSubdirs);
+
+    if (result.count > 0) {
+        lua_newtable(L);
+
+        for (int i = 0; i < (int)result.count; i++) {
+            lua_pushstring(L, result.paths[i]);
+            lua_rawseti(L, -2, i + 1);
+        }
+
+        UnloadDirectoryFiles(result);
+
+        return 1;
+    } else {
+        lua_pushnil(L);
+
+        return 1;
+    }
+}
+
+static int isFileDropped(lua_State* L)
+{
+    bool result = IsFileDropped();
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int loadDroppedFiles(lua_State* L)
+{
+    FilePathList result = LoadDroppedFiles();
+
+    if (result.count > 0) {
+        lua_newtable(L);
+
+        for (int i = 0; i < (int)result.count; i++) {
+            lua_pushstring(L, result.paths[i]);
+            lua_rawseti(L, -2, i + 1);
+        }
+
+        UnloadDroppedFiles(result);
+
+        return 1;
+    } else {
+        lua_pushnil(L);
+
+        return 1;
+    }
+}
+
 static int getFileModTime(lua_State* L)
 {
     const char* filename = luaL_checkstring(L, 1);
@@ -169,6 +246,10 @@ static const luaL_Reg functions[] = {
     { "getApplicationDirectory", getApplicationDirectory },
     { "changeDirectory", changeDirectory },
     { "isPathFile", isPathFile },
+    { "loadDirectoryFiles", loadDirectoryFiles },
+    { "loadDirectoryFilesEx", loadDirectoryFilesEx },
+    { "isFileDropped", isFileDropped },
+    { "loadDroppedFiles", loadDroppedFiles },
     { "getFileModTime", getFileModTime },
     { NULL, NULL }
 };

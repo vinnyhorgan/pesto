@@ -23,12 +23,14 @@ static const luaL_Reg modules[] = {
     { "pesto.mouse", luaopen_mouse },
     { "pesto.window", luaopen_window },
     // Lua libraries
+    { "brinevector", luaopen_brinevector },
     { "bump", luaopen_bump },
     { "classic", luaopen_classic },
     { "flux", luaopen_flux },
     { "inspect", luaopen_inspect },
     { "json", luaopen_json },
     { "lume", luaopen_lume },
+    { "signal", luaopen_signal },
     { "tick", luaopen_tick },
     { "tiny", luaopen_tiny },
     // Luasocket (C core)

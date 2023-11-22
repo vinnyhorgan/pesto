@@ -36,12 +36,14 @@ void generateHeaders()
 
     generateHeader("src/scripts/boot.lua");
 
+    generateHeader("src/lib/lua/brinevector.lua");
     generateHeader("src/lib/lua/bump.lua");
     generateHeader("src/lib/lua/classic.lua");
     generateHeader("src/lib/lua/flux.lua");
     generateHeader("src/lib/lua/inspect.lua");
     generateHeader("src/lib/lua/json.lua");
     generateHeader("src/lib/lua/lume.lua");
+    generateHeader("src/lib/lua/signal.lua");
     generateHeader("src/lib/lua/tick.lua");
     generateHeader("src/lib/lua/tiny.lua");
 

@@ -7,12 +7,14 @@ function pesto.init()
     require("pesto.window")
 
     -- Lua libraries
+    pesto.Vector = require("brinevector")
     pesto.collision = require("bump")
     pesto.Object = require("classic")
     pesto.tween = require("flux")
     pesto.inspect = require("inspect")
     pesto.json = require("json")
     pesto.util = require("lume")
+    pesto.signal = require("signal")
     pesto.timer = require("tick")
     pesto.ecs = require("tiny")
 
@@ -50,16 +52,18 @@ end
 
 function pesto.run()
     while not pesto.window.shouldClose() do
-        pesto.window.beginDrawing()
-
-        pesto.graphics.clear()
-
         local dt = pesto.window.getDelta()
 
         pesto.tween.update(dt)
         pesto.timer.update(dt)
 
-        if pesto.step then pesto.step(dt) end
+        if pesto.update then pesto.update(dt) end
+
+        pesto.window.beginDrawing()
+
+        pesto.graphics.clear()
+
+        if pesto.draw then pesto.draw() end
 
         pesto.window.endDrawing()
     end
