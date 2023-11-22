@@ -7,6 +7,7 @@ function pesto.init()
     require("pesto.window")
 
     -- Lua libraries
+    pesto.astar = require("astar")
     pesto.Vector = require("brinevector")
     pesto.collision = require("bump")
     pesto.Object = require("classic")

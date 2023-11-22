@@ -1,5 +1,6 @@
 #include "api.h"
 
+#include "../lib/lua/astar.lua.h"
 #include "../lib/lua/brinevector.lua.h"
 #include "../lib/lua/bump.lua.h"
 #include "../lib/lua/classic.lua.h"
@@ -23,6 +24,15 @@
 #include "../lib/luasocket/url.lua.h"
 
 // Lua libraries
+int luaopen_astar(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)ASTAR_DATA, sizeof(ASTAR_DATA), "astar.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
 int luaopen_brinevector(lua_State* L)
 {
     if (luaL_loadbuffer(L, (const char*)BRINEVECTOR_DATA, sizeof(BRINEVECTOR_DATA), "brinevector.lua") == 0) {

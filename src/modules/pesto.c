@@ -23,6 +23,7 @@ static const luaL_Reg modules[] = {
     { "pesto.mouse", luaopen_mouse },
     { "pesto.window", luaopen_window },
     // Lua libraries
+    { "astar", luaopen_astar },
     { "brinevector", luaopen_brinevector },
     { "bump", luaopen_bump },
     { "classic", luaopen_classic },

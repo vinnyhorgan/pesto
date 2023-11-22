@@ -17,6 +17,7 @@ int luaopen_mouse(lua_State* L);
 int luaopen_window(lua_State* L);
 
 // Lua libraries
+int luaopen_astar(lua_State* L);
 int luaopen_brinevector(lua_State* L);
 int luaopen_bump(lua_State* L);
 int luaopen_classic(lua_State* L);

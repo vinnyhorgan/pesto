@@ -36,6 +36,7 @@ void generateHeaders()
 
     generateHeader("src/scripts/boot.lua");
 
+    generateHeader("src/lib/lua/astar.lua");
     generateHeader("src/lib/lua/brinevector.lua");
     generateHeader("src/lib/lua/bump.lua");
     generateHeader("src/lib/lua/classic.lua");
