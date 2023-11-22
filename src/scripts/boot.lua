@@ -31,6 +31,14 @@ function pesto.init()
         error("Directory does not exist!")
     end
 
+    if pesto.filesystem.fileExists("luacheck.exe") then
+        local handle = io.popen("luacheck.exe " .. directory)
+        local output = handle:read("*a")
+        handle:close()
+
+        print(output)
+    end
+
     package.path = package.path .. ";" .. directory .. "/?.lua"
 
     if pesto.filesystem.fileExists(directory .. "/main.lua") then

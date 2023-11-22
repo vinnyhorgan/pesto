@@ -3,6 +3,10 @@
 #include "modules/api.h"
 #include "util.h"
 
+#ifdef _WIN32
+#include "../assets/luacheck.exe.h"
+#endif
+
 int main(int argc, char* argv[])
 {
     generateHeaders(); // Remove before release
@@ -13,6 +17,12 @@ int main(int argc, char* argv[])
         printf("Pesto %d.%d.%d (%s)\n", PESTO_VERSION_MAJOR, PESTO_VERSION_MINOR, PESTO_VERSION_PATCH, PESTO_VERSION_CODENAME);
         return 0;
     }
+
+#ifdef _WIN32
+    if (!FileExists("luacheck.exe")) {
+        SaveFileData("luacheck.exe", LUACHECK_DATA, LUACHECK_DATA_SIZE);
+    }
+#endif
 
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);

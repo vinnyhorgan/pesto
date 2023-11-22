@@ -4,7 +4,7 @@
 
 static void generateHeader(const char* filename)
 {
-    unsigned int size;
+    int size;
     unsigned char* data = LoadFileData(TextFormat("%s%s", PROJECT_PATH, filename), &size);
     ExportDataAsCode(data, size, TextFormat("%s%s.h", PROJECT_PATH, filename));
 }
@@ -29,10 +29,13 @@ void generateHeaders()
 {
     SetTraceLogLevel(LOG_NONE);
 
-    // Icon
     Image icon = LoadImage(PROJECT_PATH "assets/icon.png");
     ExportImageAsCode(icon, PROJECT_PATH "assets/icon.png.h");
     UnloadImage(icon);
+
+    int size;
+    unsigned char* data = LoadFileData(PROJECT_PATH "assets/luacheck.exe", &size);
+    ExportDataAsCode(data, size, PROJECT_PATH "assets/luacheck.exe.h");
 
     generateHeader("src/scripts/boot.lua");
 
