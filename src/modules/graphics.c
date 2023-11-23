@@ -20,7 +20,7 @@ static int text(lua_State* L)
     int x = (int)luaL_checkinteger(L, 2);
     int y = (int)luaL_checkinteger(L, 3);
 
-    DrawText(text, x, y, 20, WHITE);
+    DrawTextEx(font, text, (Vector2) { (float)x, (float)y }, (float)font.baseSize, 0, WHITE);
 
     return 0;
 }

@@ -7,6 +7,7 @@ static void generateHeader(const char* filename)
     int size;
     unsigned char* data = LoadFileData(TextFormat("%s%s", PROJECT_PATH, filename), &size);
     ExportDataAsCode(data, size, TextFormat("%s%s.h", PROJECT_PATH, filename));
+    UnloadFileData(data);
 }
 
 void preload(lua_State* L, lua_CFunction f, const char* name)
@@ -36,6 +37,7 @@ void generateHeaders()
     int size;
     unsigned char* data = LoadFileData(PROJECT_PATH "assets/luacheck.exe", &size);
     ExportDataAsCode(data, size, PROJECT_PATH "assets/luacheck.exe.h");
+    UnloadFileData(data);
 
     generateHeader("src/scripts/boot.lua");
 

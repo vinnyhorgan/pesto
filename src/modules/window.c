@@ -1,6 +1,9 @@
 #include "api.h"
 
 #include "../../assets/icon.png.h"
+#include "../../assets/noto.ttf.h"
+
+Font font;
 
 static int init(lua_State* L)
 {
@@ -19,6 +22,14 @@ static int init(lua_State* L)
     };
 
     SetWindowIcon(icon);
+
+    // Generating the font header requires opengl context
+
+    // Font font = LoadFontEx(PROJECT_PATH "assets/noto.ttf", 18, NULL, 0);
+    // ExportFontAsCode(font, PROJECT_PATH "assets/noto.ttf.h");
+    // UnloadFont(font);
+
+    font = LoadFont_Noto();
 
     return 0;
 }

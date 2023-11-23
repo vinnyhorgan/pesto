@@ -7,6 +7,9 @@
 
 #include <raylib.h>
 
+// Global variables
+extern Font font;
+
 int luaopen_pesto(lua_State* L);
 
 // Pesto modules

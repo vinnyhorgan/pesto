@@ -36,7 +36,11 @@ function pesto.init()
         local output = handle:read("*a")
         handle:close()
 
-        print(output)
+        local warnings, errors, message = output:match("Total: (%d+) warning?s? / (%d+) error?s?")
+
+        if warnings or errors then
+            error(output)
+        end
     end
 
     package.path = package.path .. ";" .. directory .. "/?.lua"
