@@ -1,9 +1,7 @@
 #ifndef API_H
 #define API_H
 
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
+#include <lua.hpp>
 
 #include <raylib.h>
 

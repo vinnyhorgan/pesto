@@ -6,7 +6,7 @@
 #define PESTO_VERSION_PATCH 0
 #define PESTO_VERSION_CODENAME "Saucy Serenade"
 
-#include <lua.h>
+#include <lua.hpp>
 
 void preload(lua_State* L, lua_CFunction f, const char* name);
 void require(lua_State* L, const char* name);

@@ -1,7 +1,9 @@
 #include "api.h"
 
+extern "C" {
 #include "../lib/luasocket/luasocket.h"
 #include "../lib/luasocket/mime.h"
+}
 
 #include "../scripts/boot.lua.h"
 #include "../util.h"

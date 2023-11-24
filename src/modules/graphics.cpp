@@ -9,7 +9,7 @@ static int clear(lua_State* L)
     int b = (int)luaL_optinteger(L, 3, 0);
     int a = (int)luaL_optinteger(L, 4, 255);
 
-    ClearBackground((Color) { r, g, b, a });
+    ClearBackground(Color { (unsigned char)r, (unsigned char)g, (unsigned char)b, (unsigned char)a });
 
     return 0;
 }
@@ -20,7 +20,7 @@ static int text(lua_State* L)
     int x = (int)luaL_checkinteger(L, 2);
     int y = (int)luaL_checkinteger(L, 3);
 
-    DrawTextEx(font, text, (Vector2) { (float)x, (float)y }, (float)font.baseSize, 0, WHITE);
+    DrawTextEx(font, text, Vector2 { (float)x, (float)y }, (float)font.baseSize, 0, WHITE);
 
     return 0;
 }

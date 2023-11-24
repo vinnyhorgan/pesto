@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(pesto)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE)
 
@@ -16,7 +16,7 @@ add_subdirectory(deps/raylib)
 add_subdirectory(deps/luajit)
 include_directories(deps/luajit/src)
 
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.c")
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.c src/*.cpp)
 
 if(WIN32)
     list(REMOVE_ITEM SOURCES

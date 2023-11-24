@@ -13,13 +13,12 @@ static int init(lua_State* L)
 
     InitWindow(width, height, title);
 
-    Image icon = {
-        .data = ICON_DATA,
-        .width = ICON_WIDTH,
-        .height = ICON_HEIGHT,
-        .format = ICON_FORMAT,
-        .mipmaps = 1
-    };
+    Image icon;
+    icon.data = ICON_DATA;
+    icon.width = ICON_WIDTH;
+    icon.height = ICON_HEIGHT;
+    icon.format = ICON_FORMAT;
+    icon.mipmaps = 1;
 
     SetWindowIcon(icon);
 

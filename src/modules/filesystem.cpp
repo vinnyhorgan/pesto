@@ -21,7 +21,7 @@ static int saveFileText(lua_State* L)
 {
     const char* filename = luaL_checkstring(L, 1);
     const char* text = luaL_checkstring(L, 2);
-    bool result = SaveFileText(filename, text);
+    bool result = SaveFileText(filename, (char*)text);
     lua_pushboolean(L, result);
 
     return 1;
