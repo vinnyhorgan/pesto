@@ -7,17 +7,18 @@ set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE)
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)
-    add_compile_options(/wd4018 /wd4090)
+    add_compile_options(/wd4005 /wd4018)
 endif()
 
-set(OPENGL_VERSION 4.3 CACHE STRING "")
-add_subdirectory(deps/raylib)
+set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "")
+set(BOX2D_BUILD_UNIT_TESTS OFF CACHE BOOL "")
+add_subdirectory(deps/box2d)
 
 add_subdirectory(deps/luajit)
 include_directories(deps/luajit/src)
 
-set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "")
-add_subdirectory(deps/box2d)
+set(OPENGL_VERSION 4.3 CACHE STRING "")
+add_subdirectory(deps/raylib)
 
 add_definitions(-DNO_FONT_AWESOME)
 
@@ -39,7 +40,7 @@ endif()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} raylib libluajit box2d)
+target_link_libraries(${PROJECT_NAME} box2d libluajit raylib)
 
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} ws2_32)
