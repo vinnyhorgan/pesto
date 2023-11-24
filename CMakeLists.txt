@@ -16,6 +16,11 @@ add_subdirectory(deps/raylib)
 add_subdirectory(deps/luajit)
 include_directories(deps/luajit/src)
 
+set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "")
+add_subdirectory(deps/box2d)
+
+add_definitions(-DNO_FONT_AWESOME)
+
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.c src/*.cpp)
 
 if(WIN32)
@@ -34,7 +39,7 @@ endif()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} raylib libluajit)
+target_link_libraries(${PROJECT_NAME} raylib libluajit box2d)
 
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} ws2_32)
