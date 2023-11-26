@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "../util.h"
+
 static int clear(lua_State* L)
 {
     int r = (int)luaL_optinteger(L, 1, 0);
@@ -21,6 +23,19 @@ static int text(lua_State* L)
     int y = (int)luaL_checkinteger(L, 3);
 
     DrawTextEx(font, text, Vector2 { (float)x, (float)y }, (float)font.baseSize, 0, WHITE);
+
+    return 0;
+}
+
+static int wprint(lua_State* L)
+{
+    const char* text = luaL_checkstring(L, 1);
+    int x = (int)luaL_checkinteger(L, 2);
+    int y = (int)luaL_checkinteger(L, 3);
+    int w = (int)luaL_checkinteger(L, 4);
+    int h = (int)luaL_checkinteger(L, 5);
+
+    DrawTextBoxedSelectable(font, text, { (float)x, (float)y, (float)w, (float)h }, (float)font.baseSize, 0, true, WHITE, 0, 0, WHITE, WHITE);
 
     return 0;
 }
@@ -53,6 +68,7 @@ static int drawTexture(lua_State* L)
 static const luaL_Reg functions[] = {
     { "clear", clear },
     { "text", text },
+    { "wprint", wprint },
     { "loadTexture", loadTexture },
     { "drawTexture", drawTexture },
     { NULL, NULL }

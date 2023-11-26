@@ -2,7 +2,6 @@
 #define API_H
 
 #include <lua.hpp>
-
 #include <raylib.h>
 
 // Global variables

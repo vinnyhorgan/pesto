@@ -137,7 +137,8 @@ local function errorHandler(msg)
 
         pesto.graphics.clear(119, 173, 120)
 
-        pesto.graphics.text("Error: " .. msg, 10, 10)
+        pesto.graphics.text("Error", 10, 10)
+        pesto.graphics.wprint(msg, 10, 50, 780, 600)
 
         pesto.window.endDrawing()
     end
