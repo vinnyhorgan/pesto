@@ -5,6 +5,7 @@
 #include <raylib.h>
 
 // Global variables
+extern bool shouldQuit;
 extern Font font;
 
 int luaopen_pesto(lua_State* L);
@@ -16,6 +17,7 @@ int luaopen_graphics(lua_State* L);
 int luaopen_keyboard(lua_State* L);
 int luaopen_log(lua_State* L);
 int luaopen_mouse(lua_State* L);
+int luaopen_system(lua_State* L);
 int luaopen_window(lua_State* L);
 
 // Lua libraries

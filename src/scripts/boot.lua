@@ -1,9 +1,12 @@
 function pesto.init()
     -- Pesto modules
     require("pesto.filesystem")
+    require("pesto.gamepad")
     require("pesto.graphics")
+    require("pesto.keyboard")
     require("pesto.log")
     require("pesto.mouse")
+    require("pesto.system")
     require("pesto.window")
 
     -- State

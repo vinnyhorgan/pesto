@@ -35,6 +35,7 @@ static const luaL_Reg modules[] = {
     { "pesto.keyboard", luaopen_keyboard },
     { "pesto.log", luaopen_log },
     { "pesto.mouse", luaopen_mouse },
+    { "pesto.system", luaopen_system },
     { "pesto.window", luaopen_window },
     // Lua libraries
     { "astar", luaopen_astar },

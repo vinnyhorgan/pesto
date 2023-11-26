@@ -140,6 +140,50 @@ static int setCursor(lua_State* L)
     return 0;
 }
 
+static int show(lua_State* L)
+{
+    ShowCursor();
+
+    return 0;
+}
+
+static int hide(lua_State* L)
+{
+    HideCursor();
+
+    return 0;
+}
+
+static int isHidden(lua_State* L)
+{
+    bool result = IsCursorHidden();
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int enable(lua_State* L)
+{
+    EnableCursor();
+
+    return 0;
+}
+
+static int disable(lua_State* L)
+{
+    DisableCursor();
+
+    return 0;
+}
+
+static int isOnScreen(lua_State* L)
+{
+    bool result = IsCursorOnScreen();
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
 static const luaL_Reg functions[] = {
     { "isPressed", isPressed },
     { "isDown", isDown },
@@ -154,6 +198,12 @@ static const luaL_Reg functions[] = {
     { "setScale", setScale },
     { "getWheelMove", getWheelMove },
     { "setCursor", setCursor },
+    { "show", show },
+    { "hide", hide },
+    { "isHidden", isHidden },
+    { "enable", enable },
+    { "disable", disable },
+    { "isOnScreen", isOnScreen },
     { NULL, NULL }
 };
 
