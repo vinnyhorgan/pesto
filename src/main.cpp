@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "modules/api.h"
 #include "util.h"
@@ -19,8 +20,13 @@ int main(int argc, char* argv[])
     }
 
 #ifdef _WIN32
-    if (!FileExists("luacheck.exe")) {
-        SaveFileData("luacheck.exe", LUACHECK_DATA, LUACHECK_DATA_SIZE);
+    const char* tempDir = getenv("TEMP");
+    const char* luacheckPath = TextFormat("%s\\luacheck.exe", tempDir);
+
+    if (!FileExists(luacheckPath)) {
+        SetTraceLogLevel(LOG_NONE);
+        SaveFileData(luacheckPath, LUACHECK_DATA, LUACHECK_DATA_SIZE);
+        SetTraceLogLevel(LOG_INFO);
     }
 #endif
 

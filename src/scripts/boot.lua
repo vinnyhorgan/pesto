@@ -21,32 +21,63 @@ function pesto.init()
 
     -- Luasocket is left as is for now
 
-    local directory = arg[1]
+    local target = arg[1]
+    local tempDir = os.getenv("TEMP")
+    local luacheckPath = tempDir .. "\\luacheck.exe"
 
-    if not directory then
-        error("No directory specified!")
+    if not target then
+        error("No target specified!")
     end
 
-    if not pesto.filesystem.directoryExists(directory) then
-        error("Directory does not exist!")
+    local file = pesto.filesystem.fileExists(target)
+    local directory = pesto.filesystem.directoryExists(target)
+
+    if not file and not directory then
+        error("Target does not exist!")
     end
 
-    if pesto.filesystem.fileExists("luacheck.exe") then
-        local handle = io.popen("luacheck.exe " .. directory)
+    if file and directory then
+        file = false
+    end
+
+    if file and not pesto.filesystem.isFileExtension(target, ".lua") then
+        error("Target is not a lua file!")
+    end
+
+    if tempDir and pesto.filesystem.fileExists(luacheckPath) then
+        local handle = io.popen(luacheckPath .. " " .. target)
         local output = handle:read("*a")
         handle:close()
 
         local warnings, errors, message = output:match("Total: (%d+) warning?s? / (%d+) error?s?")
 
-        if warnings or errors then
+        if tonumber(warnings) > 0 or tonumber(errors) > 0 then
             error(output)
         end
     end
 
-    package.path = package.path .. ";" .. directory .. "/?.lua"
+    if file then
+        local path = pesto.filesystem.getDirectoryPath(target)
 
-    if pesto.filesystem.fileExists(directory .. "/main.lua") then
-        -- Initializing window here to allow loading textures
+        package.path = package.path .. ";" .. path .. "/?.lua"
+
+        pesto.log.level("warn") -- Disable raylib's wall of info logs :)
+
+        local major, minor, patch, codename = pesto.getVersion()
+
+        pesto.window.init(800, 600, "Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename)
+
+        pesto.window.setTargetFPS(60)
+
+        pesto.log.level("info")
+
+        require(pesto.filesystem.getFileNameWithoutExt(target))
+    elseif directory then
+        if not pesto.filesystem.fileExists(target .. "/main.lua") then
+            error("No main.lua found!")
+        end
+
+        package.path = package.path .. ";" .. target .. "/?.lua"
 
         pesto.log.level("warn") -- Disable raylib's wall of info logs :)
 
@@ -58,8 +89,6 @@ function pesto.init()
         pesto.log.level("info")
 
         require("main")
-    else
-        error("No main.lua found!")
     end
 end
 
