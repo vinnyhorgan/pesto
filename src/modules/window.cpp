@@ -30,6 +30,8 @@ static int init(lua_State* L)
 
     font = LoadFont_Noto();
 
+    SetExitKey(KEY_NULL);
+
     return 0;
 }
 

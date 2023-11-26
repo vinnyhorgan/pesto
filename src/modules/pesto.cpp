@@ -30,7 +30,9 @@ static int luaopen_state(lua_State* L)
 static const luaL_Reg modules[] = {
     // Pesto modules
     { "pesto.filesystem", luaopen_filesystem },
+    { "pesto.gamepad", luaopen_gamepad },
     { "pesto.graphics", luaopen_graphics },
+    { "pesto.keyboard", luaopen_keyboard },
     { "pesto.log", luaopen_log },
     { "pesto.mouse", luaopen_mouse },
     { "pesto.window", luaopen_window },
