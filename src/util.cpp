@@ -40,6 +40,7 @@ void generateHeaders()
     UnloadFileData(data);
 
     generateHeader("src/scripts/boot.lua");
+    generateHeader("src/scripts/state.lua");
 
     generateHeader("src/lib/lua/astar.lua");
     generateHeader("src/lib/lua/brinevector.lua");
