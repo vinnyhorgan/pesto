@@ -5,6 +5,7 @@ function pesto.init()
     require("pesto.graphics")
     require("pesto.keyboard")
     require("pesto.log")
+    require("pesto.math")
     require("pesto.mouse")
     require("pesto.system")
     require("pesto.window")
@@ -123,7 +124,7 @@ function pesto.run()
 
         pesto.window.beginDrawing()
 
-        pesto.graphics.clear()
+        pesto.graphics.clear(0, 0, 0, 255)
 
         if pesto.draw then pesto.draw() end
 
@@ -152,10 +153,10 @@ local function errorHandler(msg)
     while not pesto.window.shouldClose() do
         pesto.window.beginDrawing()
 
-        pesto.graphics.clear(119, 173, 120)
+        pesto.graphics.clear(119, 173, 120, 255)
 
         pesto.graphics.text("Error", 10, 10)
-        pesto.graphics.wprint(msg, 10, 50, 780, 600)
+        pesto.graphics.wrappedText(msg, 10, 50, 780, 600)
 
         pesto.window.endDrawing()
     end

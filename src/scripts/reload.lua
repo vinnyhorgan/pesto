@@ -53,10 +53,10 @@ function reload.onerror(e)
     pesto.update = reload.update
 
     pesto.draw = function()
-        pesto.graphics.clear(172, 57, 49)
+        pesto.graphics.clear(172, 57, 49, 255)
 
         pesto.graphics.text("Reload error! Fix the error and the script will reload", 10, 10)
-        pesto.graphics.wprint(e, 10, 50, 780, 600)
+        pesto.graphics.wrappedText(e, 10, 50, 780, 600)
     end
 end
 

@@ -7,6 +7,7 @@
 // Global variables
 extern bool shouldQuit;
 extern Font font;
+extern Color currentColor;
 
 int luaopen_pesto(lua_State* L);
 
@@ -16,6 +17,7 @@ int luaopen_gamepad(lua_State* L);
 int luaopen_graphics(lua_State* L);
 int luaopen_keyboard(lua_State* L);
 int luaopen_log(lua_State* L);
+int luaopen_pmath(lua_State* L);
 int luaopen_mouse(lua_State* L);
 int luaopen_system(lua_State* L);
 int luaopen_window(lua_State* L);

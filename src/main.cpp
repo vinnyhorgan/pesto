@@ -10,7 +10,9 @@
 
 int main(int argc, char* argv[])
 {
+#ifndef NDEBUG
     generateHeaders(); // Remove before release
+#endif
 
     int retval = 0;
 

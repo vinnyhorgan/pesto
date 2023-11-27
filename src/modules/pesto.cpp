@@ -44,6 +44,7 @@ static const luaL_Reg modules[] = {
     { "pesto.graphics", luaopen_graphics },
     { "pesto.keyboard", luaopen_keyboard },
     { "pesto.log", luaopen_log },
+    { "pesto.math", luaopen_pmath },
     { "pesto.mouse", luaopen_mouse },
     { "pesto.system", luaopen_system },
     { "pesto.window", luaopen_window },
