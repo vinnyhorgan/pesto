@@ -6,6 +6,7 @@ extern "C" {
 }
 
 #include "../scripts/boot.lua.h"
+#include "../scripts/reload.lua.h"
 #include "../scripts/state.lua.h"
 #include "../util.h"
 
@@ -21,6 +22,15 @@ static int luaopen_boot(lua_State* L)
 static int luaopen_state(lua_State* L)
 {
     if (luaL_loadbuffer(L, (const char*)STATE_DATA, sizeof(STATE_DATA), "state.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+static int luaopen_reload(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)RELOAD_DATA, sizeof(RELOAD_DATA), "reload.lua") == 0) {
         lua_call(L, 0, 1);
     }
 
@@ -63,10 +73,10 @@ static const luaL_Reg modules[] = {
     { "socket", luaopen_socket },
     { "socket.tp", luaopen_tp },
     { "socket.url", luaopen_url },
-    // Boot script
+    // Scripts
     { "pesto.boot", luaopen_boot },
-    // State script
     { "pesto.state", luaopen_state },
+    { "pesto.reload", luaopen_reload },
     { NULL, NULL }
 };
 

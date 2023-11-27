@@ -9,9 +9,6 @@ function pesto.init()
     require("pesto.system")
     require("pesto.window")
 
-    -- State
-    pesto.state = require("pesto.state")
-
     -- Lua libraries
     pesto.astar = require("astar")
     pesto.Vector = require("brinevector")
@@ -26,6 +23,13 @@ function pesto.init()
     pesto.ecs = require("tiny")
 
     -- Luasocket is left as is for now
+
+    -- Scripts
+    pesto.state = require("pesto.state")
+    pesto.reload = require("pesto.reload")
+
+    -- Debug
+    pesto.debug = true
 
     local target = arg[1]
     local tempDir = os.getenv("TEMP")
@@ -78,7 +82,13 @@ function pesto.init()
 
     pesto.window.setTargetFPS(60)
 
-    pesto.log.level("info")
+    if pesto.debug then
+        pesto.log.level("debug")
+        pesto.reload.init()
+        pesto.log.debug("Running in debug mode")
+    else
+        pesto.log.level("info")
+    end
 
     if file then
         local path = pesto.filesystem.getDirectoryPath(target)
@@ -101,6 +111,10 @@ function pesto.run()
 
     while not pesto.window.shouldClose() do
         local dt = pesto.window.getDelta()
+
+        if pesto.debug then
+            pesto.reload.update(dt)
+        end
 
         pesto.tween.update(dt)
         pesto.timer.update(dt)
