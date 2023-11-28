@@ -55,8 +55,8 @@ function reload.onerror(e)
     pesto.draw = function()
         pesto.graphics.clear(172, 57, 49, 255)
 
-        pesto.graphics.text("Reload error! Fix the error and the script will reload", 10, 10)
-        pesto.graphics.wrappedText(e, 10, 50, 780, 600)
+        pesto.graphics.text("Reload error!", 10, 10)
+        pesto.graphics.wrappedText(e .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(), pesto.window.getHeight())
     end
 end
 

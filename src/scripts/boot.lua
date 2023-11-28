@@ -97,9 +97,13 @@ function pesto.init()
 
         package.path = package.path .. ";" .. path .. "/?.lua"
 
+        pesto.filesystem.changeDirectory(path)
+
         require(pesto.filesystem.getFileNameWithoutExt(target))
     elseif directory then
         package.path = package.path .. ";" .. target .. "/?.lua"
+
+        pesto.filesystem.changeDirectory(target)
 
         require("main")
     end
@@ -152,7 +156,7 @@ local function errorHandler(msg)
         pesto.graphics.clear(119, 173, 120, 255)
 
         pesto.graphics.text("Error", 10, 10)
-        pesto.graphics.wrappedText(msg, 10, 50, 780, 600)
+        pesto.graphics.wrappedText(msg .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(), pesto.window.getHeight())
 
         pesto.window.endDrawing()
     end
