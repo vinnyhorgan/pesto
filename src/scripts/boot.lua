@@ -28,6 +28,7 @@ function pesto.init()
     -- Scripts
     pesto.state = require("pesto.state")
     pesto.reload = require("pesto.reload")
+    pesto.animation = require("pesto.animation")
 
     -- Debug
     pesto.debug = true
@@ -105,11 +106,6 @@ function pesto.init()
 end
 
 function pesto.run()
-    if pesto.main then
-        pesto.state.registerEvents()
-        pesto.state.switch(pesto.main)
-    end
-
     while not pesto.window.shouldClose() do
         local dt = pesto.window.getDelta()
 

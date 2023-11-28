@@ -45,19 +45,6 @@ function state.current()
     return stack[#stack]
 end
 
-local callbacks = {"update", "draw"}
-
-function state.registerEvents()
-    local registry = {}
-    for _, f in ipairs(callbacks) do
-        registry[f] = pesto[f] or __NULL__
-        pesto[f] = function(...)
-            registry[f](...)
-            return state[f](...)
-        end
-    end
-end
-
 setmetatable(state, {__index = function(_, func)
     if not dirty or func == "update" then
         dirty = false

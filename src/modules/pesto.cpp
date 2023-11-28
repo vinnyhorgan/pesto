@@ -5,6 +5,7 @@ extern "C" {
 #include "../lib/luasocket/mime.h"
 }
 
+#include "../scripts/animation.lua.h"
 #include "../scripts/boot.lua.h"
 #include "../scripts/reload.lua.h"
 #include "../scripts/state.lua.h"
@@ -31,6 +32,15 @@ static int luaopen_state(lua_State* L)
 static int luaopen_reload(lua_State* L)
 {
     if (luaL_loadbuffer(L, (const char*)RELOAD_DATA, sizeof(RELOAD_DATA), "reload.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+static int luaopen_animation(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)ANIMATION_DATA, sizeof(ANIMATION_DATA), "animation.lua") == 0) {
         lua_call(L, 0, 1);
     }
 
@@ -78,6 +88,7 @@ static const luaL_Reg modules[] = {
     { "pesto.boot", luaopen_boot },
     { "pesto.state", luaopen_state },
     { "pesto.reload", luaopen_reload },
+    { "pesto.animation", luaopen_animation },
     { NULL, NULL }
 };
 
