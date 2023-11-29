@@ -29,6 +29,7 @@ function pesto.init()
     pesto.state = require("pesto.state")
     pesto.reload = require("pesto.reload")
     pesto.animation = require("pesto.animation")
+    pesto.ldtk = require("pesto.ldtk")
 
     -- Debug
     pesto.debug = true
@@ -110,7 +111,13 @@ function pesto.init()
 end
 
 function pesto.run()
+    pesto.window.setResizable(true)
+
+    local target = pesto.graphics.loadRenderTexture(800, 600)
+
     while not pesto.window.shouldClose() do
+        local scale = math.min(pesto.window.getWidth() / 800, pesto.window.getHeight() / 600)
+
         local dt = pesto.window.getDelta()
 
         if pesto.debug then
@@ -122,11 +129,20 @@ function pesto.run()
 
         if pesto.update then pesto.update(dt) end
 
-        pesto.window.beginDrawing()
+        pesto.graphics.beginTextureMode(target)
 
         pesto.graphics.clear(0, 0, 0, 255)
 
         if pesto.draw then pesto.draw() end
+
+        pesto.graphics.endTextureMode()
+
+        pesto.window.beginDrawing()
+
+        pesto.graphics.clear(119, 173, 120, 255)
+
+        pesto.graphics.drawPro(target.texture, 0, 0, target.texture.width, -target.texture.height,
+            (pesto.window.getWidth() - (800 * scale)) * 0.5, (pesto.window.getHeight() - (600 * scale)) * 0.5, 800 * scale, 600 * scale, 0, 0, 0)
 
         pesto.window.endDrawing()
     end

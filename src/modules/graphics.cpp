@@ -27,6 +27,29 @@ static int indexTexture(lua_State* L)
     return 1;
 }
 
+static int indexRenderTexture(lua_State* L)
+{
+    RenderTexture2D img = *(RenderTexture2D*)luaL_checkudata(L, 1, "RenderTexture");
+    const char* key = luaL_checkstring(L, 2);
+
+    if (TextIsEqual(key, "texture")) {
+        Texture2D result = img.texture;
+
+        void* ud = lua_newuserdata(L, sizeof(Texture2D));
+        memcpy(ud, &result, sizeof(Texture2D));
+        luaL_setmetatable(L, "Texture");
+    } else if (TextIsEqual(key, "depth")) {
+        Texture2D result = img.depth;
+
+        void* ud = lua_newuserdata(L, sizeof(Texture2D));
+        memcpy(ud, &result, sizeof(Texture2D));
+        luaL_setmetatable(L, "Texture");
+    } else
+        return 0;
+
+    return 1;
+}
+
 static int clear(lua_State* L)
 {
     unsigned char r = (unsigned char)luaL_checkinteger(L, 1);
@@ -47,6 +70,16 @@ static int setColor(lua_State* L)
     currentColor = { r, g, b, a };
 
     return 0;
+}
+
+static int getColor(lua_State* L)
+{
+    lua_pushinteger(L, currentColor.r);
+    lua_pushinteger(L, currentColor.g);
+    lua_pushinteger(L, currentColor.b);
+    lua_pushinteger(L, currentColor.a);
+
+    return 4;
 }
 
 static int pixel(lua_State* L)
@@ -198,9 +231,38 @@ static int drawPro(lua_State* L)
     return 0;
 }
 
+static int loadRenderTexture(lua_State* L)
+{
+    int width = (int)luaL_checkinteger(L, 1);
+    int height = (int)luaL_checkinteger(L, 2);
+    RenderTexture result = LoadRenderTexture(width, height);
+
+    void* ud = lua_newuserdata(L, sizeof(RenderTexture));
+    memcpy(ud, &result, sizeof(RenderTexture));
+    luaL_setmetatable(L, "RenderTexture");
+
+    return 1;
+}
+
+static int beginTextureMode(lua_State* L)
+{
+    RenderTexture2D target = *(RenderTexture2D*)luaL_checkudata(L, 1, "RenderTexture");
+    BeginTextureMode(target);
+
+    return 0;
+}
+
+static int endTextureMode(lua_State* L)
+{
+    EndTextureMode();
+
+    return 0;
+}
+
 static const luaL_Reg functions[] = {
     { "clear", clear },
     { "setColor", setColor },
+    { "getColor", getColor },
     { "pixel", pixel },
     { "line", line },
     { "circle", circle },
@@ -214,6 +276,9 @@ static const luaL_Reg functions[] = {
     { "load", load },
     { "draw", draw },
     { "drawPro", drawPro },
+    { "loadRenderTexture", loadRenderTexture },
+    { "beginTextureMode", beginTextureMode },
+    { "endTextureMode", endTextureMode },
     { NULL, NULL }
 };
 
@@ -221,6 +286,11 @@ int luaopen_graphics(lua_State* L)
 {
     luaL_newmetatable(L, "Texture");
     lua_pushcfunction(L, &indexTexture);
+    lua_setfield(L, -2, "__index");
+    lua_pop(L, 1);
+
+    luaL_newmetatable(L, "RenderTexture");
+    lua_pushcfunction(L, &indexRenderTexture);
     lua_setfield(L, -2, "__index");
     lua_pop(L, 1);
 

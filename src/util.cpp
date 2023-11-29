@@ -41,6 +41,7 @@ void generateHeaders()
     generateHeader("src/scripts/state.lua");
     generateHeader("src/scripts/reload.lua");
     generateHeader("src/scripts/animation.lua");
+    generateHeader("src/scripts/ldtk.lua");
 
     generateHeader("src/lib/lua/astar.lua");
     generateHeader("src/lib/lua/brinevector.lua");
