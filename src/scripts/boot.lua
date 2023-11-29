@@ -1,3 +1,15 @@
+-- Config
+local config = {
+    debug = true,
+    title = "Pesto",
+    width = 800,
+    height = 600,
+    resizable = true,
+    letterbox = true,
+    gameWidth = 800,
+    gameHeight = 600
+}
+
 function pesto.init()
     -- Pesto modules
     require("pesto.filesystem")
@@ -31,9 +43,6 @@ function pesto.init()
     pesto.animation = require("pesto.animation")
     pesto.ldtk = require("pesto.ldtk")
 
-    -- Debug
-    pesto.debug = true
-
     local target = arg[1]
     local tempDir = os.getenv("TEMP")
     local luacheckPath = tempDir .. "\\luacheck.exe"
@@ -61,6 +70,32 @@ function pesto.init()
         error("No main.lua found!")
     end
 
+    if file then
+        local path = pesto.filesystem.getDirectoryPath(target)
+
+        package.path = package.path .. ";" .. path .. "/?.lua"
+
+        pesto.filesystem.changeDirectory(path)
+
+        if pesto.filesystem.fileExists(path .. "/conf.lua") then
+            pesto.log.info("Loading config from " .. target .. "/conf.lua")
+            require("conf")
+        end
+
+        if pesto.conf then pesto.conf(config) end
+    elseif directory then
+        package.path = package.path .. ";" .. target .. "/?.lua"
+
+        pesto.filesystem.changeDirectory(target)
+
+        if pesto.filesystem.fileExists(target .. "/conf.lua") then
+            pesto.log.info("Loading config from " .. target .. "/conf.lua")
+            require("conf")
+        end
+
+        if pesto.conf then pesto.conf(config) end
+    end
+
     if tempDir and pesto.filesystem.fileExists(luacheckPath) then
         local handle = io.popen(luacheckPath .. " " .. target .. " --globals pesto")
         local output = handle:read("*a")
@@ -79,13 +114,15 @@ function pesto.init()
 
     pesto.log.level("warn") -- Disable raylib's wall of info logs :)
 
-    local major, minor, patch, codename = pesto.getVersion()
-
-    pesto.window.init(800, 600, "Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename)
+    pesto.window.init(config.width, config.height, config.title)
 
     pesto.window.setTargetFPS(60)
 
-    if pesto.debug then
+    if config.resizable then
+        pesto.window.setResizable(true)
+    end
+
+    if config.debug then
         pesto.log.level("debug")
         pesto.reload.init()
         pesto.log.debug("Running in debug mode")
@@ -94,33 +131,25 @@ function pesto.init()
     end
 
     if file then
-        local path = pesto.filesystem.getDirectoryPath(target)
-
-        package.path = package.path .. ";" .. path .. "/?.lua"
-
-        pesto.filesystem.changeDirectory(path)
-
         require(pesto.filesystem.getFileNameWithoutExt(target))
     elseif directory then
-        package.path = package.path .. ";" .. target .. "/?.lua"
-
-        pesto.filesystem.changeDirectory(target)
-
         require("main")
     end
 end
 
 function pesto.run()
-    pesto.window.setResizable(true)
+    local target
 
-    local target = pesto.graphics.loadRenderTexture(800, 600)
+    if config.letterbox then
+        target = pesto.graphics.loadRenderTexture(config.gameWidth, config.gameHeight)
+    end
 
     while not pesto.window.shouldClose() do
         local scale = math.min(pesto.window.getWidth() / 800, pesto.window.getHeight() / 600)
 
         local dt = pesto.window.getDelta()
 
-        if pesto.debug then
+        if config.debug then
             pesto.reload.update(dt)
         end
 
@@ -129,20 +158,28 @@ function pesto.run()
 
         if pesto.update then pesto.update(dt) end
 
-        pesto.graphics.beginTextureMode(target)
+        if config.letterbox then
+            pesto.graphics.beginTextureMode(target)
 
-        pesto.graphics.clear(0, 0, 0, 255)
+            pesto.graphics.clear(0, 0, 0, 255)
 
-        if pesto.draw then pesto.draw() end
+            if pesto.draw then pesto.draw() end
 
-        pesto.graphics.endTextureMode()
+            pesto.graphics.endTextureMode()
+        end
 
         pesto.window.beginDrawing()
 
         pesto.graphics.clear(119, 173, 120, 255)
 
-        pesto.graphics.drawPro(target.texture, 0, 0, target.texture.width, -target.texture.height,
-            (pesto.window.getWidth() - (800 * scale)) * 0.5, (pesto.window.getHeight() - (600 * scale)) * 0.5, 800 * scale, 600 * scale, 0, 0, 0)
+        if config.letterbox then
+            pesto.graphics.drawPro(target.texture, 0, 0, target.texture.width, -target.texture.height,
+                (pesto.window.getWidth() - (800 * scale)) * 0.5, (pesto.window.getHeight() - (600 * scale)) * 0.5, 800 * scale, 600 * scale, 0, 0, 0)
+        else
+            pesto.graphics.clear(0, 0, 0, 255)
+
+            if pesto.draw then pesto.draw() end
+        end
 
         pesto.window.endDrawing()
     end
