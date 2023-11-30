@@ -7,7 +7,8 @@ local config = {
     resizable = true,
     letterbox = true,
     gameWidth = 800,
-    gameHeight = 600
+    gameHeight = 600,
+    borderColor = {119, 173, 120, 255}
 }
 
 function pesto.init()
@@ -145,7 +146,7 @@ function pesto.run()
     end
 
     while not pesto.window.shouldClose() do
-        local scale = math.min(pesto.window.getWidth() / 800, pesto.window.getHeight() / 600)
+        local scale = math.min(pesto.window.getWidth() / config.gameWidth, pesto.window.getHeight() / config.gameHeight)
 
         local dt = pesto.window.getDelta()
 
@@ -170,11 +171,12 @@ function pesto.run()
 
         pesto.window.beginDrawing()
 
-        pesto.graphics.clear(119, 173, 120, 255)
+        pesto.graphics.clear(config.borderColor[1], config.borderColor[2], config.borderColor[3], config.borderColor[4])
 
         if config.letterbox then
-            pesto.graphics.drawPro(target.texture, 0, 0, target.texture.width, -target.texture.height,
-                (pesto.window.getWidth() - (800 * scale)) * 0.5, (pesto.window.getHeight() - (600 * scale)) * 0.5, 800 * scale, 600 * scale, 0, 0, 0)
+            pesto.graphics.drawRenderTexturePro(target, 0, 0, config.gameWidth, -config.gameHeight,
+                (pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5, (pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5,
+                config.gameWidth * scale, config.gameHeight * scale, 0, 0, 0)
         else
             pesto.graphics.clear(0, 0, 0, 255)
 
@@ -195,9 +197,7 @@ local function errorHandler(msg)
     if not pesto.window.isReady() then
         pesto.log.level("warn")
 
-        local major, minor, patch, codename = pesto.getVersion()
-
-        pesto.window.init(800, 600, "Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename)
+        pesto.window.init(800, 600, "Pesto Error")
         pesto.window.setTargetFPS(60)
 
         pesto.log.level("info")

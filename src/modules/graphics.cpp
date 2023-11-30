@@ -27,27 +27,13 @@ static int indexTexture(lua_State* L)
     return 1;
 }
 
-static int indexRenderTexture(lua_State* L)
+static int gcTexture(lua_State* L)
 {
-    RenderTexture2D img = *(RenderTexture2D*)luaL_checkudata(L, 1, "RenderTexture");
-    const char* key = luaL_checkstring(L, 2);
+    Texture2D img = *(Texture2D*)luaL_checkudata(L, 1, "Texture");
 
-    if (TextIsEqual(key, "texture")) {
-        Texture2D result = img.texture;
+    UnloadTexture(img);
 
-        void* ud = lua_newuserdata(L, sizeof(Texture2D));
-        memcpy(ud, &result, sizeof(Texture2D));
-        luaL_setmetatable(L, "Texture");
-    } else if (TextIsEqual(key, "depth")) {
-        Texture2D result = img.depth;
-
-        void* ud = lua_newuserdata(L, sizeof(Texture2D));
-        memcpy(ud, &result, sizeof(Texture2D));
-        luaL_setmetatable(L, "Texture");
-    } else
-        return 0;
-
-    return 1;
+    return 0;
 }
 
 static int clear(lua_State* L)
@@ -212,6 +198,25 @@ static int draw(lua_State* L)
     return 0;
 }
 
+static int drawRenderTexturePro(lua_State* L)
+{
+    RenderTexture2D img = *(RenderTexture2D*)luaL_checkudata(L, 1, "RenderTexture");
+    float srcX = (float)luaL_checknumber(L, 2);
+    float srcY = (float)luaL_checknumber(L, 3);
+    float srcW = (float)luaL_checknumber(L, 4);
+    float srcH = (float)luaL_checknumber(L, 5);
+    float destX = (float)luaL_checknumber(L, 6);
+    float destY = (float)luaL_checknumber(L, 7);
+    float destW = (float)luaL_checknumber(L, 8);
+    float destH = (float)luaL_checknumber(L, 9);
+    float originX = (float)luaL_checknumber(L, 10);
+    float originY = (float)luaL_checknumber(L, 11);
+    float rotation = (float)luaL_checknumber(L, 12);
+    DrawTexturePro(img.texture, { srcX, srcY, srcW, srcH }, { destX, destY, destW, destH }, { originX, originY }, rotation, currentColor);
+
+    return 0;
+}
+
 static int drawPro(lua_State* L)
 {
     Texture2D img = *(Texture2D*)luaL_checkudata(L, 1, "Texture");
@@ -279,6 +284,7 @@ static const luaL_Reg functions[] = {
     { "loadRenderTexture", loadRenderTexture },
     { "beginTextureMode", beginTextureMode },
     { "endTextureMode", endTextureMode },
+    { "drawRenderTexturePro", drawRenderTexturePro },
     { NULL, NULL }
 };
 
@@ -287,11 +293,11 @@ int luaopen_graphics(lua_State* L)
     luaL_newmetatable(L, "Texture");
     lua_pushcfunction(L, &indexTexture);
     lua_setfield(L, -2, "__index");
+    lua_pushcfunction(L, &gcTexture);
+    lua_setfield(L, -2, "__gc");
     lua_pop(L, 1);
 
     luaL_newmetatable(L, "RenderTexture");
-    lua_pushcfunction(L, &indexRenderTexture);
-    lua_setfield(L, -2, "__index");
     lua_pop(L, 1);
 
     lua_getglobal(L, "pesto");
