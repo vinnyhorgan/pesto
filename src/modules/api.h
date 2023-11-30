@@ -12,13 +12,17 @@ extern Color currentColor;
 int luaopen_pesto(lua_State* L);
 
 // Pesto modules
+int luaopen_audio(lua_State* L);
 int luaopen_filesystem(lua_State* L);
 int luaopen_gamepad(lua_State* L);
 int luaopen_graphics(lua_State* L);
+int luaopen_gui(lua_State* L);
 int luaopen_keyboard(lua_State* L);
 int luaopen_log(lua_State* L);
 int luaopen_pmath(lua_State* L);
 int luaopen_mouse(lua_State* L);
+int luaopen_physics(lua_State* L);
+int luaopen_rres(lua_State* L);
 int luaopen_system(lua_State* L);
 int luaopen_window(lua_State* L);
 

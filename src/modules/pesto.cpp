@@ -59,13 +59,17 @@ static int luaopen_ldtk(lua_State* L)
 
 static const luaL_Reg modules[] = {
     // Pesto modules
+    { "pesto.audio", luaopen_audio },
     { "pesto.filesystem", luaopen_filesystem },
     { "pesto.gamepad", luaopen_gamepad },
     { "pesto.graphics", luaopen_graphics },
+    { "pesto.gui", luaopen_gui },
     { "pesto.keyboard", luaopen_keyboard },
     { "pesto.log", luaopen_log },
     { "pesto.math", luaopen_pmath },
     { "pesto.mouse", luaopen_mouse },
+    { "pesto.physics", luaopen_physics },
+    { "pesto.rres", luaopen_rres },
     { "pesto.system", luaopen_system },
     { "pesto.window", luaopen_window },
     // Lua libraries

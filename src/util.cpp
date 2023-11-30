@@ -32,11 +32,6 @@ void generateHeaders()
     ExportImageAsCode(icon, PROJECT_PATH "assets/icon.png.h");
     UnloadImage(icon);
 
-    int size;
-    unsigned char* data = LoadFileData(PROJECT_PATH "assets/luacheck.exe", &size);
-    ExportDataAsCode(data, size, PROJECT_PATH "assets/luacheck.exe.h");
-    UnloadFileData(data);
-
     generateHeader("src/scripts/boot.lua");
     generateHeader("src/scripts/state.lua");
     generateHeader("src/scripts/reload.lua");

@@ -13,13 +13,17 @@ local config = {
 
 function pesto.init()
     -- Pesto modules
+    require("pesto.audio")
     require("pesto.filesystem")
     require("pesto.gamepad")
     require("pesto.graphics")
+    require("pesto.gui")
     require("pesto.keyboard")
     require("pesto.log")
     require("pesto.math")
     require("pesto.mouse")
+    require("pesto.physics")
+    require("pesto.rres")
     require("pesto.system")
     require("pesto.window")
 
@@ -45,8 +49,6 @@ function pesto.init()
     pesto.ldtk = require("pesto.ldtk")
 
     local target = arg[1]
-    local tempDir = os.getenv("TEMP")
-    local luacheckPath = tempDir .. "\\luacheck.exe"
 
     if not target then
         error("No target specified!")
@@ -97,27 +99,13 @@ function pesto.init()
         if pesto.conf then pesto.conf(config) end
     end
 
-    if tempDir and pesto.filesystem.fileExists(luacheckPath) then
-        local handle = io.popen(luacheckPath .. " " .. target .. " --globals pesto")
-        local output = handle:read("*a")
-        handle:close()
-
-        local warnings, errors, message = output:match("Total: (%d+) warning?s? / (%d+) error?s?")
-
-        if tonumber(warnings) > 0 then
-            pesto.log.warn(output)
-        end
-
-        if tonumber(errors) > 0 then
-            error(output)
-        end
-    end
-
     pesto.log.level("warn") -- Disable raylib's wall of info logs :)
 
     pesto.window.init(config.width, config.height, config.title)
 
     pesto.window.setTargetFPS(60)
+
+    pesto.gui.setup()
 
     if config.resizable then
         pesto.window.setResizable(true)
@@ -183,10 +171,18 @@ function pesto.run()
             if pesto.draw then pesto.draw() end
         end
 
+        pesto.gui.beginDrawing()
+
+        pesto.gui.demo()
+
+        pesto.gui.endDrawing()
+
         pesto.window.endDrawing()
     end
 
     pesto.log.level("warn")
+
+    pesto.gui.shutdown()
 
     pesto.window.close()
 end
