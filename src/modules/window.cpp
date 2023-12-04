@@ -12,6 +12,8 @@ static int init(lua_State* L)
     int height = (int)luaL_checkinteger(L, 2);
     const char* title = luaL_checkstring(L, 3);
 
+    SetTraceLogLevel(LOG_WARNING);
+
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(width, height, title);
 

@@ -8,7 +8,7 @@ local config = {
     letterbox = true,
     gameWidth = 800,
     gameHeight = 600,
-    borderColor = {119, 173, 120, 255}
+    borderColor = { 119, 173, 120, 255 }
 }
 
 function pesto.init()
@@ -48,58 +48,29 @@ function pesto.init()
     pesto.animation = require("pesto.animation")
     pesto.ldtk = require("pesto.ldtk")
 
-    local target = arg[1]
+    local directory = arg[1]
 
-    if not target then
-        error("No target specified!")
+    if not directory then
+        error("No directory specified!")
     end
 
-    local file = pesto.filesystem.fileExists(target)
-    local directory = pesto.filesystem.directoryExists(target)
-
-    if not file and not directory then
-        error("Target does not exist!")
+    if not pesto.filesystem.directoryExists(directory) then
+        error("Directory does not exist!")
     end
 
-    if file and directory then
-        file = false
-    end
-
-    if file and not pesto.filesystem.isFileExtension(target, ".lua") then
-        error("Target is not a lua file!")
-    end
-
-    if directory and not pesto.filesystem.fileExists(target .. "/main.lua") then
+    if not pesto.filesystem.fileExists(directory .. "/main.lua") then
         error("No main.lua found!")
     end
 
-    if file then
-        local path = pesto.filesystem.getDirectoryPath(target)
+    package.path = package.path .. ";" .. directory .. "/?.lua"
 
-        package.path = package.path .. ";" .. path .. "/?.lua"
+    pesto.filesystem.changeDirectory(directory)
 
-        pesto.filesystem.changeDirectory(path)
-
-        if pesto.filesystem.fileExists(path .. "/conf.lua") then
-            pesto.log.info("Loading config from " .. target .. "/conf.lua")
-            require("conf")
-        end
-
-        if pesto.conf then pesto.conf(config) end
-    elseif directory then
-        package.path = package.path .. ";" .. target .. "/?.lua"
-
-        pesto.filesystem.changeDirectory(target)
-
-        if pesto.filesystem.fileExists(target .. "/conf.lua") then
-            pesto.log.info("Loading config from " .. target .. "/conf.lua")
-            require("conf")
-        end
-
-        if pesto.conf then pesto.conf(config) end
+    if pesto.filesystem.fileExists(directory .. "/conf.lua") then
+        require("conf")
     end
 
-    pesto.log.level("warn") -- Disable raylib's wall of info logs :)
+    if pesto.conf then pesto.conf(config) end
 
     pesto.window.init(config.width, config.height, config.title)
 
@@ -112,18 +83,10 @@ function pesto.init()
     end
 
     if config.debug then
-        pesto.log.level("debug")
         pesto.reload.init()
-        pesto.log.debug("Running in debug mode")
-    else
-        pesto.log.level("info")
     end
 
-    if file then
-        require(pesto.filesystem.getFileNameWithoutExt(target))
-    elseif directory then
-        require("main")
-    end
+    require("main")
 end
 
 function pesto.run()
@@ -133,7 +96,13 @@ function pesto.run()
         target = pesto.graphics.loadRenderTexture(config.gameWidth, config.gameHeight)
     end
 
-    while not pesto.window.shouldClose() do
+    while true do
+        if pesto.window.shouldClose() then
+            if not pesto.quit or not pesto.quit() then
+                break
+            end
+        end
+
         local scale = math.min(pesto.window.getWidth() / config.gameWidth, pesto.window.getHeight() / config.gameHeight)
 
         local dt = pesto.window.getDelta()
@@ -163,7 +132,8 @@ function pesto.run()
 
         if config.letterbox then
             pesto.graphics.drawRenderTexturePro(target, 0, 0, config.gameWidth, -config.gameHeight,
-                (pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5, (pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5,
+                (pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5,
+                (pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5,
                 config.gameWidth * scale, config.gameHeight * scale, 0, 0, 0)
         else
             pesto.graphics.clear(0, 0, 0, 255)
@@ -180,8 +150,6 @@ function pesto.run()
         pesto.window.endDrawing()
     end
 
-    pesto.log.level("warn")
-
     pesto.gui.shutdown()
 
     pesto.window.close()
@@ -191,12 +159,8 @@ local function errorHandler(msg)
     pesto.log.error(msg)
 
     if not pesto.window.isReady() then
-        pesto.log.level("warn")
-
         pesto.window.init(800, 600, "Pesto Error")
         pesto.window.setTargetFPS(60)
-
-        pesto.log.level("info")
     end
 
     while not pesto.window.shouldClose() do
@@ -205,12 +169,11 @@ local function errorHandler(msg)
         pesto.graphics.clear(119, 173, 120, 255)
 
         pesto.graphics.text("Error", 10, 10)
-        pesto.graphics.wrappedText(msg .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(), pesto.window.getHeight())
+        pesto.graphics.wrappedText(msg .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(),
+            pesto.window.getHeight())
 
         pesto.window.endDrawing()
     end
-
-    pesto.log.level("warn")
 
     pesto.window.close()
 end
