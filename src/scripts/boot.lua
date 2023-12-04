@@ -1,6 +1,7 @@
 -- Config
 local config = {
     debug = true,
+    version = "0.1",
     title = "Pesto",
     width = 800,
     height = 600,
@@ -58,19 +59,25 @@ function pesto.init()
         error("Directory does not exist!")
     end
 
-    if not pesto.filesystem.fileExists(directory .. "/main.lua") then
+    pesto.filesystem.changeDirectory(directory)
+
+    if not pesto.filesystem.fileExists("main.lua") then
         error("No main.lua found!")
     end
 
     package.path = package.path .. ";" .. directory .. "/?.lua"
 
-    pesto.filesystem.changeDirectory(directory)
-
-    if pesto.filesystem.fileExists(directory .. "/conf.lua") then
+    if pesto.filesystem.fileExists("conf.lua") then
         require("conf")
     end
 
     if pesto.conf then pesto.conf(config) end
+
+    local major, minor = pesto.getVersion()
+
+    if config.version ~= major .. "." .. minor then
+        pesto.log.warn("Version mismatch!", config.version, major .. "." .. minor)
+    end
 
     pesto.window.init(config.width, config.height, config.title)
 
@@ -155,7 +162,7 @@ function pesto.run()
     pesto.window.close()
 end
 
-local function errorHandler(msg)
+function pesto.errhand(msg)
     pesto.log.error(msg)
 
     if not pesto.window.isReady() then
@@ -179,9 +186,9 @@ local function errorHandler(msg)
 end
 
 return function()
-    local result = xpcall(pesto.init, errorHandler)
+    local result = xpcall(pesto.init, pesto.errhand)
     if not result then return 1 end
-    local result, retval = xpcall(pesto.run, errorHandler)
+    local result, retval = xpcall(pesto.run, pesto.errhand)
     if not result then return 1 end
 
     return tonumber(retval) or 0
