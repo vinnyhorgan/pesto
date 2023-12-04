@@ -159,7 +159,7 @@ static int text(lua_State* L)
     const char* text = luaL_checkstring(L, 1);
     int x = (int)luaL_checkinteger(L, 2);
     int y = (int)luaL_checkinteger(L, 3);
-    DrawTextEx(font, text, Vector2 { (float)x, (float)y }, (float)font.baseSize, 0, currentColor);
+    DrawTextEx(currentFont, text, Vector2 { (float)x, (float)y }, (float)currentFont.baseSize, 0, currentColor);
 
     return 0;
 }
@@ -171,7 +171,7 @@ static int wrappedText(lua_State* L)
     int y = (int)luaL_checkinteger(L, 3);
     int w = (int)luaL_checkinteger(L, 4);
     int h = (int)luaL_checkinteger(L, 5);
-    DrawTextBoxedSelectable(font, text, { (float)x, (float)y, (float)w, (float)h }, (float)font.baseSize, 0, true, currentColor, 0, 0, WHITE, WHITE);
+    DrawTextBoxedSelectable(currentFont, text, { (float)x, (float)y, (float)w, (float)h }, (float)currentFont.baseSize, 0, true, currentColor, 0, 0, WHITE, WHITE);
 
     return 0;
 }

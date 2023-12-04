@@ -1,118 +1,40 @@
 #include "api.h"
 
-static int loadFileText(lua_State* L)
+#include <filesystem>
+
+static int changeDirectory(lua_State* L)
 {
-    const char* filename = luaL_checkstring(L, 1);
-    char* result = LoadFileText(filename);
+    const char* dir = luaL_checkstring(L, 1);
+    bool result = ChangeDirectory(dir);
+    lua_pushboolean(L, result);
 
-    if (result != NULL) {
-        lua_pushstring(L, result);
-        UnloadFileText(result);
+    return 1;
+}
 
-        return 1;
-    } else {
-        lua_pushnil(L);
+static int createDirectory(lua_State* L)
+{
+    const char* dirpath = luaL_checkstring(L, 1);
 
-        return 1;
+    try {
+        bool result = std::filesystem::create_directory(dirpath);
+        lua_pushboolean(L, result);
+    } catch (const std::exception& e) {
+        TraceLog(LOG_WARNING, e.what());
+        lua_pushboolean(L, false);
     }
+
+    return 1;
 }
 
-static int saveFileText(lua_State* L)
+static int exists(lua_State* L)
 {
     const char* filename = luaL_checkstring(L, 1);
-    const char* text = luaL_checkstring(L, 2);
-    bool result = SaveFileText(filename, (char*)text);
-    lua_pushboolean(L, result);
 
-    return 1;
-}
-
-static int fileExists(lua_State* L)
-{
-    const char* filename = luaL_checkstring(L, 1);
-    bool result = FileExists(filename);
-    lua_pushboolean(L, result);
-
-    return 1;
-}
-
-static int directoryExists(lua_State* L)
-{
-    const char* dirpath = luaL_checkstring(L, 1);
-    bool result = DirectoryExists(dirpath);
-    lua_pushboolean(L, result);
-
-    return 1;
-}
-
-static int isFileExtension(lua_State* L)
-{
-    const char* filename = luaL_checkstring(L, 1);
-    const char* ext = luaL_checkstring(L, 2);
-    bool result = IsFileExtension(filename, ext);
-    lua_pushboolean(L, result);
-
-    return 1;
-}
-
-static int getFileLength(lua_State* L)
-{
-    const char* filename = luaL_checkstring(L, 1);
-    int result = GetFileLength(filename);
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getFileExtension(lua_State* L)
-{
-    const char* filename = luaL_checkstring(L, 1);
-    const char* result = GetFileExtension(filename);
-    lua_pushstring(L, result);
-
-    return 1;
-}
-
-static int getFileName(lua_State* L)
-{
-    const char* filepath = luaL_checkstring(L, 1);
-    const char* result = GetFileName(filepath);
-    lua_pushstring(L, result);
-
-    return 1;
-}
-
-static int getFileNameWithoutExt(lua_State* L)
-{
-    const char* filepath = luaL_checkstring(L, 1);
-    const char* result = GetFileNameWithoutExt(filepath);
-    lua_pushstring(L, result);
-
-    return 1;
-}
-
-static int getDirectoryPath(lua_State* L)
-{
-    const char* filepath = luaL_checkstring(L, 1);
-    const char* result = GetDirectoryPath(filepath);
-    lua_pushstring(L, result);
-
-    return 1;
-}
-
-static int getPrevDirectoryPath(lua_State* L)
-{
-    const char* dirpath = luaL_checkstring(L, 1);
-    const char* result = GetPrevDirectoryPath(dirpath);
-    lua_pushstring(L, result);
-
-    return 1;
-}
-
-static int getWorkingDirectory(lua_State* L)
-{
-    const char* result = GetWorkingDirectory();
-    lua_pushstring(L, result);
+    if (FileExists(filename) || DirectoryExists(filename)) {
+        lua_pushboolean(L, true);
+    } else {
+        lua_pushboolean(L, false);
+    }
 
     return 1;
 }
@@ -125,48 +47,7 @@ static int getApplicationDirectory(lua_State* L)
     return 1;
 }
 
-static int changeDirectory(lua_State* L)
-{
-    const char* dir = luaL_checkstring(L, 1);
-    bool result = ChangeDirectory(dir);
-    lua_pushboolean(L, result);
-
-    return 1;
-}
-
-static int isPathFile(lua_State* L)
-{
-    const char* path = luaL_checkstring(L, 1);
-    bool result = IsPathFile(path);
-    lua_pushboolean(L, result);
-
-    return 1;
-}
-
-static int loadDirectoryFiles(lua_State* L)
-{
-    const char* dirpath = luaL_checkstring(L, 1);
-    FilePathList result = LoadDirectoryFiles(dirpath);
-
-    if (result.count > 0) {
-        lua_newtable(L);
-
-        for (int i = 0; i < (int)result.count; i++) {
-            lua_pushstring(L, result.paths[i]);
-            lua_rawseti(L, -2, i + 1);
-        }
-
-        UnloadDirectoryFiles(result);
-
-        return 1;
-    } else {
-        lua_pushnil(L);
-
-        return 1;
-    }
-}
-
-static int loadDirectoryFilesEx(lua_State* L)
+static int getDirectoryItems(lua_State* L)
 {
     const char* basepath = luaL_checkstring(L, 1);
     const char* filter = luaL_checkstring(L, 2);
@@ -182,24 +63,14 @@ static int loadDirectoryFilesEx(lua_State* L)
         }
 
         UnloadDirectoryFiles(result);
-
-        return 1;
     } else {
         lua_pushnil(L);
-
-        return 1;
     }
-}
-
-static int isFileDropped(lua_State* L)
-{
-    bool result = IsFileDropped();
-    lua_pushboolean(L, result);
 
     return 1;
 }
 
-static int loadDroppedFiles(lua_State* L)
+static int getDroppedItems(lua_State* L)
 {
     FilePathList result = LoadDroppedFiles();
 
@@ -212,16 +83,14 @@ static int loadDroppedFiles(lua_State* L)
         }
 
         UnloadDroppedFiles(result);
-
-        return 1;
     } else {
         lua_pushnil(L);
-
-        return 1;
     }
+
+    return 1;
 }
 
-static int getFileModTime(lua_State* L)
+static int getLastModified(lua_State* L)
 {
     const char* filename = luaL_checkstring(L, 1);
     long result = GetFileModTime(filename);
@@ -230,27 +99,125 @@ static int getFileModTime(lua_State* L)
     return 1;
 }
 
+static int getRealDirectory(lua_State* L)
+{
+    const char* filepath = luaL_checkstring(L, 1);
+    const char* result = GetDirectoryPath(filepath);
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
+static int getSize(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+    int result = GetFileLength(filename);
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getWorkingDirectory(lua_State* L)
+{
+    const char* result = GetWorkingDirectory();
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
+static int isDirectory(lua_State* L)
+{
+    const char* path = luaL_checkstring(L, 1);
+    bool result = IsPathFile(path);
+
+    if (result) {
+        lua_pushboolean(L, false);
+    } else {
+        lua_pushboolean(L, true);
+    }
+
+    return 1;
+}
+
+static int isFile(lua_State* L)
+{
+    const char* path = luaL_checkstring(L, 1);
+    bool result = IsPathFile(path);
+
+    if (result) {
+        lua_pushboolean(L, true);
+    } else {
+        lua_pushboolean(L, false);
+    }
+
+    return 1;
+}
+
+static int isFileDropped(lua_State* L)
+{
+    bool result = IsFileDropped();
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int read(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+    char* result = LoadFileText(filename);
+
+    if (result != NULL) {
+        lua_pushstring(L, result);
+        UnloadFileText(result);
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
+}
+
+static int remove(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+
+    try {
+        bool result = std::filesystem::remove(filename);
+        lua_pushboolean(L, result);
+    } catch (const std::exception& e) {
+        TraceLog(LOG_WARNING, e.what());
+        lua_pushboolean(L, false);
+    }
+
+    return 1;
+}
+
+static int write(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+    const char* text = luaL_checkstring(L, 2);
+    bool result = SaveFileText(filename, (char*)text);
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
 static const luaL_Reg functions[] = {
-    { "loadFileText", loadFileText },
-    { "saveFileText", saveFileText },
-    { "fileExists", fileExists },
-    { "directoryExists", directoryExists },
-    { "isFileExtension", isFileExtension },
-    { "getFileLength", getFileLength },
-    { "getFileExtension", getFileExtension },
-    { "getFileName", getFileName },
-    { "getFileNameWithoutExt", getFileNameWithoutExt },
-    { "getDirectoryPath", getDirectoryPath },
-    { "getPrevDirectoryPath", getPrevDirectoryPath },
-    { "getWorkingDirectory", getWorkingDirectory },
-    { "getApplicationDirectory", getApplicationDirectory },
     { "changeDirectory", changeDirectory },
-    { "isPathFile", isPathFile },
-    { "loadDirectoryFiles", loadDirectoryFiles },
-    { "loadDirectoryFilesEx", loadDirectoryFilesEx },
+    { "createDirectory", createDirectory },
+    { "exists", exists },
+    { "getApplicationDirectory", getApplicationDirectory },
+    { "getDirectoryItems", getDirectoryItems },
+    { "getDroppedItems", getDroppedItems },
+    { "getLastModified", getLastModified },
+    { "getRealDirectory", getRealDirectory },
+    { "getSize", getSize },
+    { "getWorkingDirectory", getWorkingDirectory },
+    { "isDirectory", isDirectory },
+    { "isFile", isFile },
     { "isFileDropped", isFileDropped },
-    { "loadDroppedFiles", loadDroppedFiles },
-    { "getFileModTime", getFileModTime },
+    { "read", read },
+    { "remove", remove },
+    { "write", write },
     { NULL, NULL }
 };
 
@@ -261,6 +228,8 @@ int luaopen_filesystem(lua_State* L)
     lua_newtable(L);
     luaL_setfuncs(L, functions, 0);
     lua_setfield(L, -2, "filesystem");
+
+    lua_pop(L, 1);
 
     return 1;
 }

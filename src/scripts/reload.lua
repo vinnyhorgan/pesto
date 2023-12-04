@@ -1,7 +1,7 @@
 -- Hot reload implementation based on rxi's lurker <3
 local reload = {}
 
-local callbacks = {"update", "draw"}
+local callbacks = { "update", "draw" }
 
 function reload.init()
     reload.path = "."
@@ -21,7 +21,7 @@ end
 function reload.initwrappers()
     for _, v in pairs(callbacks) do
         reload.funcwrappers[v] = function(...)
-            local args = {...}
+            local args = { ... }
 
             xpcall(function()
                 return reload.pestofuncs[v] and reload.pestofuncs[v](unpack(args))
@@ -56,7 +56,8 @@ function reload.onerror(e)
         pesto.graphics.clear(172, 57, 49, 255)
 
         pesto.graphics.text("Reload error!", 10, 10)
-        pesto.graphics.wrappedText(e .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(), pesto.window.getHeight())
+        pesto.graphics.wrappedText(e .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(),
+            pesto.window.getHeight())
     end
 end
 
@@ -64,7 +65,6 @@ function reload.exitinitstate()
     reload.state = "normal"
     reload.initwrappers()
 end
-
 
 function reload.exiterrorstate()
     reload.state = "normal"
@@ -96,10 +96,10 @@ end
 
 function reload.getchanged()
     local function fn(f)
-        return reload.files[f] ~= pesto.filesystem.getFileModTime(f)
+        return reload.files[f] ~= pesto.filesystem.getLastModified(f)
     end
 
-    return pesto.util.filter(pesto.filesystem.loadDirectoryFilesEx(reload.path, ".lua", true), fn)
+    return pesto.util.filter(pesto.filesystem.getDirectoryItems(reload.path, ".lua", true), fn)
 end
 
 function reload.modname(f)
@@ -107,7 +107,7 @@ function reload.modname(f)
 end
 
 function reload.resetfile(f)
-    reload.files[f] = pesto.filesystem.getFileModTime(f)
+    reload.files[f] = pesto.filesystem.getLastModified(f)
 end
 
 function reload.hotswapfile(f)

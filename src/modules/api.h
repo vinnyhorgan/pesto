@@ -6,7 +6,7 @@
 
 // Global variables
 extern bool shouldQuit;
-extern Font font;
+extern Font currentFont;
 extern Color currentColor;
 
 int luaopen_pesto(lua_State* L);

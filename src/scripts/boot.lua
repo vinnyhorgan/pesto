@@ -55,19 +55,19 @@ function pesto.init()
         error("No directory specified!")
     end
 
-    if not pesto.filesystem.directoryExists(directory) then
+    if not pesto.filesystem.isDirectory(directory) then
         error("Directory does not exist!")
     end
 
     pesto.filesystem.changeDirectory(directory)
 
-    if not pesto.filesystem.fileExists("main.lua") then
+    if not pesto.filesystem.isFile("main.lua") then
         error("No main.lua found!")
     end
 
     package.path = package.path .. ";" .. directory .. "/?.lua"
 
-    if pesto.filesystem.fileExists("conf.lua") then
+    if pesto.filesystem.isFile("conf.lua") then
         require("conf")
     end
 

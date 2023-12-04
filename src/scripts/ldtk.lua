@@ -66,7 +66,7 @@ local function create_layer_object(self, data, auto)
     self.id = data.__identifier
     self.x, self.y = data.__pxTotalOffsetX, data.__pxTotalOffsetY
     self.visible = data.visible
-    self.color = {255, 255, 255, data.__opacity}
+    self.color = { 255, 255, 255, data.__opacity }
 
     self.width = data.__cWid
     self.height = data.__cHei
@@ -111,7 +111,8 @@ local function draw_layer_object(self)
             local quad = cache.quods[self.tileset.uid][self.tiles[i].t]
 
             pesto.graphics.drawPro(cache.tilesets[self.tileset.uid], quad.x, quad.y, quad.w, quad.h,
-                self.x + self.tiles[i].px[1] + self._offsetX[self.tiles[i].f], self.y + self.tiles[i].px[2] + self._offsetY[self.tiles[i].f],
+                self.x + self.tiles[i].px[1] + self._offsetX[self.tiles[i].f],
+                self.y + self.tiles[i].px[2] + self._offsetY[self.tiles[i].f],
                 quad.w * flipX[self.tiles[i].f], quad.h * flipY[self.tiles[i].f], 0, 0, 0)
         end
 
@@ -125,7 +126,7 @@ end
 -- Converts hex color to RGB
 function ldtk.hex2rgb(color)
     local r = load("return {0x" .. color:sub(2, 3) .. ",0x" .. color:sub(4, 5) .. ",0x" .. color:sub(6, 7) .. "}")()
-    return {r[1], r[2], r[3]}
+    return { r[1], r[2], r[3] }
 end
 
 --Checks if a table is empty.
@@ -139,7 +140,7 @@ end
 ----------- LDTK Functions -------------
 --loads project settings
 function ldtk:load(file, level)
-    self.data = pesto.json.decode(pesto.filesystem.loadFileText(file))
+    self.data = pesto.json.decode(pesto.filesystem.read(file))
     self.entities = {}
     self.x, self.y = self.x or 0, self.x or 0
     self.countOfLevels = #self.data.levels
@@ -234,7 +235,7 @@ local types = {
     end,
     Tiles = function(currentLayer, order, level)
         if not is_empty(currentLayer.gridTiles) then
-            local layer = {draw = draw_layer_object}
+            local layer = { draw = draw_layer_object }
             create_layer_object(layer, currentLayer, false)
             layer.order = order
             ldtk.onLayer(layer, level)
@@ -242,7 +243,7 @@ local types = {
     end,
     IntGrid = function(currentLayer, order, level)
         if not is_empty(currentLayer.autoLayerTiles) and currentLayer.__tilesetDefUid then
-            local layer = {draw = draw_layer_object}
+            local layer = { draw = draw_layer_object }
             create_layer_object(layer, currentLayer, true)
             layer.order = order
             ldtk.onLayer(layer, level)
@@ -250,7 +251,7 @@ local types = {
     end,
     AutoLayer = function(currentLayer, order, level)
         if not is_empty(currentLayer.autoLayerTiles) and currentLayer.__tilesetDefUid then
-            local layer = {draw = draw_layer_object}
+            local layer = { draw = draw_layer_object }
             create_layer_object(layer, currentLayer, true)
             layer.order = order
             ldtk.onLayer(layer, level)
@@ -269,7 +270,8 @@ function ldtk:goTo(index)
 
     local layers
     if self.data.externalLevels then
-        layers = pesto.json.decode(pesto.filesystem.loadFileText(self.getPath(self.data.levels[index].externalRelPath))).layerInstances
+        layers = pesto.json.decode(pesto.filesystem.read(self.getPath(self.data.levels[index].externalRelPath)))
+            .layerInstances
     else
         layers = self.data.levels[index].layerInstances
     end
@@ -310,7 +312,7 @@ end
 function ldtk:level(name)
     self:goTo(
         self.levels[tostring(name)] or
-            error('There are no levels with the name: "' .. tostring(name) .. '".\nDid you save? (ctrl +s)')
+        error('There are no levels with the name: "' .. tostring(name) .. '".\nDid you save? (ctrl +s)')
     )
 end
 

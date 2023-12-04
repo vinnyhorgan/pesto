@@ -4,7 +4,7 @@
 #include "../../assets/noto.ttf.h"
 
 bool shouldQuit = false;
-Font font;
+Font currentFont;
 
 static int init(lua_State* L)
 {
@@ -32,7 +32,7 @@ static int init(lua_State* L)
     // ExportFontAsCode(font, PROJECT_PATH "assets/noto.ttf.h");
     // UnloadFont(font);
 
-    font = LoadFont_Noto();
+    currentFont = LoadFont_Noto();
 
     SetExitKey(KEY_NULL);
 
