@@ -14,7 +14,7 @@ static int init(lua_State* L)
 
     SetTraceLogLevel(LOG_WARNING);
 
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIGHDPI);
     InitWindow(width, height, title);
 
     Image icon;

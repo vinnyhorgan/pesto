@@ -133,7 +133,8 @@ static int isDirectory(lua_State* L)
     if (result) {
         lua_pushboolean(L, false);
     } else {
-        lua_pushboolean(L, true);
+        bool directoryExists = DirectoryExists(path);
+        lua_pushboolean(L, directoryExists);
     }
 
     return 1;
@@ -143,12 +144,7 @@ static int isFile(lua_State* L)
 {
     const char* path = luaL_checkstring(L, 1);
     bool result = IsPathFile(path);
-
-    if (result) {
-        lua_pushboolean(L, true);
-    } else {
-        lua_pushboolean(L, false);
-    }
+    lua_pushboolean(L, result);
 
     return 1;
 }
