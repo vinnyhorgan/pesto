@@ -9,7 +9,7 @@
 #define RRES_SUPPORT_ENCRYPTION_XCHACHA20
 #include "../lib/rres/rres-raylib.h"
 
-static const char* GetCompressionName(int compType)
+static const char* getCompressionName(int compType)
 {
     if (compType == RRES_COMP_NONE)
         return "none";
@@ -23,7 +23,7 @@ static const char* GetCompressionName(int compType)
         return "Undefined";
 }
 
-static const char* GetCipherName(int cipherType)
+static const char* getCipherName(int cipherType)
 {
     if (cipherType == RRES_CIPHER_NONE)
         return "none";
@@ -35,144 +35,197 @@ static const char* GetCipherName(int cipherType)
         return "Undefined";
 }
 
-static unsigned char* LoadDataBuffer(rresResourceChunkData data, unsigned int rawSize)
+static int getInfo(lua_State* L)
 {
-    unsigned char* buffer = (unsigned char*)RRES_CALLOC((data.propCount + 1) * sizeof(unsigned int) + rawSize, 1);
+    const char* rresFilename = luaL_checkstring(L, 1);
 
-    memcpy(buffer, &data.propCount, sizeof(unsigned int));
-    for (int i = 0; i < data.propCount; i++)
-        memcpy(buffer + (i + 1) * sizeof(unsigned int), &data.props[i], sizeof(unsigned int));
-    memcpy(buffer + (data.propCount + 1) * sizeof(unsigned int), data.raw, rawSize);
-
-    return buffer;
-}
-
-static void UnloadDataBuffer(unsigned char* buffer)
-{
-    RRES_FREE(buffer);
-}
-
-static int info(lua_State* L)
-{
-    const char* filename = luaL_checkstring(L, 1);
-
-    rresCentralDir dir = rresLoadCentralDirectory(filename);
-
-    if (dir.count == 0)
-        printf("WARNING: Central Directory not available\n"); // No central directory
-
-    // NOTE: With no CDIR we can still load the contained resources info,
-    // but we can't know the original input files that generated the resource chunks
-
-    // Load ALL resource chunks info from .rres file
-    unsigned int chunkCount = 0;
-    rresResourceChunkInfo* infos = rresLoadResourceChunkInfoAll(filename, &chunkCount);
-
-    unsigned int prevId = 0;
-
-    // Display resource chunks info
-    // NOTE: Central Directory relates input files to rres resource chunks,
-    // some input files could generate multiple rres resource chunks (Font files)
-    for (unsigned int i = 0; i < chunkCount; i++) {
-        for (unsigned int j = 0; j < dir.count; j++) {
-            if ((infos[i].id == dir.entries[j].id) && (infos[i].id != prevId)) {
-                printf("Input File: %s\n", dir.entries[j].fileName);
-                printf("Resource(s) Offset: 0x%08x\n", dir.entries[j].offset);
-                prevId = dir.entries[j].id;
-                break;
-            }
-        }
-
-        printf("    Resource Chunk: %c%c%c%c\n", infos[i].type[0], infos[i].type[1], infos[i].type[2], infos[i].type[3]);
-        printf("       > id:            0x%08x\n", infos[i].id);
-        printf("       > compType:      %s (%i)\n", GetCompressionName((int)infos[i].compType), (int)infos[i].compType);
-        printf("       > cipherType:    %s (%i)\n", GetCipherName((int)infos[i].cipherType), (int)infos[i].cipherType);
-        printf("       > baseSize:      %i\n", infos[i].baseSize);
-        printf("       > packedSize:    %i (%i%%)\n", infos[i].packedSize, (int)(((float)infos[i].packedSize / infos[i].baseSize) * 100)); // Get compression ratio
-        printf("       > nextOffset:    %i\n", infos[i].nextOffset);
-        printf("       > CRC32:         0x%08x\n", infos[i].crc32);
+    if (!FileExists(rresFilename)) {
+        return luaL_error(L, "RRES file %s does not exist.", rresFilename);
     }
 
-    // Free allocated memory for chunks info
-    RRES_FREE(infos);
+    rresCentralDir dir = rresLoadCentralDirectory(rresFilename);
 
-    return 0;
+    if (dir.count == 0) {
+        return luaL_error(L, "RRES file %s does not contain a central directory.", rresFilename);
+    }
+
+    lua_newtable(L);
+
+    for (unsigned int i = 0; i < dir.count; i++) {
+        rresResourceChunkInfo info = rresLoadResourceChunkInfo(rresFilename, dir.entries[i].id);
+
+        lua_newtable(L);
+
+        lua_pushstring(L, "input");
+        lua_pushstring(L, dir.entries[i].fileName);
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "offset");
+        lua_pushstring(L, TextFormat("0x%08x", dir.entries[i].offset));
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "type");
+        lua_pushstring(L, TextFormat("%c%c%c%c", info.type[0], info.type[1], info.type[2], info.type[3]));
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "id");
+        lua_pushstring(L, TextFormat("0x%08x", dir.entries[i].offset));
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "compression");
+        lua_pushstring(L, getCompressionName((int)info.compType));
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "cipher");
+        lua_pushstring(L, getCipherName((int)info.cipherType));
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "baseSize");
+        lua_pushstring(L, TextFormat("%i", info.baseSize));
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "packedSize");
+        lua_pushstring(L, TextFormat("%i", info.packedSize));
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "nextOffset");
+        lua_pushstring(L, TextFormat("%i", info.nextOffset));
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "crc32");
+        lua_pushstring(L, TextFormat("0x%08x", info.crc32));
+        lua_settable(L, -3);
+
+        lua_rawseti(L, -2, i + 1);
+    }
+
+    return 1;
 }
 
-static int saveText(lua_State* L)
+static int getPassword(lua_State* L)
 {
-    const char* filename = luaL_checkstring(L, 1);
-    const char* text = luaL_checkstring(L, 2);
+    const char* result = rresGetCipherPassword();
+    lua_pushstring(L, result);
 
-    FILE* rresFile = fopen(filename, "wb");
+    return 1;
+}
 
-    // Header
+static int loadText(lua_State* L)
+{
+    const char* rresFilename = luaL_checkstring(L, 1);
+    const char* filename = luaL_checkstring(L, 2);
 
-    rresFileHeader header;
-    header.id[0] = 'r';
-    header.id[1] = 'r';
-    header.id[2] = 'e';
-    header.id[3] = 's';
-    header.version = 100;
-    header.chunkCount = 1;
-    header.cdOffset = 0;
-    header.reserved = 0;
+    if (!FileExists(rresFilename)) {
+        return luaL_error(L, "RRES file %s does not exist.", rresFilename);
+    }
 
-    fwrite(&header, sizeof(rresFileHeader), 1, rresFile);
+    rresCentralDir dir = rresLoadCentralDirectory(rresFilename);
 
-    // Chunks
+    if (dir.count == 0) {
+        return luaL_error(L, "RRES file %s does not contain a central directory.", rresFilename);
+    }
 
-    rresResourceChunkInfo chunkInfo = { 0 };
-    rresResourceChunkData chunkData = { 0 };
+    unsigned int id = rresGetResourceId(dir, filename);
+    rresResourceChunk chunk = rresLoadResourceChunk(rresFilename, id);
 
-    unsigned char* buffer = NULL;
+    int result = UnpackResourceChunk(&chunk);
 
-    // Text
+    if (result != 0) {
+        rresUnloadResourceChunk(chunk);
+        rresUnloadCentralDirectory(dir);
+    }
 
-    unsigned int rawSize = (unsigned int)strlen(text);
+    if (result == 1) {
+        return luaL_error(L, "Resource %s uses an unsupported encryption algorithm.", filename);
+    } else if (result == 2) {
+        return luaL_error(L, "Resource %s cannot be decrypted with provided password.", filename);
+    } else if (result == 3) {
+        return luaL_error(L, "Resource %s uses an unsupported compression algorithm.", filename);
+    } else if (result == 4) {
+        return luaL_error(L, "Resource %s cannot be decompressed.", filename);
+    }
 
-    chunkInfo.type[0] = 'T';
-    chunkInfo.type[1] = 'E';
-    chunkInfo.type[2] = 'X';
-    chunkInfo.type[3] = 'T';
+    char* text = LoadTextFromResource(chunk);
 
-    chunkInfo.id = rresComputeCRC32((unsigned char*)"file", (int)strlen("file"));
+    rresUnloadResourceChunk(chunk);
+    rresUnloadCentralDirectory(dir);
 
-    chunkInfo.compType = RRES_COMP_NONE;
-    chunkInfo.cipherType = RRES_CIPHER_NONE;
-    chunkInfo.flags = 0;
-    chunkInfo.baseSize = 5 * sizeof(unsigned int) + rawSize;
-    chunkInfo.packedSize = chunkInfo.baseSize;
-    chunkInfo.nextOffset = 0;
-    chunkInfo.reserved = 0;
+    lua_pushstring(L, text);
 
-    chunkData.propCount = 4;
-    chunkData.props = (unsigned int*)RRES_CALLOC(chunkData.propCount, sizeof(unsigned int));
-    chunkData.props[0] = rawSize;
-    chunkData.props[1] = RRES_TEXT_ENCODING_UNDEFINED;
-    chunkData.props[2] = RRES_CODE_LANG_UNDEFINED;
-    chunkData.props[3] = 0x0409;
-    chunkData.raw = (void*)text;
+    return 1;
+}
 
-    buffer = LoadDataBuffer(chunkData, rawSize);
+static int loadTexture(lua_State* L)
+{
+    const char* rresFilename = luaL_checkstring(L, 1);
+    const char* filename = luaL_checkstring(L, 2);
 
-    chunkInfo.crc32 = rresComputeCRC32(buffer, chunkInfo.packedSize);
+    if (!FileExists(rresFilename)) {
+        return luaL_error(L, "RRES file %s does not exist.", rresFilename);
+    }
 
-    fwrite(&chunkInfo, sizeof(rresResourceChunkInfo), 1, rresFile);
-    fwrite(buffer, 1, chunkInfo.packedSize, rresFile);
+    rresCentralDir dir = rresLoadCentralDirectory(rresFilename);
 
-    memset(&chunkInfo, 0, sizeof(rresResourceChunkInfo));
-    RRES_FREE(chunkData.props);
-    UnloadDataBuffer(buffer);
+    if (dir.count == 0) {
+        return luaL_error(L, "RRES file %s does not contain a central directory.", rresFilename);
+    }
 
-    fclose(rresFile);
+    unsigned int id = rresGetResourceId(dir, filename);
+    rresResourceChunk chunk = rresLoadResourceChunk(rresFilename, id);
+
+    int result = UnpackResourceChunk(&chunk);
+
+    if (result != 0) {
+        rresUnloadResourceChunk(chunk);
+        rresUnloadCentralDirectory(dir);
+    }
+
+    if (result == 1) {
+        return luaL_error(L, "Resource %s uses an unsupported encryption algorithm.", filename);
+    } else if (result == 2) {
+        return luaL_error(L, "Resource %s cannot be decrypted with provided password.", filename);
+    } else if (result == 3) {
+        return luaL_error(L, "Resource %s uses an unsupported compression algorithm.", filename);
+    } else if (result == 4) {
+        return luaL_error(L, "Resource %s cannot be decompressed.", filename);
+    }
+
+    Image image = LoadImageFromResource(chunk);
+
+    if (image.data == NULL) {
+        rresUnloadResourceChunk(chunk);
+        rresUnloadCentralDirectory(dir);
+
+        return luaL_error(L, "Resource %s could not be loaded.", filename);
+    }
+
+    Texture texture = LoadTextureFromImage(image);
+    UnloadImage(image);
+
+    rresUnloadResourceChunk(chunk);
+    rresUnloadCentralDirectory(dir);
+
+    void* ud = lua_newuserdata(L, sizeof(Texture));
+    memcpy(ud, &texture, sizeof(Texture));
+    luaL_setmetatable(L, "Texture");
+
+    return 1;
+}
+
+static int setPassword(lua_State* L)
+{
+    const char* password = luaL_checkstring(L, 1);
+    rresSetCipherPassword(password);
 
     return 0;
 }
 
 static const luaL_Reg functions[] = {
-    { "info", info },
-    { "saveText", saveText },
+    { "getInfo", getInfo },
+    { "getPassword", getPassword },
+    { "loadText", loadText },
+    { "loadTexture", loadTexture },
+    { "setPassword", setPassword },
     { NULL, NULL }
 };
 
