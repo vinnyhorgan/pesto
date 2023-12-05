@@ -7,7 +7,7 @@ set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE)
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)
-    add_compile_options(/wd4005 /wd4018)
+    add_compile_options(/wd4005 /wd4018 /wd4996)
 endif()
 
 set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "")

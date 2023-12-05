@@ -120,6 +120,10 @@ RLAPI void SetBaseDirectory(const char *baseDir);               // Set base dire
 
 #if defined(RRES_RAYLIB_IMPLEMENTATION)
 
+#if defined(__cplusplus)
+extern "C" {            // Prevents name mangling of functions
+#endif
+
 // Compression/Encryption algorithms supported
 // NOTE: They should be the same supported by the rres packaging tool (rrespacker)
 // https://github.com/phoboslab/qoi
@@ -128,17 +132,18 @@ RLAPI void SetBaseDirectory(const char *baseDir);               // Set base dire
 #if defined(RRES_SUPPORT_COMPRESSION_LZ4)
     // https://github.com/lz4/lz4
     #include "external/lz4.h"               // Compression algorithm: LZ4
-    #include "external/lz4.c"               // Compression algorithm implementation: LZ4
 #endif
 #if defined(RRES_SUPPORT_ENCRYPTION_AES)
     // https://github.com/kokke/tiny-AES-c
     #include "external/aes.h"               // Encryption algorithm: AES
-    #include "external/aes.c"               // Encryption algorithm implementation: AES
 #endif
 #if defined(RRES_SUPPORT_ENCRYPTION_XCHACHA20)
     // https://github.com/LoupVaillant/Monocypher
     #include "external/monocypher.h"        // Encryption algorithm: XChaCha20-Poly1305
-    #include "external/monocypher.c"        // Encryption algorithm implementation: XChaCha20-Poly1305
+#endif
+
+#if defined(__cplusplus)
+}
 #endif
 
 //----------------------------------------------------------------------------------
@@ -559,18 +564,18 @@ int UnpackResourceChunk(rresResourceChunk *chunk)
             memcpy(salt, ((unsigned char *)chunk->data.raw) + (chunk->info.packedSize - 16 - 16), 16);
 
             // Key stretching configuration
-            crypto_argon2_config config = {
-                .algorithm = CRYPTO_ARGON2_I,           // Algorithm: Argon2i
-                .nb_blocks = 16384,                     // Blocks: 16 MB
-                .nb_passes = 3,                         // Iterations
-                .nb_lanes  = 1                          // Single-threaded
-            };
-            crypto_argon2_inputs inputs = {
-                .pass = (const uint8_t *)rresGetCipherPassword(),   // User password
-                .pass_size = strlen(rresGetCipherPassword()),       // Password length
-                .salt = salt,                           // Salt for the password
-                .salt_size = 16
-            };
+            crypto_argon2_config config;
+            config.algorithm = CRYPTO_ARGON2_I;           // Algorithm: Argon2i
+            config.nb_blocks = 16384;                     // Blocks: 16 MB
+            config.nb_passes = 3;                         // Iterations
+            config.nb_lanes  = 1;                          // Single-threaded
+
+            crypto_argon2_inputs inputs;
+            inputs.pass = (const uint8_t *)rresGetCipherPassword();   // User password
+            inputs.pass_size = (uint32_t)strlen(rresGetCipherPassword());       // Password length
+            inputs.salt = salt;                           // Salt for the password
+            inputs.salt_size = 16;
+
             crypto_argon2_extras extras = { 0 };        // Extra parameters unused
 
             void *workArea = RL_MALLOC(config.nb_blocks*1024);    // Key stretching work area
@@ -634,18 +639,18 @@ int UnpackResourceChunk(rresResourceChunk *chunk)
             memcpy(salt, ((unsigned char *)chunk->data.raw) + (chunk->info.packedSize - 16 - 24 - 16), 16);
 
             // Key stretching configuration
-            crypto_argon2_config config = {
-                .algorithm = CRYPTO_ARGON2_I,           // Algorithm: Argon2i
-                .nb_blocks = 16384,                     // Blocks: 16 MB
-                .nb_passes = 3,                         // Iterations
-                .nb_lanes  = 1                          // Single-threaded
-            };
-            crypto_argon2_inputs inputs = {
-                .pass = (const uint8_t *)rresGetCipherPassword(),   // User password
-                .pass_size = strlen(rresGetCipherPassword()),       // Password length
-                .salt = salt,                           // Salt for the password
-                .salt_size = 16
-            };
+            crypto_argon2_config config;
+            config.algorithm = CRYPTO_ARGON2_I;           // Algorithm: Argon2i
+            config.nb_blocks = 16384;                     // Blocks: 16 MB
+            config.nb_passes = 3;                         // Iterations
+            config.nb_lanes  = 1;                          // Single-threaded
+
+            crypto_argon2_inputs inputs;
+            inputs.pass = (const uint8_t *)rresGetCipherPassword();   // User password
+            inputs.pass_size = (uint32_t)strlen(rresGetCipherPassword());       // Password length
+            inputs.salt = salt;                           // Salt for the password
+            inputs.salt_size = 16;
+
             crypto_argon2_extras extras = { 0 };        // Extra parameters unused
 
             void *workArea = RL_MALLOC(config.nb_blocks*1024);    // Key stretching work area
@@ -667,7 +672,7 @@ int UnpackResourceChunk(rresResourceChunk *chunk)
             memcpy(mac, ((unsigned char *)chunk->data.raw) + (chunk->info.packedSize - 16), 16);
 
             // Message decryption requires key, nonce and MAC
-            int decryptResult = crypto_aead_unlock(decryptedData, mac, key, nonce, NULL, 0, chunk->data.raw, (chunk->info.packedSize - 16 - 24 - 16));
+            int decryptResult = crypto_aead_unlock(decryptedData, mac, key, nonce, NULL, 0, (uint8_t*)chunk->data.raw, (chunk->info.packedSize - 16 - 24 - 16));
 
             // Wipe secrets if they are no longer needed
             crypto_wipe(nonce, 24);
@@ -736,7 +741,7 @@ int UnpackResourceChunk(rresResourceChunk *chunk)
             {
                 int uncompDataSize = 0;
                 uncompData = (unsigned char *)RRES_CALLOC(chunk->info.baseSize, 1);
-                uncompDataSize = LZ4_decompress_safe(decryptedData, uncompData, chunk->info.packedSize, chunk->info.baseSize);
+                uncompDataSize = LZ4_decompress_safe((char*)decryptedData, (char*)uncompData, chunk->info.packedSize, chunk->info.baseSize);
 
                 if ((uncompData != NULL) && (uncompDataSize > 0))     // Decompression successful
                 {
