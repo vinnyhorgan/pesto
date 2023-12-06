@@ -5,8 +5,6 @@
 
 #define RRES_RAYLIB_IMPLEMENTATION
 #define RRES_SUPPORT_COMPRESSION_LZ4
-#define RRES_SUPPORT_ENCRYPTION_AES
-#define RRES_SUPPORT_ENCRYPTION_XCHACHA20
 #include "../lib/rres/rres-raylib.h"
 
 static const char* getCompressionName(int compType)
@@ -98,14 +96,6 @@ static int getInfo(lua_State* L)
 
         lua_rawseti(L, -2, i + 1);
     }
-
-    return 1;
-}
-
-static int getPassword(lua_State* L)
-{
-    const char* result = rresGetCipherPassword();
-    lua_pushstring(L, result);
 
     return 1;
 }
@@ -212,20 +202,10 @@ static int loadTexture(lua_State* L)
     return 1;
 }
 
-static int setPassword(lua_State* L)
-{
-    const char* password = luaL_checkstring(L, 1);
-    rresSetCipherPassword(password);
-
-    return 0;
-}
-
 static const luaL_Reg functions[] = {
     { "getInfo", getInfo },
-    { "getPassword", getPassword },
     { "loadText", loadText },
     { "loadTexture", loadTexture },
-    { "setPassword", setPassword },
     { NULL, NULL }
 };
 
