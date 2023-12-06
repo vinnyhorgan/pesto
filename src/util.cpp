@@ -24,6 +24,15 @@ void require(lua_State* L, const char* name)
     lua_call(L, 1, 1);
 }
 
+int check_boolean(lua_State* L, int index)
+{
+    if (!lua_isboolean(L, index)) {
+        luaL_argerror(L, index, TextFormat("boolean expected, got %s", luaL_typename(L, index)));
+    }
+
+    return lua_toboolean(L, index);
+}
+
 void generateHeaders()
 {
     SetTraceLogLevel(LOG_NONE);
@@ -31,6 +40,8 @@ void generateHeaders()
     Image icon = LoadImage(PROJECT_PATH "assets/icon.png");
     ExportImageAsCode(icon, PROJECT_PATH "assets/icon.png.h");
     UnloadImage(icon);
+
+    // Font can't be generated without opengl context
 
     generateHeader("src/scripts/boot.lua");
     generateHeader("src/scripts/state.lua");

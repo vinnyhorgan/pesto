@@ -264,6 +264,28 @@ static int endTextureMode(lua_State* L)
     return 0;
 }
 
+static int beginDrawing(lua_State* L)
+{
+    BeginDrawing();
+
+    return 0;
+}
+
+static int endDrawing(lua_State* L)
+{
+    EndDrawing();
+
+    return 0;
+}
+
+static int getDelta(lua_State* L)
+{
+    float result = GetFrameTime();
+    lua_pushnumber(L, result);
+
+    return 1;
+}
+
 static const luaL_Reg functions[] = {
     { "clear", clear },
     { "setColor", setColor },
@@ -285,6 +307,9 @@ static const luaL_Reg functions[] = {
     { "beginTextureMode", beginTextureMode },
     { "endTextureMode", endTextureMode },
     { "drawRenderTexturePro", drawRenderTexturePro },
+    { "beginDrawing", beginDrawing },
+    { "endDrawing", endDrawing },
+    { "getDelta", getDelta },
     { NULL, NULL }
 };
 

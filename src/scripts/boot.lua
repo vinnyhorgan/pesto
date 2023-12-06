@@ -112,7 +112,7 @@ function pesto.run()
 
         local scale = math.min(pesto.window.getWidth() / config.gameWidth, pesto.window.getHeight() / config.gameHeight)
 
-        local dt = pesto.window.getDelta()
+        local dt = pesto.graphics.getDelta()
 
         if config.debug then
             pesto.reload.update(dt)
@@ -133,7 +133,7 @@ function pesto.run()
             pesto.graphics.endTextureMode()
         end
 
-        pesto.window.beginDrawing()
+        pesto.graphics.beginDrawing()
 
         pesto.graphics.clear(config.borderColor[1], config.borderColor[2], config.borderColor[3], config.borderColor[4])
 
@@ -154,7 +154,7 @@ function pesto.run()
 
         pesto.gui.endDrawing()
 
-        pesto.window.endDrawing()
+        pesto.graphics.endDrawing()
     end
 
     pesto.gui.shutdown()
@@ -171,7 +171,7 @@ function pesto.errhand(msg)
     end
 
     while not pesto.window.shouldClose() do
-        pesto.window.beginDrawing()
+        pesto.graphics.beginDrawing()
 
         pesto.graphics.clear(119, 173, 120, 255)
 
@@ -179,7 +179,7 @@ function pesto.errhand(msg)
         pesto.graphics.wrappedText(msg .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(),
             pesto.window.getHeight())
 
-        pesto.window.endDrawing()
+        pesto.graphics.endDrawing()
     end
 
     pesto.window.close()

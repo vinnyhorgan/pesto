@@ -1,10 +1,149 @@
 #include "api.h"
 
+#include "../util.h"
+
 #include "../../assets/icon.png.h"
 #include "../../assets/noto.ttf.h"
 
 bool shouldQuit = false;
 Font currentFont;
+
+static int close(lua_State* L)
+{
+    CloseWindow();
+
+    return 0;
+}
+
+static int getCurrentMonitor(lua_State* L)
+{
+    int result = GetCurrentMonitor();
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getDPIScale(lua_State* L)
+{
+    Vector2 result = GetWindowScaleDPI();
+    lua_pushnumber(L, result.x);
+    lua_pushnumber(L, result.y);
+
+    return 2;
+}
+
+static int getHeight(lua_State* L)
+{
+    int result = GetRenderHeight();
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getMonitorCount(lua_State* L)
+{
+    int result = GetMonitorCount();
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getMonitorHeight(lua_State* L)
+{
+    int monitor = (int)luaL_checkinteger(L, 1);
+    int result = GetMonitorHeight(monitor);
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getMonitorName(lua_State* L)
+{
+    int monitor = (int)luaL_checkinteger(L, 1);
+    const char* result = GetMonitorName(monitor);
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
+static int getMonitorPhysicalHeight(lua_State* L)
+{
+    int monitor = (int)luaL_checkinteger(L, 1);
+    int result = GetMonitorPhysicalHeight(monitor);
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getMonitorPhysicalWidth(lua_State* L)
+{
+    int monitor = (int)luaL_checkinteger(L, 1);
+    int result = GetMonitorPhysicalWidth(monitor);
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getMonitorPosition(lua_State* L)
+{
+    int monitor = (int)luaL_checkinteger(L, 1);
+    Vector2 result = GetMonitorPosition(monitor);
+    lua_pushnumber(L, result.x);
+    lua_pushnumber(L, result.y);
+
+    return 2;
+}
+
+static int getMonitorRefreshRate(lua_State* L)
+{
+    int monitor = (int)luaL_checkinteger(L, 1);
+    int result = GetMonitorRefreshRate(monitor);
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getMonitorWidth(lua_State* L)
+{
+    int monitor = (int)luaL_checkinteger(L, 1);
+    int result = GetMonitorWidth(monitor);
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getPosition(lua_State* L)
+{
+    Vector2 result = GetWindowPosition();
+    lua_pushnumber(L, result.x);
+    lua_pushnumber(L, result.y);
+
+    return 2;
+}
+
+static int getResizable(lua_State* L)
+{
+    bool result = IsWindowState(FLAG_WINDOW_RESIZABLE);
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int getVSync(lua_State* L)
+{
+    bool result = IsWindowState(FLAG_VSYNC_HINT);
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int getWidth(lua_State* L)
+{
+    int result = GetRenderWidth();
+    lua_pushinteger(L, result);
+
+    return 1;
+}
 
 static int init(lua_State* L)
 {
@@ -12,10 +151,12 @@ static int init(lua_State* L)
     int height = (int)luaL_checkinteger(L, 2);
     const char* title = luaL_checkstring(L, 3);
 
-    SetTraceLogLevel(LOG_WARNING);
-
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIGHDPI);
     InitWindow(width, height, title);
+
+    SetExitKey(KEY_NULL);
+
+    currentFont = LoadFont_Noto();
 
     Image icon;
     icon.data = ICON_DATA;
@@ -26,37 +167,12 @@ static int init(lua_State* L)
 
     SetWindowIcon(icon);
 
-    // Generating the font header requires opengl context
-
-    // Font font = LoadFontEx(PROJECT_PATH "assets/noto.ttf", 18, NULL, 0);
-    // ExportFontAsCode(font, PROJECT_PATH "assets/noto.ttf.h");
-    // UnloadFont(font);
-
-    currentFont = LoadFont_Noto();
-
-    SetExitKey(KEY_NULL);
-
     return 0;
 }
 
-static int close(lua_State* L)
+static int isFocused(lua_State* L)
 {
-    CloseWindow();
-
-    return 0;
-}
-
-static int shouldClose(lua_State* L)
-{
-    bool result = WindowShouldClose() || shouldQuit;
-    lua_pushboolean(L, result);
-
-    return 1;
-}
-
-static int isReady(lua_State* L)
-{
-    bool result = IsWindowReady();
+    bool result = IsWindowFocused();
     lua_pushboolean(L, result);
 
     return 1;
@@ -78,14 +194,6 @@ static int isHidden(lua_State* L)
     return 1;
 }
 
-static int isMinimized(lua_State* L)
-{
-    bool result = IsWindowMinimized();
-    lua_pushboolean(L, result);
-
-    return 1;
-}
-
 static int isMaximized(lua_State* L)
 {
     bool result = IsWindowMaximized();
@@ -94,9 +202,17 @@ static int isMaximized(lua_State* L)
     return 1;
 }
 
-static int isFocused(lua_State* L)
+static int isMinimized(lua_State* L)
 {
-    bool result = IsWindowFocused();
+    bool result = IsWindowMinimized();
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int isReady(lua_State* L)
+{
+    bool result = IsWindowReady();
     lua_pushboolean(L, result);
 
     return 1;
@@ -108,41 +224,6 @@ static int isResized(lua_State* L)
     lua_pushboolean(L, result);
 
     return 1;
-}
-
-static int getResizable(lua_State* L)
-{
-    bool result = IsWindowState(FLAG_WINDOW_RESIZABLE);
-    lua_pushboolean(L, result);
-
-    return 1;
-}
-
-static int setResizable(lua_State* L)
-{
-    bool resizable = lua_toboolean(L, 1);
-
-    if (resizable) {
-        SetWindowState(FLAG_WINDOW_RESIZABLE);
-    } else {
-        ClearWindowState(FLAG_WINDOW_RESIZABLE);
-    }
-
-    return 0;
-}
-
-static int toggleFullscreen(lua_State* L)
-{
-    ToggleFullscreen();
-
-    return 0;
-}
-
-static int toggleBorderless(lua_State* L)
-{
-    ToggleBorderlessWindowed();
-
-    return 0;
 }
 
 static int maximize(lua_State* L)
@@ -166,36 +247,23 @@ static int restore(lua_State* L)
     return 0;
 }
 
-static int setTitle(lua_State* L)
+static int setFocused(lua_State* L)
 {
-    const char* title = luaL_checkstring(L, 1);
-    SetWindowTitle(title);
+    SetWindowFocused();
 
     return 0;
 }
 
-static int setPosition(lua_State* L)
+static int setIcon(lua_State* L)
 {
-    int x = (int)luaL_checkinteger(L, 1);
-    int y = (int)luaL_checkinteger(L, 2);
-    SetWindowPosition(x, y);
+    Texture2D icon = *(Texture2D*)luaL_checkudata(L, 1, "Texture");
 
-    return 0;
-}
+    if (!IsTextureReady(icon)) {
+        return luaL_error(L, "Icon texture is null");
+    }
 
-static int setMonitor(lua_State* L)
-{
-    int monitor = (int)luaL_checkinteger(L, 1);
-    SetWindowMonitor(monitor);
-
-    return 0;
-}
-
-static int setMinSize(lua_State* L)
-{
-    int width = (int)luaL_checkinteger(L, 1);
-    int height = (int)luaL_checkinteger(L, 2);
-    SetWindowMinSize(width, height);
+    Image image = LoadImageFromTexture(icon);
+    SetWindowIcon(image);
 
     return 0;
 }
@@ -209,11 +277,19 @@ static int setMaxSize(lua_State* L)
     return 0;
 }
 
-static int setSize(lua_State* L)
+static int setMinSize(lua_State* L)
 {
     int width = (int)luaL_checkinteger(L, 1);
     int height = (int)luaL_checkinteger(L, 2);
-    SetWindowSize(width, height);
+    SetWindowMinSize(width, height);
+
+    return 0;
+}
+
+static int setMonitor(lua_State* L)
+{
+    int monitor = (int)luaL_checkinteger(L, 1);
+    SetWindowMonitor(monitor);
 
     return 0;
 }
@@ -226,153 +302,41 @@ static int setOpacity(lua_State* L)
     return 0;
 }
 
-static int setFocused(lua_State* L)
+static int setPosition(lua_State* L)
 {
-    SetWindowFocused();
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    SetWindowPosition(x, y);
 
     return 0;
 }
 
-static int getWidth(lua_State* L)
+static int setResizable(lua_State* L)
 {
-    int result = GetScreenWidth();
-    lua_pushinteger(L, result);
+    bool resizable = check_boolean(L, 1);
 
-    return 1;
-}
-
-static int getHeight(lua_State* L)
-{
-    int result = GetScreenHeight();
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getRenderWidth(lua_State* L)
-{
-    int result = GetRenderWidth();
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getRenderHeight(lua_State* L)
-{
-    int result = GetRenderHeight();
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getMonitorCount(lua_State* L)
-{
-    int result = GetMonitorCount();
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getCurrentMonitor(lua_State* L)
-{
-    int result = GetCurrentMonitor();
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getMonitorPosition(lua_State* L)
-{
-    int monitor = (int)luaL_checkinteger(L, 1);
-    Vector2 result = GetMonitorPosition(monitor);
-    lua_pushnumber(L, result.x);
-    lua_pushnumber(L, result.y);
-
-    return 2;
-}
-
-static int getMonitorWidth(lua_State* L)
-{
-    int monitor = (int)luaL_checkinteger(L, 1);
-    int result = GetMonitorWidth(monitor);
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getMonitorHeight(lua_State* L)
-{
-    int monitor = (int)luaL_checkinteger(L, 1);
-    int result = GetMonitorHeight(monitor);
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getMonitorPhysicalWidth(lua_State* L)
-{
-    int monitor = (int)luaL_checkinteger(L, 1);
-    int result = GetMonitorPhysicalWidth(monitor);
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getMonitorPhysicalHeight(lua_State* L)
-{
-    int monitor = (int)luaL_checkinteger(L, 1);
-    int result = GetMonitorPhysicalHeight(monitor);
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getMonitorRefreshRate(lua_State* L)
-{
-    int monitor = (int)luaL_checkinteger(L, 1);
-    int result = GetMonitorRefreshRate(monitor);
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getPosition(lua_State* L)
-{
-    Vector2 result = GetWindowPosition();
-    lua_pushnumber(L, result.x);
-    lua_pushnumber(L, result.y);
-
-    return 2;
-}
-
-static int getScaleDPI(lua_State* L)
-{
-    Vector2 result = GetWindowScaleDPI();
-    lua_pushnumber(L, result.x);
-    lua_pushnumber(L, result.y);
-
-    return 2;
-}
-
-static int getMonitorName(lua_State* L)
-{
-    int monitor = (int)luaL_checkinteger(L, 1);
-    const char* result = GetMonitorName(monitor);
-    lua_pushstring(L, result);
-
-    return 1;
-}
-
-static int beginDrawing(lua_State* L)
-{
-    BeginDrawing();
+    if (resizable) {
+        SetWindowState(FLAG_WINDOW_RESIZABLE);
+    } else {
+        ClearWindowState(FLAG_WINDOW_RESIZABLE);
+    }
 
     return 0;
 }
 
-static int endDrawing(lua_State* L)
+static int setSize(lua_State* L)
 {
-    EndDrawing();
+    int width = (int)luaL_checkinteger(L, 1);
+    int height = (int)luaL_checkinteger(L, 2);
+    SetWindowSize(width, height);
+
+    return 0;
+}
+
+static int setTitle(lua_State* L)
+{
+    const char* title = luaL_checkstring(L, 1);
+    SetWindowTitle(title);
 
     return 0;
 }
@@ -385,86 +349,84 @@ static int setTargetFPS(lua_State* L)
     return 0;
 }
 
-static int getDelta(lua_State* L)
+static int setVSync(lua_State* L)
 {
-    float result = GetFrameTime();
-    lua_pushnumber(L, result);
+    bool resizable = check_boolean(L, 1);
+
+    if (resizable) {
+        SetWindowState(FLAG_VSYNC_HINT);
+    } else {
+        ClearWindowState(FLAG_VSYNC_HINT);
+    }
+
+    return 0;
+}
+
+static int shouldClose(lua_State* L)
+{
+    bool result = WindowShouldClose() || shouldQuit;
+    lua_pushboolean(L, result);
 
     return 1;
 }
 
-static int getTime(lua_State* L)
+static int toggleBorderless(lua_State* L)
 {
-    double result = GetTime();
-    lua_pushnumber(L, result);
+    ToggleBorderlessWindowed();
 
-    return 1;
+    return 0;
 }
 
-static int getFPS(lua_State* L)
+static int toggleFullscreen(lua_State* L)
 {
-    int result = GetFPS();
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int wait(lua_State* L)
-{
-    float seconds = (float)luaL_checknumber(L, 1);
-    WaitTime(seconds);
+    ToggleFullscreen();
 
     return 0;
 }
 
 static const luaL_Reg functions[] = {
-    { "init", init },
     { "close", close },
-    { "shouldClose", shouldClose },
-    { "isReady", isReady },
+    { "getCurrentMonitor", getCurrentMonitor },
+    { "getDPIScale", getDPIScale },
+    { "getHeight", getHeight },
+    { "getMonitorCount", getMonitorCount },
+    { "getMonitorHeight", getMonitorHeight },
+    { "getMonitorName", getMonitorName },
+    { "getMonitorPhysicalHeight", getMonitorPhysicalHeight },
+    { "getMonitorPhysicalWidth", getMonitorPhysicalWidth },
+    { "getMonitorPosition", getMonitorPosition },
+    { "getMonitorRefreshRate", getMonitorRefreshRate },
+    { "getMonitorWidth", getMonitorWidth },
+    { "getPosition", getPosition },
+    { "getResizable", getResizable },
+    { "getVSync", getVSync },
+    { "getWidth", getWidth },
+    { "init", init },
+    { "isFocused", isFocused },
     { "isFullscreen", isFullscreen },
     { "isHidden", isHidden },
-    { "isMinimized", isMinimized },
     { "isMaximized", isMaximized },
-    { "isFocused", isFocused },
+    { "isMinimized", isMinimized },
+    { "isReady", isReady },
     { "isResized", isResized },
-    { "getResizable", getResizable },
-    { "setResizable", setResizable },
-    { "toggleFullscreen", toggleFullscreen },
-    { "toggleBorderless", toggleBorderless },
     { "maximize", maximize },
     { "minimize", minimize },
     { "restore", restore },
-    { "setTitle", setTitle },
-    { "setPosition", setPosition },
-    { "setMonitor", setMonitor },
-    { "setMinSize", setMinSize },
-    { "setMaxSize", setMaxSize },
-    { "setSize", setSize },
-    { "setOpacity", setOpacity },
     { "setFocused", setFocused },
-    { "getWidth", getWidth },
-    { "getHeight", getHeight },
-    { "getRenderWidth", getRenderWidth },
-    { "getRenderHeight", getRenderHeight },
-    { "getMonitorCount", getMonitorCount },
-    { "getCurrentMonitor", getCurrentMonitor },
-    { "getMonitorPosition", getMonitorPosition },
-    { "getMonitorWidth", getMonitorWidth },
-    { "getMonitorHeight", getMonitorHeight },
-    { "getMonitorPhysicalWidth", getMonitorPhysicalWidth },
-    { "getMonitorPhysicalHeight", getMonitorPhysicalHeight },
-    { "getMonitorRefreshRate", getMonitorRefreshRate },
-    { "getPosition", getPosition },
-    { "getScaleDPI", getScaleDPI },
-    { "getMonitorName", getMonitorName },
-    { "beginDrawing", beginDrawing },
-    { "endDrawing", endDrawing },
+    { "setIcon", setIcon },
+    { "setMaxSize", setMaxSize },
+    { "setMinSize", setMinSize },
+    { "setMonitor", setMonitor },
+    { "setOpacity", setOpacity },
+    { "setPosition", setPosition },
+    { "setResizable", setResizable },
+    { "setSize", setSize },
+    { "setTitle", setTitle },
     { "setTargetFPS", setTargetFPS },
-    { "getDelta", getDelta },
-    { "getTime", getTime },
-    { "getFPS", getFPS },
-    { "wait", wait },
+    { "setVSync", setVSync },
+    { "shouldClose", shouldClose },
+    { "toggleBorderless", toggleBorderless },
+    { "toggleFullscreen", toggleFullscreen },
     { NULL, NULL }
 };
 
@@ -475,6 +437,8 @@ int luaopen_window(lua_State* L)
     lua_newtable(L);
     luaL_setfuncs(L, functions, 0);
     lua_setfield(L, -2, "window");
+
+    lua_pop(L, 1);
 
     return 1;
 }

@@ -118,6 +118,7 @@ static const luaL_Reg functions[] = {
 int luaopen_log(lua_State* L)
 {
     SetTraceLogCallback(customLog);
+    SetTraceLogLevel(LOG_WARNING);
 
     lua_getglobal(L, "pesto");
 
