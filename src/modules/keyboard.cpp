@@ -218,6 +218,31 @@ static int stringToKey(const char* key)
         return KEY_NULL;
 }
 
+static int getCharPressed(lua_State* L)
+{
+    int result = GetCharPressed();
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int getPressed(lua_State* L)
+{
+    int result = GetKeyPressed();
+    lua_pushinteger(L, result);
+
+    return 1;
+}
+
+static int isDown(lua_State* L)
+{
+    const char* key = luaL_checkstring(L, 1);
+    bool result = IsKeyDown(stringToKey(key));
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
 static int isPressed(lua_State* L)
 {
     const char* key = luaL_checkstring(L, 1);
@@ -231,15 +256,6 @@ static int isPressedRepeat(lua_State* L)
 {
     const char* key = luaL_checkstring(L, 1);
     bool result = IsKeyPressedRepeat(stringToKey(key));
-    lua_pushboolean(L, result);
-
-    return 1;
-}
-
-static int isDown(lua_State* L)
-{
-    const char* key = luaL_checkstring(L, 1);
-    bool result = IsKeyDown(stringToKey(key));
     lua_pushboolean(L, result);
 
     return 1;
@@ -263,30 +279,14 @@ static int isUp(lua_State* L)
     return 1;
 }
 
-static int getPressed(lua_State* L)
-{
-    int result = GetKeyPressed();
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getCharPressed(lua_State* L)
-{
-    int result = GetCharPressed();
-    lua_pushinteger(L, result);
-
-    return 1;
-}
-
 static const luaL_Reg functions[] = {
+    { "getCharPressed", getCharPressed },
+    { "getPressed", getPressed },
+    { "isDown", isDown },
     { "isPressed", isPressed },
     { "isPressedRepeat", isPressedRepeat },
-    { "isDown", isDown },
     { "isReleased", isReleased },
     { "isUp", isUp },
-    { "getPressed", getPressed },
-    { "getCharPressed", getCharPressed },
     { NULL, NULL }
 };
 
@@ -297,6 +297,8 @@ int luaopen_keyboard(lua_State* L)
     lua_newtable(L);
     luaL_setfuncs(L, functions, 0);
     lua_setfield(L, -2, "keyboard");
+
+    lua_pop(L, 1);
 
     return 1;
 }

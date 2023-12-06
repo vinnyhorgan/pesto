@@ -414,3 +414,261 @@ function pesto.window.toggleBorderless() end
 ---Toggles between fullscreen and windowed mode.
 ---
 function pesto.window.toggleFullscreen() end
+
+---
+---The `pesto.mouse` module provides functions for interacting with the mouse input.
+---
+---@class pesto.mouse
+pesto.mouse = {}
+
+---
+---Disables the mouse cursor.
+---
+function pesto.mouse.disable() end
+
+---
+---Enables the mouse cursor.
+---
+function pesto.mouse.enable() end
+
+---
+---Gets the change in mouse position since the last frame.
+---
+---@return number deltaX # Change in X position.
+---@return number deltaY # Change in Y position.
+function pesto.mouse.getDelta() end
+
+---
+---Gets the current X coordinate of the mouse cursor.
+---
+---@return number x # The X coordinate of the mouse cursor.
+function pesto.mouse.getX() end
+
+---
+---Gets the current Y coordinate of the mouse cursor.
+---
+---@return number y # The Y coordinate of the mouse cursor.
+function pesto.mouse.getY() end
+
+---
+---Gets the movement of the mouse wheel.
+---
+---@return number deltaX # Horizontal movement of the mouse wheel.
+---@return number deltaY # Vertical movement of the mouse wheel.
+function pesto.mouse.getWheelMove() end
+
+---
+---Gets the current position of the mouse cursor.
+---
+---@return number x # The X coordinate of the mouse cursor.
+---@return number y # The Y coordinate of the mouse cursor.
+function pesto.mouse.getPosition() end
+
+---
+---Hides the mouse cursor.
+---
+function pesto.mouse.hide() end
+
+---
+---Checks if a mouse button is currently pressed down.
+---
+---@param button number # The button ID to check.
+---@return boolean # Returns true if the button is pressed, false otherwise.
+function pesto.mouse.isDown(button) end
+
+---
+---Checks if the mouse cursor is currently hidden.
+---
+---@return boolean # Returns true if the cursor is hidden, false otherwise.
+function pesto.mouse.isHidden() end
+
+---
+---Checks if the mouse cursor is within the screen boundaries.
+---
+---@return boolean # Returns true if the cursor is within the screen, false otherwise.
+function pesto.mouse.isOnScreen() end
+
+---
+---Checks if a mouse button was pressed during the last frame.
+---
+---@param button number # The button ID to check.
+---@return boolean # Returns true if the button was pressed, false otherwise.
+function pesto.mouse.isPressed(button) end
+
+---
+---Checks if a mouse button was released during the last frame.
+---
+---@param button number # The button ID to check.
+---@return boolean # Returns true if the button was released, false otherwise.
+function pesto.mouse.isReleased(button) end
+
+---
+---Checks if a mouse button is currently up (not pressed).
+---
+---@param button number # The button ID to check.
+---@return boolean # Returns true if the button is up, false otherwise.
+function pesto.mouse.isUp(button) end
+
+---
+---Sets the mouse cursor type.
+---
+---@param cursor string # The type of cursor to set (e.g., "default", "arrow").
+function pesto.mouse.setCursor(cursor) end
+
+---
+---Sets the scale of the mouse cursor.
+---
+---@param x number # The scale factor along the X-axis.
+---@param y number # The scale factor along the Y-axis.
+function pesto.mouse.setScale(x, y) end
+
+---
+---Sets the offset of the mouse cursor.
+---
+---@param x number # The offset along the X-axis.
+---@param y number # The offset along the Y-axis.
+function pesto.mouse.setOffset(x, y) end
+
+---
+---Sets the position of the mouse cursor.
+---
+---@param x number # The X coordinate to set.
+---@param y number # The Y coordinate to set.
+function pesto.mouse.setPosition(x, y) end
+
+---
+---Shows the mouse cursor.
+---
+function pesto.mouse.show() end
+
+---
+---The `pesto.keyboard` module provides functions for interacting with keyboard input.
+---
+---@class pesto.keyboard
+pesto.keyboard = {}
+
+---
+---Gets the unicode value of the character pressed on the keyboard.
+---
+---@return number # Unicode value of the pressed character.
+function pesto.keyboard.getCharPressed() end
+
+---
+---Gets the key code of the key currently pressed on the keyboard.
+---
+---@return number # Key code of the currently pressed key.
+function pesto.keyboard.getPressed() end
+
+---
+---Checks if a specific key is currently held down.
+---
+---@param key string # The key to check (e.g., "a", "space").
+---@return boolean # Returns true if the key is down, false otherwise.
+function pesto.keyboard.isDown(key) end
+
+---
+---Checks if a specific key was pressed during the last frame.
+---
+---@param key string # The key to check (e.g., "a", "space").
+---@return boolean # Returns true if the key was pressed, false otherwise.
+function pesto.keyboard.isPressed(key) end
+
+---
+---Checks if a specific key is being held down and repeated.
+---
+---@param key string # The key to check (e.g., "a", "space").
+---@return boolean # Returns true if the key is being repeated, false otherwise.
+function pesto.keyboard.isPressedRepeat(key) end
+
+---
+---Checks if a specific key was released during the last frame.
+---
+---@param key string # The key to check (e.g., "a", "space").
+---@return boolean # Returns true if the key was released, false otherwise.
+function pesto.keyboard.isReleased(key) end
+
+---
+---Checks if a specific key is currently up (not pressed).
+---
+---@param key string # The key to check (e.g., "a", "space").
+---@return boolean # Returns true if the key is up, false otherwise.
+function pesto.keyboard.isUp(key) end
+
+---
+---The `pesto.gamepad` module provides functions for interacting with gamepad input.
+---
+---@class pesto.gamepad
+pesto.gamepad = {}
+
+---
+---Gets the number of axes available on the specified gamepad.
+---
+---@param gamepad number # The ID of the gamepad.
+---@return number # The number of axes available.
+function pesto.gamepad.getAxisCount(gamepad) end
+
+---
+---Gets the movement value of the specified axis on the gamepad.
+---
+---@param gamepad number # The ID of the gamepad.
+---@param axis number # The axis ID to query.
+---@return number # The movement value of the axis.
+function pesto.gamepad.getAxisMovement(gamepad, axis) end
+
+---
+---Gets the name of the specified gamepad.
+---
+---@param gamepad number # The ID of the gamepad.
+---@return string # The name of the gamepad.
+function pesto.gamepad.getName(gamepad) end
+
+---
+---Gets the ID of the button currently being pressed on any gamepad.
+---
+---@return number # The ID of the pressed button.
+function pesto.gamepad.getPressed() end
+
+---
+---Checks if the specified gamepad is available.
+---
+---@param gamepad number # The ID of the gamepad.
+---@return boolean # Returns true if the gamepad is available, false otherwise.
+function pesto.gamepad.isAvailable(gamepad) end
+
+---
+---Checks if the specified button on the gamepad is currently down.
+---
+---@param gamepad number # The ID of the gamepad.
+---@param button number # The button ID to check.
+---@return boolean # Returns true if the button is currently down, false otherwise.
+function pesto.gamepad.isDown(gamepad, button) end
+
+---
+---Checks if the specified button on the gamepad was pressed during the last frame.
+---
+---@param gamepad number # The ID of the gamepad.
+---@param button number # The button ID to check.
+---@return boolean # Returns true if the button was pressed, false otherwise.
+function pesto.gamepad.isPressed(gamepad, button) end
+
+---
+---Checks if the specified button on the gamepad was released during the last frame.
+---
+---@param gamepad number # The ID of the gamepad.
+---@param button number # The button ID to check.
+---@return boolean # Returns true if the button was released, false otherwise.
+function pesto.gamepad.isReleased(gamepad, button) end
+
+---
+---Checks if the specified button on the gamepad is currently up (not pressed).
+---
+---@param gamepad number # The ID of the gamepad.
+---@param button number # The button ID to check.
+---@return boolean # Returns true if the button is up, false otherwise.
+function pesto.gamepad.isUp(gamepad, button) end
+
+---
+---Sets the mappings for the gamepad.
+---
+---@param mappings string # The mapping configuration for the gamepad.
+function pesto.gamepad.setMappings(mappings) end
