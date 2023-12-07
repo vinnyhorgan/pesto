@@ -76,16 +76,14 @@ function pesto.init()
     local major, minor = pesto.getVersion()
 
     if config.version ~= major .. "." .. minor then
-        pesto.log.warn("Version mismatch!", config.version, major .. "." .. minor)
+        pesto.log.warn("Version mismatch!")
     end
 
     pesto.window.init(config.width, config.height, config.title)
-
     pesto.window.setTargetFPS(60)
 
     pesto.audio.init()
-
-    pesto.gui.setup()
+    pesto.gui.init()
 
     if config.resizable then
         pesto.window.setResizable(true)
@@ -152,17 +150,15 @@ function pesto.run()
 
         pesto.gui.beginDrawing()
 
-        pesto.gui.demo()
+        if pesto.postdraw then pesto.postdraw() end
 
         pesto.gui.endDrawing()
 
         pesto.graphics.endDrawing()
     end
 
-    pesto.gui.shutdown()
-
+    pesto.gui.close()
     pesto.audio.close()
-
     pesto.window.close()
 end
 
