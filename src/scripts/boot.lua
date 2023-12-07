@@ -83,6 +83,8 @@ function pesto.init()
 
     pesto.window.setTargetFPS(60)
 
+    pesto.audio.init()
+
     pesto.gui.setup()
 
     if config.resizable then
@@ -158,6 +160,8 @@ function pesto.run()
     end
 
     pesto.gui.shutdown()
+
+    pesto.audio.close()
 
     pesto.window.close()
 end

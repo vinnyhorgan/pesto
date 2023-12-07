@@ -64,6 +64,12 @@ pesto.quit = nil
 ---@class pesto.Texture
 local Texture = {}
 
+---@class pesto.Sound
+local Sound = {}
+
+---@class pesto.Stream
+local Stream = {}
+
 ---
 ---The `pesto.rres` module provides functions for interacting with `.rres` resource files.
 ---
@@ -886,3 +892,51 @@ function pesto.filesystem.remove(filename) end
 ---@param text string # The text content to write.
 ---@return boolean # Returns true if writing is successful, false otherwise.
 function pesto.filesystem.write(filename, text) end
+
+---
+---The `pesto.audio` module provides audio-related functionalities.
+---
+---@class pesto.audio
+pesto.audio = {}
+
+---
+---Closes the audio device.
+---
+function pesto.audio.close() end
+
+---
+---Gets the master volume.
+---
+---@return number # The master volume.
+function pesto.audio.getVolume() end
+
+---
+---Initializes the audio device.
+---
+function pesto.audio.init() end
+
+---
+---Checks if the audio device is ready.
+---
+---@return boolean # Returns true if the audio device is ready, false otherwise.
+function pesto.audio.isReady() end
+
+---
+---Loads a sound file.
+---
+---@param filename string # The path to the sound file.
+---@return pesto.Sound # Returns a loaded sound.
+function pesto.audio.loadSound(filename) end
+
+---
+---Loads a music stream.
+---
+---@param filename string # The path to the music stream file.
+---@return pesto.Stream # Returns a loaded stream.
+function pesto.audio.loadStream(filename) end
+
+---
+---Sets the master volume.
+---
+---@param volume number # The volume to set.
+function pesto.audio.setVolume(volume) end

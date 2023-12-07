@@ -1,16 +1,26 @@
 #include "api.h"
 
-extern "C" {
-#include "../lib/luasocket/luasocket.h"
-#include "../lib/luasocket/mime.h"
-}
+#include "../util.h"
 
 #include "../scripts/animation.lua.h"
 #include "../scripts/boot.lua.h"
 #include "../scripts/ldtk.lua.h"
 #include "../scripts/reload.lua.h"
 #include "../scripts/state.lua.h"
-#include "../util.h"
+
+extern "C" {
+#include "../lib/luasocket/luasocket.h"
+#include "../lib/luasocket/mime.h"
+}
+
+static int luaopen_animation(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)ANIMATION_DATA, sizeof(ANIMATION_DATA), "animation.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
 
 static int luaopen_boot(lua_State* L)
 {
@@ -21,9 +31,9 @@ static int luaopen_boot(lua_State* L)
     return 1;
 }
 
-static int luaopen_state(lua_State* L)
+static int luaopen_ldtk(lua_State* L)
 {
-    if (luaL_loadbuffer(L, (const char*)STATE_DATA, sizeof(STATE_DATA), "state.lua") == 0) {
+    if (luaL_loadbuffer(L, (const char*)LDTK_DATA, sizeof(LDTK_DATA), "ldtk.lua") == 0) {
         lua_call(L, 0, 1);
     }
 
@@ -39,18 +49,9 @@ static int luaopen_reload(lua_State* L)
     return 1;
 }
 
-static int luaopen_animation(lua_State* L)
+static int luaopen_state(lua_State* L)
 {
-    if (luaL_loadbuffer(L, (const char*)ANIMATION_DATA, sizeof(ANIMATION_DATA), "animation.lua") == 0) {
-        lua_call(L, 0, 1);
-    }
-
-    return 1;
-}
-
-static int luaopen_ldtk(lua_State* L)
-{
-    if (luaL_loadbuffer(L, (const char*)LDTK_DATA, sizeof(LDTK_DATA), "ldtk.lua") == 0) {
+    if (luaL_loadbuffer(L, (const char*)STATE_DATA, sizeof(STATE_DATA), "state.lua") == 0) {
         lua_call(L, 0, 1);
     }
 
@@ -99,11 +100,11 @@ static const luaL_Reg modules[] = {
     { "socket.tp", luaopen_tp },
     { "socket.url", luaopen_url },
     // Scripts
-    { "pesto.boot", luaopen_boot },
-    { "pesto.state", luaopen_state },
-    { "pesto.reload", luaopen_reload },
     { "pesto.animation", luaopen_animation },
+    { "pesto.boot", luaopen_boot },
     { "pesto.ldtk", luaopen_ldtk },
+    { "pesto.reload", luaopen_reload },
+    { "pesto.state", luaopen_state },
     { NULL, NULL }
 };
 
