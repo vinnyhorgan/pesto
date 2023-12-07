@@ -56,5 +56,7 @@ int luaopen_gui(lua_State* L)
     luaL_setfuncs(L, functions, 0);
     lua_setfield(L, -2, "gui");
 
+    lua_pop(L, 1);
+
     return 1;
 }

@@ -147,11 +147,15 @@ static int getWidth(lua_State* L)
 
 static int init(lua_State* L)
 {
+    if (IsWindowReady()) {
+        return 0;
+    }
+
     int width = (int)luaL_checkinteger(L, 1);
     int height = (int)luaL_checkinteger(L, 2);
     const char* title = luaL_checkstring(L, 3);
 
-    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIGHDPI);
+    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIGHDPI | FLAG_WINDOW_ALWAYS_RUN);
     InitWindow(width, height, title);
 
     SetExitKey(KEY_NULL);
@@ -297,6 +301,11 @@ static int setMonitor(lua_State* L)
 static int setOpacity(lua_State* L)
 {
     float opacity = (float)luaL_checknumber(L, 1);
+
+    if (opacity < 0.0f || opacity > 1.0f) {
+        return luaL_error(L, "Opacity must be between 0 and 1");
+    }
+
     SetWindowOpacity(opacity);
 
     return 0;

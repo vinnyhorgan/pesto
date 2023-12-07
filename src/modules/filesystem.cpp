@@ -19,8 +19,7 @@ static int createDirectory(lua_State* L)
         bool result = std::filesystem::create_directory(dirpath);
         lua_pushboolean(L, result);
     } catch (const std::exception& e) {
-        TraceLog(LOG_WARNING, e.what());
-        lua_pushboolean(L, false);
+        return luaL_error(L, "Failed to create directory: %s", e.what());
     }
 
     return 1;
@@ -50,8 +49,14 @@ static int getApplicationDirectory(lua_State* L)
 static int getDirectoryItems(lua_State* L)
 {
     const char* basepath = luaL_checkstring(L, 1);
-    const char* filter = luaL_checkstring(L, 2);
+    const char* filter = NULL;
+
+    if (lua_gettop(L) >= 2) {
+        filter = luaL_checkstring(L, 2);
+    }
+
     bool scanSubdirs = lua_toboolean(L, 3);
+
     FilePathList result = LoadDirectoryFilesEx(basepath, filter, scanSubdirs);
 
     if (result.count > 0) {
@@ -180,8 +185,7 @@ static int remove(lua_State* L)
         bool result = std::filesystem::remove(filename);
         lua_pushboolean(L, result);
     } catch (const std::exception& e) {
-        TraceLog(LOG_WARNING, e.what());
-        lua_pushboolean(L, false);
+        return luaL_error(L, "Failed to remove file: %s", e.what());
     }
 
     return 1;

@@ -331,5 +331,7 @@ int luaopen_graphics(lua_State* L)
     luaL_setfuncs(L, functions, 0);
     lua_setfield(L, -2, "graphics");
 
+    lua_pop(L, 1);
+
     return 1;
 }

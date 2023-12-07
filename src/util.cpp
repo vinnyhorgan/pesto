@@ -71,8 +71,6 @@ void generateHeaders()
     generateHeader("src/lib/luasocket/socket.lua");
     generateHeader("src/lib/luasocket/tp.lua");
     generateHeader("src/lib/luasocket/url.lua");
-
-    SetTraceLogLevel(LOG_INFO);
 }
 
 // From raylib examples

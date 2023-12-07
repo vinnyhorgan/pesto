@@ -769,3 +769,120 @@ function pesto.log.trace(message) end
 ---
 ---@param message string # The message to log.
 function pesto.log.warn(message) end
+
+---
+---The `pesto.filesystem` module provides filesystem-related functionalities.
+---
+---@class pesto.filesystem
+pesto.filesystem = {}
+
+---
+---Changes the current working directory.
+---
+---@param dir string # The directory path to change to.
+---@return boolean # Returns true if successful, false otherwise.
+function pesto.filesystem.changeDirectory(dir) end
+
+---
+---Creates a new directory.
+---
+---@param dirpath string # The directory path to create.
+---@return boolean # Returns true if successful, false otherwise.
+function pesto.filesystem.createDirectory(dirpath) end
+
+---
+---Checks whether a file or directory exists.
+---
+---@param path string # The path to the file or directory.
+---@return boolean # Returns true if the file or directory exists, false otherwise.
+function pesto.filesystem.exists(path) end
+
+---
+---Gets the application directory.
+---
+---@return string # The application directory path.
+function pesto.filesystem.getApplicationDirectory() end
+
+---
+---Gets a list of items in a directory.
+---
+---@param basepath string # The base directory path.
+---@param filter string | nil # Optional filter for file names (can be nil).
+---@param scanSubdirs boolean | nil # Indicates whether to scan subdirectories.
+---@return table | nil # Returns a table containing directory items, or nil if no items found.
+function pesto.filesystem.getDirectoryItems(basepath, filter, scanSubdirs) end
+
+---
+---Gets a list of dropped items.
+---
+---@return table | nil # Returns a table containing dropped file paths, or nil if none dropped.
+function pesto.filesystem.getDroppedItems() end
+
+---
+---Gets the last modified time of a file.
+---
+---@param filename string # The file path.
+---@return number # Returns the last modified time in seconds since epoch.
+function pesto.filesystem.getLastModified(filename) end
+
+---
+---Gets the real directory path from a file path.
+---
+---@param filepath string # The file path.
+---@return string # Returns the real directory path.
+function pesto.filesystem.getRealDirectory(filepath) end
+
+---
+---Gets the size of a file in bytes.
+---
+---@param filename string # The file path.
+---@return number # Returns the file size in bytes.
+function pesto.filesystem.getSize(filename) end
+
+---
+---Gets the current working directory.
+---
+---@return string # Returns the current working directory path.
+function pesto.filesystem.getWorkingDirectory() end
+
+---
+---Checks if a path is a directory.
+---
+---@param path string # The path to check.
+---@return boolean # Returns true if the path is a directory, false otherwise.
+function pesto.filesystem.isDirectory(path) end
+
+---
+---Checks if a path is a file.
+---
+---@param path string # The path to check.
+---@return boolean # Returns true if the path is a file, false otherwise.
+function pesto.filesystem.isFile(path) end
+
+---
+---Checks if a file has been dropped on the window.
+---
+---@return boolean # Returns true if a file has been dropped, false otherwise.
+function pesto.filesystem.isFileDropped() end
+
+---
+---Reads the contents of a text file.
+---
+---@param filename string # The file path to read.
+---@return string | nil # Returns the file content as a string, or nil if read fails.
+function pesto.filesystem.read(filename) end
+
+---
+---Removes a file or empty directory.
+---
+---@param filename string # The file or directory path to remove.
+---@return boolean # Returns true if successful, false otherwise.
+function pesto.filesystem.remove(filename) end
+
+---
+---Writes text content to a file.
+---
+---@param filename string # The file path to write to.
+---@param text string # The text content to write.
+---@return boolean # Returns true if writing is successful, false otherwise.
+function pesto.filesystem.write(filename, text) end

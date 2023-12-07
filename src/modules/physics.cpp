@@ -12,5 +12,7 @@ int luaopen_physics(lua_State* L)
     luaL_setfuncs(L, functions, 0);
     lua_setfield(L, -2, "physics");
 
+    lua_pop(L, 1);
+
     return 1;
 }
