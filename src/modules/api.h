@@ -19,7 +19,7 @@ int luaopen_graphics(lua_State* L);
 int luaopen_gui(lua_State* L);
 int luaopen_keyboard(lua_State* L);
 int luaopen_log(lua_State* L);
-int luaopen_pmath(lua_State* L);
+int luaopen_pmath(lua_State* L); // luaopen_math conflicts with lua internals
 int luaopen_mouse(lua_State* L);
 int luaopen_physics(lua_State* L);
 int luaopen_rres(lua_State* L);

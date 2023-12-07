@@ -672,3 +672,52 @@ function pesto.gamepad.isUp(gamepad, button) end
 ---
 ---@param mappings string # The mapping configuration for the gamepad.
 function pesto.gamepad.setMappings(mappings) end
+
+---
+---The `pesto.math` module provides various mathematical functions and utilities.
+---
+---@class pesto.math
+pesto.math = {}
+
+---
+---Calculates 2D Simplex noise at a given (x, y) coordinate.
+---
+---@param x number # The x-coordinate.
+---@param y number # The y-coordinate.
+---@return number result # The calculated noise value.
+function pesto.math.noise2d(x, y) end
+
+---
+---Calculates 3D Simplex noise at a given (x, y, z) coordinate.
+---
+---@param x number # The x-coordinate.
+---@param y number # The y-coordinate.
+---@param z number # The z-coordinate.
+---@return number result # The calculated noise value.
+function pesto.math.noise3d(x, y, z) end
+
+---
+---Generates a random integer within the specified range.
+---
+---@param min number # The minimum value of the range.
+---@param max number # The maximum value of the range.
+---@return number result # The generated random integer.
+function pesto.math.random(min, max) end
+
+---
+---Sets the frequency for Simplex noise calculations.
+---
+---@param frequency number # The frequency value to set.
+function pesto.math.setNoiseFrequency(frequency) end
+
+---
+---Sets the seed value for Simplex noise calculations.
+---
+---@param seed number # The seed value to set.
+function pesto.math.setNoiseSeed(seed) end
+
+---
+---Sets the seed for the random number generator.
+---
+---@param seed number # The seed value to set.
+function pesto.math.setRandomSeed(seed) end
