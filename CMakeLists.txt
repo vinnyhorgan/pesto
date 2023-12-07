@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE)
 
 if(MSVC)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS _WINSOCK_DEPRECATED_NO_WARNINGS)
     add_compile_options(/wd4005 /wd4018 /wd4996)
 endif()
 
@@ -18,11 +18,13 @@ add_subdirectory(deps/luajit)
 include_directories(deps/luajit/src)
 
 set(OPENGL_VERSION 4.3 CACHE STRING "")
+set(CUSTOMIZE_BUILD ON CACHE BOOL "")
+set(SUPPORT_FILEFORMAT_JPG ON CACHE BOOL "")
 add_subdirectory(deps/raylib)
 
-add_definitions(-DNO_FONT_AWESOME)
+add_compile_definitions(NO_FONT_AWESOME PROJECT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
 
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.c src/*.cpp)
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp")
 
 if(WIN32)
     list(REMOVE_ITEM SOURCES
@@ -39,7 +41,6 @@ else()
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-
 target_link_libraries(${PROJECT_NAME} box2d libluajit raylib)
 
 if(WIN32)
@@ -52,4 +53,10 @@ if(APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
 endif()
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC PROJECT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
+if(MSVC)
+    set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "pestoc")
+    add_executable(pesto_win ${SOURCES})
+    target_link_libraries(pesto_win box2d libluajit raylib ws2_32)
+    target_link_options(pesto_win PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
+    set_target_properties(pesto_win PROPERTIES OUTPUT_NAME "pesto")
+endif()

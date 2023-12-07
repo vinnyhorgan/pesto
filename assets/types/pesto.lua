@@ -721,3 +721,51 @@ function pesto.math.setNoiseSeed(seed) end
 ---
 ---@param seed number # The seed value to set.
 function pesto.math.setRandomSeed(seed) end
+
+---
+---The `pesto.log` module provides logging functionalities.
+---
+---@class pesto.log
+pesto.log = {}
+
+---
+---Logs a message at debug level.
+---
+---@param message string # The message to log.
+function pesto.log.debug(message) end
+
+---
+---Logs a message at error level.
+---
+---@param message string # The message to log.
+function pesto.log.error(message) end
+
+---
+---Logs a message at fatal level.
+---
+---@param message string # The message to log.
+function pesto.log.fatal(message) end
+
+---
+---Logs a message at info level.
+---
+---@param message string # The message to log.
+function pesto.log.info(message) end
+
+---
+---Sets the log level.
+---
+---@param level string # The log level to set ("trace", "debug", "info", "warn", "error", "fatal").
+function pesto.log.level(level) end
+
+---
+---Logs a message at trace level.
+---
+---@param message string # The message to log.
+function pesto.log.trace(message) end
+
+---
+---Logs a message at warning level.
+---
+---@param message string # The message to log.
+function pesto.log.warn(message) end
