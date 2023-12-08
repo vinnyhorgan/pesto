@@ -260,12 +260,7 @@ static int setFocused(lua_State* L)
 
 static int setIcon(lua_State* L)
 {
-    Texture2D icon = *(Texture2D*)luaL_checkudata(L, 1, "Texture");
-
-    if (!IsTextureReady(icon)) {
-        return luaL_error(L, "Icon texture is null");
-    }
-
+    Texture icon = *(Texture*)luaL_checkudata(L, 1, "Texture");
     Image image = LoadImageFromTexture(icon);
     SetWindowIcon(image);
 

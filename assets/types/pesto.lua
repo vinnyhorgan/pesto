@@ -54,12 +54,27 @@ pesto.update = nil
 pesto.draw = nil
 
 ---
+---Callback function used to draw the imgui every frame.
+---
+---@type fun()
+pesto.gui = nil
+
+---
 ---Callback that is called right before the application is about to quit.
 ---
 ---If `true` is returned quitting gets aborted.
 ---
 ---@type fun():boolean
 pesto.quit = nil
+
+---@class pesto.Canvas
+local Canvas = {}
+
+---@class pesto.Font
+local Font = {}
+
+---@class pesto.Shader
+local Shader = {}
 
 ---@class pesto.Texture
 local Texture = {}
@@ -1134,3 +1149,180 @@ function pesto.imgui.endMenu() end
 ---@param enabled? boolean # Optional parameter for enabling the menu item.
 ---@return boolean # Returns true if the menu item is selected.
 function pesto.imgui.menuItem(label, shortcut, selected, enabled) end
+
+---
+---The `pesto.graphics` module provides functions for graphics rendering.
+---
+---@class pesto.graphics
+pesto.graphics = {}
+
+---
+---Begins the drawing process.
+---
+function pesto.graphics.beginDrawing() end
+
+---
+---Draws a filled circle.
+---
+---@param x number # The x-coordinate of the circle's center.
+---@param y number # The y-coordinate of the circle's center.
+---@param radius number # The radius of the circle.
+function pesto.graphics.circle(x, y, radius) end
+
+---
+---Draws an outlined circle.
+---
+---@param x number # The x-coordinate of the circle's center.
+---@param y number # The y-coordinate of the circle's center.
+---@param radius number # The radius of the circle.
+function pesto.graphics.circleLines(x, y, radius) end
+
+---
+---Clears the screen with a specified color.
+---
+---@param r number? # Red component (0-255).
+---@param g number? # Green component (0-255).
+---@param b number? # Blue component (0-255).
+---@param a number? # Alpha component (0-255).
+function pesto.graphics.clear(r, g, b, a) end
+
+---
+---Ends the drawing process.
+---
+function pesto.graphics.endDrawing() end
+
+---
+---Gets the current color used for drawing.
+---
+---@return number, number, number, number # The current color used for drawing.
+function pesto.graphics.getColor() end
+
+---
+---Gets the time difference between frames.
+---
+---@return number deltaTime # The time difference between frames in seconds.
+function pesto.graphics.getDelta() end
+
+---
+---Gets the frames per second (FPS) of the application.
+---
+---@return number fps # The current FPS value.
+function pesto.graphics.getFPS() end
+
+---
+---Draws a line between two points.
+---
+---@param x1 number # The x-coordinate of the starting point.
+---@param y1 number # The y-coordinate of the starting point.
+---@param x2 number # The x-coordinate of the ending point.
+---@param y2 number # The y-coordinate of the ending point.
+function pesto.graphics.line(x1, y1, x2, y2) end
+
+---
+---Loads a canvas with specified width and height.
+---
+---@param width number # The width of the canvas.
+---@param height number # The height of the canvas.
+---@return pesto.Canvas canvas # RenderTexture object representing the canvas.
+function pesto.graphics.loadCanvas(width, height) end
+
+---
+---Loads a font from a file with a specified size.
+---
+---@param filename string # The path to the font file.
+---@param size number # The size of the font.
+---@return pesto.Font font # Font object loaded from the file.
+function pesto.graphics.loadFont(filename, size) end
+
+---
+---Loads a shader from vertex and fragment shader files.
+---
+---@param vsFilename string # The path to the vertex shader file.
+---@param fsFilename string # The path to the fragment shader file.
+---@return pesto.Shader shader # Shader object loaded from the files.
+function pesto.graphics.loadShader(vsFilename, fsFilename) end
+
+---
+---Loads a texture from an image file.
+---
+---@param filename string # The path to the image file.
+---@return pesto.Texture # Texture object loaded from the file.
+function pesto.graphics.loadTexture(filename) end
+
+---
+---Draws a single pixel at the specified position.
+---
+---@param x number # The x-coordinate of the pixel.
+---@param y number # The y-coordinate of the pixel.
+function pesto.graphics.pixel(x, y) end
+
+---
+---Draws a polygon with specified parameters.
+---
+---@param x number # The x-coordinate of the polygon's center.
+---@param y number # The y-coordinate of the polygon's center.
+---@param sides number # The number of sides of the polygon.
+---@param radius number # The radius of the polygon.
+---@param rotation number # The rotation angle of the polygon.
+function pesto.graphics.polygon(x, y, sides, radius, rotation) end
+
+---
+---Draws an outlined polygon with specified parameters.
+---
+---@param x number # The x-coordinate of the polygon's center.
+---@param y number # The y-coordinate of the polygon's center.
+---@param sides number # The number of sides of the polygon.
+---@param radius number # The radius of the polygon.
+---@param rotation number # The rotation angle of the polygon.
+function pesto.graphics.polygonLines(x, y, sides, radius, rotation) end
+
+---
+---Draws a rectangle at the specified position with the given dimensions.
+---
+---@param x number # The x-coordinate of the top-left corner of the rectangle.
+---@param y number # The y-coordinate of the top-left corner of the rectangle.
+---@param width number # The width of the rectangle.
+---@param height number # The height of the rectangle.
+function pesto.graphics.rectangle(x, y, width, height) end
+
+---
+---Draws an outlined rectangle at the specified position with the given dimensions.
+---
+---@param x number # The x-coordinate of the top-left corner of the rectangle.
+---@param y number # The y-coordinate of the top-left corner of the rectangle.
+---@param width number # The width of the rectangle.
+---@param height number # The height of the rectangle.
+function pesto.graphics.rectangleLines(x, y, width, height) end
+
+---
+---Sets the color for subsequent drawing operations.
+---
+---@param r number # Red component (0-255).
+---@param g number # Green component (0-255).
+---@param b number # Blue component (0-255).
+---@param a number # Alpha component (0-255).
+function pesto.graphics.setColor(r, g, b, a) end
+
+---
+---Sets the font for subsequent text drawing operations.
+---
+---@param font pesto.Font # Font object obtained from `pesto.graphics.loadFont`.
+function pesto.graphics.setFont(font) end
+
+---
+---Draws text at the specified position using the current font and color.
+---
+---@param text string # The text to draw.
+---@param x number # The x-coordinate of the text position.
+---@param y number # The y-coordinate of the text position.
+function pesto.graphics.text(text, x, y) end
+
+---
+---Draws wrapped text within a box at the specified position using the current font and color.
+---
+---@param text string # The text to draw.
+---@param x number # The x-coordinate of the text position.
+---@param y number # The y-coordinate of the text position.
+---@param width number # The width of the box for text wrapping.
+---@param height number # The height of the box for text wrapping.
+function pesto.graphics.wrappedText(text, x, y, width, height) end

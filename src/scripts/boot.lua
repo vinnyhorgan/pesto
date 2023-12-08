@@ -100,7 +100,8 @@ function pesto.run()
     local target
 
     if config.letterbox then
-        target = pesto.graphics.loadRenderTexture(config.gameWidth, config.gameHeight)
+        target = pesto.graphics.loadCanvas(config.gameWidth, config.gameHeight)
+        target:setFilter("point")
     end
 
     while true do
@@ -123,27 +124,27 @@ function pesto.run()
 
         if pesto.update then pesto.update(dt) end
 
-        if config.letterbox then
-            pesto.graphics.beginTextureMode(target)
+        pesto.graphics.beginDrawing()
 
-            pesto.graphics.clear(0, 0, 0, 255)
+        if config.letterbox then
+            target:beginDrawing()
+
+            pesto.graphics.clear()
 
             if pesto.draw then pesto.draw() end
 
-            pesto.graphics.endTextureMode()
+            target:endDrawing()
         end
-
-        pesto.graphics.beginDrawing()
 
         pesto.graphics.clear(config.borderColor[1], config.borderColor[2], config.borderColor[3], config.borderColor[4])
 
         if config.letterbox then
-            pesto.graphics.drawRenderTexturePro(target, 0, 0, config.gameWidth, -config.gameHeight,
+            target:drawPro(0, 0, config.gameWidth, -config.gameHeight,
                 (pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5,
                 (pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5,
                 config.gameWidth * scale, config.gameHeight * scale, 0, 0, 0)
         else
-            pesto.graphics.clear(0, 0, 0, 255)
+            pesto.graphics.clear()
 
             if pesto.draw then pesto.draw() end
         end

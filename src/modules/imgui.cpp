@@ -285,13 +285,8 @@ static int image(lua_State* L)
         return luaL_error(L, "pesto.imgui calls can only be made in the pesto.gui callback.");
     }
 
-    Texture image = *(Texture*)luaL_checkudata(L, 1, "Texture");
-
-    if (!IsTextureReady(image)) {
-        return luaL_error(L, "Image texture is null");
-    }
-
-    rlImGuiImage(&image);
+    Texture* image = (Texture*)luaL_checkudata(L, 1, "Texture");
+    rlImGuiImage(image);
 
     return 0;
 }
