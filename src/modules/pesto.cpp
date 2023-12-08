@@ -64,7 +64,7 @@ static const luaL_Reg modules[] = {
     { "pesto.filesystem", luaopen_filesystem },
     { "pesto.gamepad", luaopen_gamepad },
     { "pesto.graphics", luaopen_graphics },
-    { "pesto.gui", luaopen_gui },
+    { "pesto.imgui", luaopen_imgui },
     { "pesto.keyboard", luaopen_keyboard },
     { "pesto.log", luaopen_log },
     { "pesto.math", luaopen_pmath },

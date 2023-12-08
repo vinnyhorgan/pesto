@@ -128,7 +128,7 @@ static int level(lua_State* L)
     else if (TextIsEqual(level, "fatal"))
         logLevel = LOG_FATAL;
     else
-        return luaL_error(L, "Invalid log level");
+        return luaL_error(L, "Invalid log level: %s", level);
 
     return 0;
 }

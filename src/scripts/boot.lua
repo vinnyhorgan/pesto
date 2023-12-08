@@ -18,7 +18,7 @@ function pesto.init()
     require("pesto.filesystem")
     require("pesto.gamepad")
     require("pesto.graphics")
-    require("pesto.gui")
+    require("pesto.imgui")
     require("pesto.keyboard")
     require("pesto.log")
     require("pesto.math")
@@ -83,7 +83,7 @@ function pesto.init()
     pesto.window.setTargetFPS(60)
 
     pesto.audio.init()
-    pesto.gui.init()
+    pesto.imgui.init()
 
     if config.resizable then
         pesto.window.setResizable(true)
@@ -148,16 +148,16 @@ function pesto.run()
             if pesto.draw then pesto.draw() end
         end
 
-        pesto.gui.beginDrawing()
+        pesto.imgui.beginDrawing()
 
-        if pesto.postdraw then pesto.postdraw() end
+        if pesto.gui then pesto.gui() end
 
-        pesto.gui.endDrawing()
+        pesto.imgui.endDrawing()
 
         pesto.graphics.endDrawing()
     end
 
-    pesto.gui.close()
+    pesto.imgui.close()
     pesto.audio.close()
     pesto.window.close()
 end

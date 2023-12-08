@@ -143,7 +143,7 @@ static int setCursor(lua_State* L)
     } else if (TextIsEqual(cursor, "notAllowed")) {
         SetMouseCursor(MOUSE_CURSOR_NOT_ALLOWED);
     } else {
-        return luaL_error(L, "Invalid cursor type");
+        return luaL_error(L, "Invalid cursor type: %s", cursor);
     }
 
     return 0;

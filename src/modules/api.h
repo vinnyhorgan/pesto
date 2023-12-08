@@ -16,7 +16,7 @@ int luaopen_audio(lua_State* L);
 int luaopen_filesystem(lua_State* L);
 int luaopen_gamepad(lua_State* L);
 int luaopen_graphics(lua_State* L);
-int luaopen_gui(lua_State* L);
+int luaopen_imgui(lua_State* L);
 int luaopen_keyboard(lua_State* L);
 int luaopen_log(lua_State* L);
 int luaopen_pmath(lua_State* L); // luaopen_math conflicts with lua internals

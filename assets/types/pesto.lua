@@ -940,3 +940,197 @@ function pesto.audio.loadStream(filename) end
 ---
 ---@param volume number # The volume to set.
 function pesto.audio.setVolume(volume) end
+
+---
+---The `pesto.imgui` module provides a simple binding to the ImGui library.
+---
+---@class pesto.imgui
+pesto.imgui = {}
+
+---
+---Begins drawing ImGui elements.
+---
+function pesto.imgui.beginDrawing() end
+
+---
+---Closes the ImGui environment.
+---
+function pesto.imgui.close() end
+
+---
+---Ends the ImGui drawing.
+---
+function pesto.imgui.endDrawing() end
+
+---
+---Initializes the ImGui environment.
+---
+function pesto.imgui.init() end
+
+---
+---Begins a new ImGui window.
+---
+---@param name string # The name of the window.
+---@param ... string # Additional window flags.
+function pesto.imgui.beginWindow(name, ...) end
+
+---
+---Ends the current ImGui window.
+---
+function pesto.imgui.endWindow() end
+
+---
+---Shows the ImGui demo window.
+---
+function pesto.imgui.showDemoWindow() end
+
+---
+---Displays text within the ImGui window.
+---
+---@param text string # The text to display.
+function pesto.imgui.text(text) end
+
+---
+---Creates a button in the ImGui window.
+---
+---@param label string # The label of the button.
+---@param width? number # Optional width of the button.
+---@param height? number # Optional height of the button.
+---@return boolean # Returns true if the button is pressed, false otherwise.
+function pesto.imgui.button(label, width, height) end
+
+---
+---Creates a checkbox in the ImGui window.
+---
+---@param label string # The label of the checkbox.
+---@param checked boolean # The initial state of the checkbox.
+---@return boolean, boolean # Returns the current state of the checkbox and whether it was modified.
+function pesto.imgui.checkbox(label, checked) end
+
+---
+---Creates a text input field in the ImGui window.
+---
+---@param label string # The label of the input field.
+---@param defaultText string # The default text for the input field.
+---@return string, boolean # Returns the entered text and whether the input field was modified.
+function pesto.imgui.inputText(label, defaultText) end
+
+---
+---Creates a floating-point slider in the ImGui window.
+---
+---@param label string # The label of the slider.
+---@param value number # The initial value of the slider.
+---@param min number # The minimum value of the slider.
+---@param max number # The maximum value of the slider.
+---@return number, boolean # Returns the current value of the slider and whether it was modified.
+function pesto.imgui.sliderFloat(label, value, min, max) end
+
+---
+---Creates an integer slider in the ImGui window.
+---
+---@param label string # The label of the slider.
+---@param value number # The initial value of the slider.
+---@param min number # The minimum value of the slider.
+---@param max number # The maximum value of the slider.
+---@return number, boolean # Returns the current value of the slider and whether it was modified.
+function pesto.imgui.sliderInt(label, value, min, max) end
+
+---
+---Creates a color picker for three floating-point values in the ImGui window (RGB).
+---
+---@param label string # The label of the color picker.
+---@param r number # The initial red value.
+---@param g number # The initial green value.
+---@param b number # The initial blue value.
+---@return number, number, number, boolean # Returns the current RGB values and whether they were modified.
+function pesto.imgui.colorEdit3(label, r, g, b) end
+
+---
+---Creates a color picker for four floating-point values in the ImGui window (RGBA).
+---
+---@param label string # The label of the color picker.
+---@param r number # The initial red value.
+---@param g number # The initial green value.
+---@param b number # The initial blue value.
+---@param a number # The initial alpha value.
+---@return number, number, number, number, boolean # Returns the current RGBA values and whether they were modified.
+function pesto.imgui.colorEdit4(label, r, g, b, a) end
+
+---
+---Displays an image in the ImGui window.
+---
+---@param texture pesto.Texture # The image texture.
+function pesto.imgui.image(texture) end
+
+---
+---Inserts a horizontal separator in the ImGui window.
+---
+function pesto.imgui.separator() end
+
+---
+---Moves the next item to the same line in the ImGui window.
+---
+---@param offset? number # Optional offset from the start of the line.
+---@param spacing? number # Optional spacing from the previous item.
+function pesto.imgui.sameLine(offset, spacing) end
+
+---
+---Sets the next window's position in the ImGui window.
+---
+---@param x number # The x-coordinate of the window's position.
+---@param y number # The y-coordinate of the window's position.
+---@param condition? string # Optional condition for setting the position ("none", "always", "once", "firstUseEver", "appearing").
+function pesto.imgui.setNextWindowPos(x, y, condition) end
+
+---
+---Sets the next window's size in the ImGui window.
+---
+---@param x number # The x-coordinate of the window's size.
+---@param y number # The y-coordinate of the window's size.
+---@param condition? string # Optional condition for setting the size ("none", "always", "once", "firstUseEver", "appearing").
+function pesto.imgui.setNextWindowSize(x, y, condition) end
+
+---
+---Begins the main menu bar in the ImGui window.
+---
+---@return boolean # Returns true if the main menu bar is active.
+function pesto.imgui.beginMainMenuBar() end
+
+---
+---Ends the main menu bar in the ImGui window.
+---
+function pesto.imgui.endMainMenuBar() end
+
+---
+---Begins a menu bar in the ImGui window.
+---
+---@return boolean # Returns true if the menu bar is active.
+function pesto.imgui.beginMenuBar() end
+
+---
+---Ends the menu bar in the ImGui window.
+---
+function pesto.imgui.endMenuBar() end
+
+---
+---Begins a menu in the ImGui window.
+---
+---@param label string # The label of the menu.
+---@param enabled? boolean # Optional parameter for menu enablement.
+---@return boolean # Returns true if the menu is active.
+function pesto.imgui.beginMenu(label, enabled) end
+
+---
+---Ends the menu in the ImGui window.
+---
+function pesto.imgui.endMenu() end
+
+---
+---Adds a menu item in the ImGui window.
+---
+---@param label string # The label of the menu item.
+---@param shortcut? string # Optional keyboard shortcut for the menu item.
+---@param selected? boolean # Optional parameter for initial selection of the menu item.
+---@param enabled? boolean # Optional parameter for enabling the menu item.
+---@return boolean # Returns true if the menu item is selected.
+function pesto.imgui.menuItem(label, shortcut, selected, enabled) end
