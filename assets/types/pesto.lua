@@ -987,6 +987,7 @@ function pesto.imgui.init() end
 ---
 ---@param name string # The name of the window.
 ---@param ... string # Additional window flags.
+---@return boolean # Returns true if the window is active, false otherwise.
 function pesto.imgui.beginWindow(name, ...) end
 
 ---
@@ -997,6 +998,7 @@ function pesto.imgui.endWindow() end
 ---
 ---Shows the ImGui demo window.
 ---
+---@return boolean # Returns true if the demo window is active, false otherwise.
 function pesto.imgui.showDemoWindow() end
 
 ---

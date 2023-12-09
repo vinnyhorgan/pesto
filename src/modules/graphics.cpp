@@ -7,12 +7,84 @@
 static bool safe = false;
 static Color currentColor = WHITE;
 
+static int beginBlendMode(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    const char* mode = luaL_checkstring(L, 1);
+
+    if (TextIsEqual(mode, "alpha")) {
+        BeginBlendMode(BLEND_ALPHA);
+    } else if (TextIsEqual(mode, "additive")) {
+        BeginBlendMode(BLEND_ADDITIVE);
+    } else if (TextIsEqual(mode, "multiplied")) {
+        BeginBlendMode(BLEND_MULTIPLIED);
+    } else if (TextIsEqual(mode, "addColors")) {
+        BeginBlendMode(BLEND_ADD_COLORS);
+    } else if (TextIsEqual(mode, "subtractColors")) {
+        BeginBlendMode(BLEND_SUBTRACT_COLORS);
+    } else if (TextIsEqual(mode, "alphaPremultiplied")) {
+        BeginBlendMode(BLEND_ALPHA_PREMULTIPLY);
+    } else {
+        return luaL_error(L, "Unknown blend mode: %s", mode);
+    }
+
+    return 0;
+}
+
 static int beginDrawing(lua_State* L)
 {
     BeginDrawing();
     safe = true;
 
     return 0;
+}
+
+static int beginScissorMode(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    int width = (int)luaL_checkinteger(L, 3);
+    int height = (int)luaL_checkinteger(L, 4);
+    BeginScissorMode(x, y, width, height);
+
+    return 0;
+}
+
+static int checkCollisionPointRec(lua_State* L)
+{
+    int pointX = (int)luaL_checkinteger(L, 1);
+    int pointY = (int)luaL_checkinteger(L, 2);
+    int recX = (int)luaL_checkinteger(L, 3);
+    int recY = (int)luaL_checkinteger(L, 4);
+    int recWidth = (int)luaL_checkinteger(L, 5);
+    int recHeight = (int)luaL_checkinteger(L, 6);
+    bool result = CheckCollisionPointRec({ (float)pointX, (float)pointY }, { (float)recX, (float)recY, (float)recWidth, (float)recHeight });
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int checkCollisionRecs(lua_State* L)
+{
+    int x1 = (int)luaL_checkinteger(L, 1);
+    int y1 = (int)luaL_checkinteger(L, 2);
+    int w1 = (int)luaL_checkinteger(L, 3);
+    int h1 = (int)luaL_checkinteger(L, 4);
+    int x2 = (int)luaL_checkinteger(L, 5);
+    int y2 = (int)luaL_checkinteger(L, 6);
+    int w2 = (int)luaL_checkinteger(L, 7);
+    int h2 = (int)luaL_checkinteger(L, 8);
+    bool result = CheckCollisionRecs({ (float)x1, (float)y1, (float)w1, (float)h1 }, { (float)x2, (float)y2, (float)w2, (float)h2 });
+    lua_pushboolean(L, result);
+
+    return 1;
 }
 
 static int circle(lua_State* L)
@@ -58,10 +130,62 @@ static int clear(lua_State* L)
     return 0;
 }
 
+static int ellipse(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    float radiusX = (float)luaL_checknumber(L, 3);
+    float radiusY = (float)luaL_checknumber(L, 4);
+    DrawEllipse(x, y, radiusX, radiusY, currentColor);
+
+    return 0;
+}
+
+static int ellipseLines(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    float radiusX = (float)luaL_checknumber(L, 3);
+    float radiusY = (float)luaL_checknumber(L, 4);
+    DrawEllipseLines(x, y, radiusX, radiusY, currentColor);
+
+    return 0;
+}
+
+static int endBlendMode(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    EndBlendMode();
+
+    return 0;
+}
+
 static int endDrawing(lua_State* L)
 {
     EndDrawing();
     safe = false;
+
+    return 0;
+}
+
+static int endScissorMode(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    EndScissorMode();
 
     return 0;
 }
@@ -105,6 +229,26 @@ static int line(lua_State* L)
     DrawLine(x1, y1, x2, y2, currentColor);
 
     return 0;
+}
+
+static int loadCamera(lua_State* L)
+{
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    float rotation = (float)luaL_optnumber(L, 3, 0);
+    float zoom = (float)luaL_optnumber(L, 4, 1);
+
+    Camera2D result;
+    result.target = { (float)x, (float)y };
+    result.offset = { GetRenderWidth() / 2.0f, GetRenderHeight() / 2.0f };
+    result.rotation = rotation;
+    result.zoom = zoom;
+
+    void* ud = lua_newuserdata(L, sizeof(Camera2D));
+    memcpy(ud, &result, sizeof(Camera2D));
+    luaL_setmetatable(L, "Camera");
+
+    return 1;
 }
 
 static int loadCanvas(lua_State* L)
@@ -156,6 +300,27 @@ static int loadShader(lua_State* L)
     void* ud = lua_newuserdata(L, sizeof(Shader));
     memcpy(ud, &result, sizeof(Shader));
     luaL_setmetatable(L, "Shader");
+
+    return 1;
+}
+
+static int loadSvg(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+
+    if (!FileExists(filename)) {
+        return luaL_error(L, "File %s does not exist.", filename);
+    }
+
+    int width = (int)luaL_checkinteger(L, 2);
+    int height = (int)luaL_checkinteger(L, 3);
+    Image image = LoadImageSvg(filename, width, height);
+    Texture result = LoadTextureFromImage(image);
+    UnloadImage(image);
+
+    void* ud = lua_newuserdata(L, sizeof(Texture));
+    memcpy(ud, &result, sizeof(Texture));
+    luaL_setmetatable(L, "Texture");
 
     return 1;
 }
@@ -252,6 +417,76 @@ static int rectangleLines(lua_State* L)
     return 0;
 }
 
+static int ring(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    float innerRadius = (float)luaL_checknumber(L, 3);
+    float outerRadius = (float)luaL_checknumber(L, 4);
+    float startAngle = (float)luaL_checknumber(L, 5);
+    float endAngle = (float)luaL_checknumber(L, 6);
+    int segments = (int)luaL_checkinteger(L, 7);
+    DrawRing({ (float)x, (float)y }, innerRadius, outerRadius, startAngle, endAngle, segments, currentColor);
+
+    return 0;
+}
+
+static int ringLines(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    float innerRadius = (float)luaL_checknumber(L, 3);
+    float outerRadius = (float)luaL_checknumber(L, 4);
+    float startAngle = (float)luaL_checknumber(L, 5);
+    float endAngle = (float)luaL_checknumber(L, 6);
+    int segments = (int)luaL_checkinteger(L, 7);
+    DrawRingLines({ (float)x, (float)y }, innerRadius, outerRadius, startAngle, endAngle, segments, currentColor);
+
+    return 0;
+}
+
+static int sector(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    float radius = (float)luaL_checknumber(L, 3);
+    float startAngle = (float)luaL_checknumber(L, 4);
+    float endAngle = (float)luaL_checknumber(L, 5);
+    int segments = (int)luaL_checkinteger(L, 6);
+    DrawCircleSector({ (float)x, (float)y }, radius, startAngle, endAngle, segments, currentColor);
+
+    return 0;
+}
+
+static int sectorLines(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    float radius = (float)luaL_checknumber(L, 3);
+    float startAngle = (float)luaL_checknumber(L, 4);
+    float endAngle = (float)luaL_checknumber(L, 5);
+    int segments = (int)luaL_checkinteger(L, 6);
+    DrawCircleSectorLines({ (float)x, (float)y }, radius, startAngle, endAngle, segments, currentColor);
+
+    return 0;
+}
+
 static int setColor(lua_State* L)
 {
     unsigned char r = (unsigned char)luaL_optinteger(L, 1, 0);
@@ -285,6 +520,40 @@ static int text(lua_State* L)
     return 0;
 }
 
+static int triangle(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x1 = (int)luaL_checkinteger(L, 1);
+    int y1 = (int)luaL_checkinteger(L, 2);
+    int x2 = (int)luaL_checkinteger(L, 3);
+    int y2 = (int)luaL_checkinteger(L, 4);
+    int x3 = (int)luaL_checkinteger(L, 5);
+    int y3 = (int)luaL_checkinteger(L, 6);
+    DrawTriangle({ (float)x1, (float)y1 }, { (float)x2, (float)y2 }, { (float)x3, (float)y3 }, currentColor);
+
+    return 0;
+}
+
+static int triangleLines(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x1 = (int)luaL_checkinteger(L, 1);
+    int y1 = (int)luaL_checkinteger(L, 2);
+    int x2 = (int)luaL_checkinteger(L, 3);
+    int y2 = (int)luaL_checkinteger(L, 4);
+    int x3 = (int)luaL_checkinteger(L, 5);
+    int y3 = (int)luaL_checkinteger(L, 6);
+    DrawTriangleLines({ (float)x1, (float)y1 }, { (float)x2, (float)y2 }, { (float)x3, (float)y3 }, currentColor);
+
+    return 0;
+}
+
 static int wrappedText(lua_State* L)
 {
     if (!safe) {
@@ -302,27 +571,43 @@ static int wrappedText(lua_State* L)
 }
 
 static const luaL_Reg functions[] = {
+    { "beginBlendMode", beginBlendMode },
     { "beginDrawing", beginDrawing },
+    { "beginScissorMode", beginScissorMode },
+    { "checkCollisionPointRec", checkCollisionPointRec },
+    { "checkCollisionRecs", checkCollisionRecs },
     { "circle", circle },
     { "circleLines", circleLines },
     { "clear", clear },
+    { "ellipse", ellipse },
+    { "ellipseLines", ellipseLines },
+    { "endBlendMode", endBlendMode },
     { "endDrawing", endDrawing },
+    { "endScissorMode", endScissorMode },
     { "getColor", getColor },
     { "getDelta", getDelta },
     { "getFPS", getFPS },
     { "line", line },
+    { "loadCamera", loadCamera },
     { "loadCanvas", loadCanvas },
     { "loadFont", loadFont },
     { "loadShader", loadShader },
+    { "loadSvg", loadSvg },
     { "loadTexture", loadTexture },
     { "pixel", pixel },
     { "polygon", polygon },
     { "polygonLines", polygonLines },
     { "rectangle", rectangle },
     { "rectangleLines", rectangleLines },
+    { "ring", ring },
+    { "ringLines", ringLines },
+    { "sector", sector },
+    { "sectorLines", sectorLines },
     { "setColor", setColor },
     { "setFont", setFont },
     { "text", text },
+    { "triangle", triangle },
+    { "triangleLines", triangleLines },
     { "wrappedText", wrappedText },
     { NULL, NULL }
 };
@@ -621,7 +906,7 @@ static int measureFont(lua_State* L)
 {
     Font font = *(Font*)luaL_checkudata(L, 1, "Font");
     const char* text = luaL_checkstring(L, 2);
-    Vector2 result = MeasureTextEx(font, text, font.baseSize, 0);
+    Vector2 result = MeasureTextEx(font, text, (float)font.baseSize, 0);
     lua_pushnumber(L, result.x);
     lua_pushnumber(L, result.y);
 
@@ -704,6 +989,51 @@ static int isReadyShader(lua_State* L)
     return 1;
 }
 
+static int setValueShader(lua_State* L)
+{
+    Shader shader = *(Shader*)luaL_checkudata(L, 1, "Shader");
+    int locIndex = (int)luaL_checkinteger(L, 2);
+
+    int type = lua_type(L, 3);
+
+    if (type == LUA_TNUMBER) {
+        float value = (float)luaL_checknumber(L, 3);
+        SetShaderValue(shader, locIndex, &value, SHADER_UNIFORM_FLOAT);
+    } else if (type = LUA_TUSERDATA) {
+        Texture value = *(Texture*)luaL_checkudata(L, 3, "Texture");
+        SetShaderValueTexture(shader, locIndex, value);
+    } else if (type == LUA_TTABLE) {
+        int tableLength = (int)lua_objlen(L, 3);
+
+        if (tableLength == 2 || tableLength == 3 || tableLength == 4) {
+            float values[4];
+
+            for (int i = 0; i < tableLength; ++i) {
+                lua_rawgeti(L, 3, i + 1);
+                values[i] = (float)luaL_checknumber(L, -1);
+                lua_pop(L, 1);
+            }
+
+            int uniformType;
+
+            if (tableLength == 2)
+                uniformType = SHADER_UNIFORM_VEC2;
+            else if (tableLength == 3)
+                uniformType = SHADER_UNIFORM_VEC3;
+            else
+                uniformType = SHADER_UNIFORM_VEC4;
+
+            SetShaderValue(shader, locIndex, &values, uniformType);
+        } else {
+            return luaL_error(L, "Invalid number of elements in table for shader value.");
+        }
+    } else {
+        return luaL_error(L, "Invalid type for shader value.");
+    }
+
+    return 0;
+}
+
 static const luaL_Reg shaderMethods[] = {
     { "__gc", gcShader },
     { "__tostring", tostringShader },
@@ -712,6 +1042,161 @@ static const luaL_Reg shaderMethods[] = {
     { "getAttribute", getAttributeShader },
     { "getUniform", getUniformShader },
     { "isReady", isReadyShader },
+    { "setValue", setValueShader },
+    { NULL, NULL }
+};
+
+static int tostringCamera(lua_State* L)
+{
+    lua_pushstring(L, "Camera");
+
+    return 1;
+}
+
+static int beginDrawingCamera(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    Camera2D camera = *(Camera2D*)luaL_checkudata(L, 1, "Camera");
+    BeginMode2D(camera);
+
+    return 0;
+}
+
+static int endDrawingCamera(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    EndMode2D();
+
+    return 0;
+}
+
+static int getPositionCamera(lua_State* L)
+{
+    Camera2D camera = *(Camera2D*)luaL_checkudata(L, 1, "Camera");
+    Vector2 result = camera.target;
+    lua_pushnumber(L, result.x);
+    lua_pushnumber(L, result.y);
+
+    return 2;
+}
+
+static int getRotationCamera(lua_State* L)
+{
+    Camera2D camera = *(Camera2D*)luaL_checkudata(L, 1, "Camera");
+    lua_pushnumber(L, camera.rotation);
+
+    return 1;
+}
+
+static int getZoomCamera(lua_State* L)
+{
+    Camera2D camera = *(Camera2D*)luaL_checkudata(L, 1, "Camera");
+    lua_pushnumber(L, camera.zoom);
+
+    return 1;
+}
+
+static int moveCamera(lua_State* L)
+{
+    Camera2D* camera = (Camera2D*)luaL_checkudata(L, 1, "Camera");
+    float x = (float)luaL_checknumber(L, 2);
+    float y = (float)luaL_checknumber(L, 3);
+    camera->target = { camera->target.x + x, camera->target.y + y };
+
+    return 0;
+}
+
+static int rotateCamera(lua_State* L)
+{
+    Camera2D* camera = (Camera2D*)luaL_checkudata(L, 1, "Camera");
+    float rotation = (float)luaL_checknumber(L, 2);
+    camera->rotation += rotation;
+
+    return 0;
+}
+
+static int screenToWorldCamera(lua_State* L)
+{
+    Camera2D camera = *(Camera2D*)luaL_checkudata(L, 1, "Camera");
+    float x = (float)luaL_checknumber(L, 2);
+    float y = (float)luaL_checknumber(L, 3);
+    Vector2 result = GetScreenToWorld2D({ x, y }, camera);
+    lua_pushnumber(L, result.x);
+    lua_pushnumber(L, result.y);
+
+    return 2;
+}
+
+static int setPositionCamera(lua_State* L)
+{
+    Camera2D* camera = (Camera2D*)luaL_checkudata(L, 1, "Camera");
+    float x = (float)luaL_checknumber(L, 2);
+    float y = (float)luaL_checknumber(L, 3);
+    camera->target = { x, y };
+
+    return 0;
+}
+
+static int setRotationCamera(lua_State* L)
+{
+    Camera2D* camera = (Camera2D*)luaL_checkudata(L, 1, "Camera");
+    float rotation = (float)luaL_checknumber(L, 2);
+    camera->rotation = rotation;
+
+    return 0;
+}
+
+static int setZoomCamera(lua_State* L)
+{
+    Camera2D* camera = (Camera2D*)luaL_checkudata(L, 1, "Camera");
+    float zoom = (float)luaL_checknumber(L, 2);
+    camera->zoom = zoom;
+
+    return 0;
+}
+
+static int worldToScreenCamera(lua_State* L)
+{
+    Camera2D camera = *(Camera2D*)luaL_checkudata(L, 1, "Camera");
+    float x = (float)luaL_checknumber(L, 2);
+    float y = (float)luaL_checknumber(L, 3);
+    Vector2 result = GetWorldToScreen2D({ x, y }, camera);
+    lua_pushnumber(L, result.x);
+    lua_pushnumber(L, result.y);
+
+    return 2;
+}
+
+static int zoomCamera(lua_State* L)
+{
+    Camera2D* camera = (Camera2D*)luaL_checkudata(L, 1, "Camera");
+    float zoom = (float)luaL_checknumber(L, 2);
+    camera->zoom *= zoom;
+
+    return 0;
+}
+
+static const luaL_Reg cameraMethods[] = {
+    { "__tostring", tostringCamera },
+    { "beginDrawing", beginDrawingCamera },
+    { "endDrawing", endDrawingCamera },
+    { "getPosition", getPositionCamera },
+    { "getRotation", getRotationCamera },
+    { "getZoom", getZoomCamera },
+    { "move", moveCamera },
+    { "rotate", rotateCamera },
+    { "screenToWorld", screenToWorldCamera },
+    { "setPosition", setPositionCamera },
+    { "setRotation", setRotationCamera },
+    { "setZoom", setZoomCamera },
+    { "worldToScreen", worldToScreenCamera },
+    { "zoom", zoomCamera },
     { NULL, NULL }
 };
 
@@ -739,6 +1224,12 @@ int luaopen_graphics(lua_State* L)
     lua_pushvalue(L, -1);
     lua_setfield(L, -2, "__index");
     luaL_setfuncs(L, shaderMethods, 0);
+    lua_pop(L, 1);
+
+    luaL_newmetatable(L, "Camera");
+    lua_pushvalue(L, -1);
+    lua_setfield(L, -2, "__index");
+    luaL_setfuncs(L, cameraMethods, 0);
     lua_pop(L, 1);
 
     lua_getglobal(L, "pesto");
