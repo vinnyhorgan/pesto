@@ -7,6 +7,7 @@
 // Global variables
 extern bool shouldQuit;
 extern Font currentFont;
+extern Shader sdfShader;
 
 int luaopen_pesto(lua_State* L);
 

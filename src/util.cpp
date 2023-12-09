@@ -41,6 +41,8 @@ void generateHeaders()
     ExportImageAsCode(icon, PROJECT_PATH "assets/icon.png.h");
     UnloadImage(icon);
 
+    generateHeader("assets/sdf.fs");
+
     // Font can't be generated without opengl context
 
     generateHeader("src/scripts/boot.lua");

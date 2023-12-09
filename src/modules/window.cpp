@@ -4,9 +4,11 @@
 
 #include "../../assets/icon.png.h"
 #include "../../assets/noto.ttf.h"
+#include "../../assets/sdf.fs.h"
 
 bool shouldQuit = false;
 Font currentFont;
+Shader sdfShader;
 
 static int close(lua_State* L)
 {
@@ -170,6 +172,8 @@ static int init(lua_State* L)
     icon.mipmaps = 1;
 
     SetWindowIcon(icon);
+
+    sdfShader = LoadShaderFromMemory(0, (const char*)SDF_DATA);
 
     return 0;
 }
