@@ -282,6 +282,35 @@ static int loadFont(lua_State* L)
     return 1;
 }
 
+static int loadFontSDF(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+
+    if (!FileExists(filename)) {
+        return luaL_error(L, "File %s does not exist.", filename);
+    }
+
+    int fileSize = 0;
+    unsigned char* fileData = LoadFileData(filename, &fileSize);
+
+    Font fontSDF = { 0 };
+    fontSDF.baseSize = 16;
+    fontSDF.glyphCount = 95;
+    fontSDF.glyphs = LoadFontData(fileData, fileSize, 16, 0, 0, FONT_SDF);
+    Image atlas = GenImageFontAtlas(fontSDF.glyphs, &fontSDF.recs, 95, 16, 0, 1);
+    fontSDF.texture = LoadTextureFromImage(atlas);
+    SetTextureFilter(fontSDF.texture, TEXTURE_FILTER_BILINEAR);
+
+    UnloadImage(atlas);
+    UnloadFileData(fileData);
+
+    void* ud = lua_newuserdata(L, sizeof(Font));
+    memcpy(ud, &fontSDF, sizeof(Font));
+    luaL_setmetatable(L, "Font");
+
+    return 1;
+}
+
 static int loadShader(lua_State* L)
 {
     const char* vsFilename = luaL_checkstring(L, 1);
@@ -498,14 +527,6 @@ static int setColor(lua_State* L)
     return 0;
 }
 
-static int setFont(lua_State* L)
-{
-    Font font = *(Font*)luaL_checkudata(L, 1, "Font");
-    currentFont = font;
-
-    return 0;
-}
-
 static int text(lua_State* L)
 {
     if (!safe) {
@@ -515,7 +536,7 @@ static int text(lua_State* L)
     const char* text = luaL_checkstring(L, 1);
     int x = (int)luaL_checkinteger(L, 2);
     int y = (int)luaL_checkinteger(L, 3);
-    DrawTextEx(currentFont, text, { (float)x, (float)y }, (float)currentFont.baseSize, 0, currentColor);
+    DrawTextEx(defaultFont, text, { (float)x, (float)y }, (float)defaultFont.baseSize, 0, currentColor);
 
     return 0;
 }
@@ -565,7 +586,7 @@ static int wrappedText(lua_State* L)
     int y = (int)luaL_checkinteger(L, 3);
     int w = (int)luaL_checkinteger(L, 4);
     int h = (int)luaL_checkinteger(L, 5);
-    DrawTextBoxedSelectable(currentFont, text, { (float)x, (float)y, (float)w, (float)h }, (float)currentFont.baseSize, 0, true, currentColor, 0, 0, WHITE, WHITE);
+    DrawTextBoxedSelectable(defaultFont, text, { (float)x, (float)y, (float)w, (float)h }, (float)defaultFont.baseSize, 0, true, currentColor, 0, 0, WHITE, WHITE);
 
     return 0;
 }
@@ -591,6 +612,7 @@ static const luaL_Reg functions[] = {
     { "loadCamera", loadCamera },
     { "loadCanvas", loadCanvas },
     { "loadFont", loadFont },
+    { "loadFontSDF", loadFontSDF },
     { "loadShader", loadShader },
     { "loadSvg", loadSvg },
     { "loadTexture", loadTexture },
@@ -604,7 +626,6 @@ static const luaL_Reg functions[] = {
     { "sector", sector },
     { "sectorLines", sectorLines },
     { "setColor", setColor },
-    { "setFont", setFont },
     { "text", text },
     { "triangle", triangle },
     { "triangleLines", triangleLines },
@@ -893,6 +914,63 @@ static int tostringFont(lua_State* L)
     return 1;
 }
 
+static int draw(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    Font font = *(Font*)luaL_checkudata(L, 1, "Font");
+    const char* text = luaL_checkstring(L, 2);
+    int x = (int)luaL_checkinteger(L, 3);
+    int y = (int)luaL_checkinteger(L, 4);
+    float rotation = (float)luaL_optnumber(L, 5, 0);
+    int ox = (int)luaL_optinteger(L, 6, 0);
+    int oy = (int)luaL_optinteger(L, 7, 0);
+    DrawTextPro(font, text, { (float)x, (float)y }, { (float)ox, (float)oy }, rotation, (float)font.baseSize, 0, currentColor);
+
+    return 0;
+}
+
+static int drawSDF(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    Font font = *(Font*)luaL_checkudata(L, 1, "Font");
+    const char* text = luaL_checkstring(L, 2);
+    int x = (int)luaL_checkinteger(L, 3);
+    int y = (int)luaL_checkinteger(L, 4);
+    float size = (float)luaL_checknumber(L, 5);
+    float rotation = (float)luaL_optnumber(L, 6, 0);
+    int ox = (int)luaL_optinteger(L, 7, 0);
+    int oy = (int)luaL_optinteger(L, 8, 0);
+
+    BeginShaderMode(sdfShader);
+    DrawTextPro(font, text, { (float)x, (float)y }, { (float)ox, (float)oy }, rotation, size, 0, currentColor);
+    EndShaderMode();
+
+    return 0;
+}
+
+static int drawWrapped(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    Font font = *(Font*)luaL_checkudata(L, 1, "Font");
+    const char* text = luaL_checkstring(L, 2);
+    int x = (int)luaL_checkinteger(L, 3);
+    int y = (int)luaL_checkinteger(L, 4);
+    int w = (int)luaL_checkinteger(L, 5);
+    int h = (int)luaL_checkinteger(L, 6);
+    DrawTextBoxedSelectable(font, text, { (float)x, (float)y, (float)w, (float)h }, (float)font.baseSize, 0, true, currentColor, 0, 0, WHITE, WHITE);
+
+    return 0;
+}
+
 static int isReadyFont(lua_State* L)
 {
     Font font = *(Font*)luaL_checkudata(L, 1, "Font");
@@ -916,6 +994,9 @@ static int measureFont(lua_State* L)
 static const luaL_Reg fontMethods[] = {
     { "__gc", gcFont },
     { "__tostring", tostringFont },
+    { "draw", draw },
+    { "drawSDF", drawSDF },
+    { "drawWrapped", drawWrapped },
     { "isReady", isReadyFont },
     { "measure", measureFont },
     { NULL, NULL }

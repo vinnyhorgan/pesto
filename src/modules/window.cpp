@@ -7,11 +7,13 @@
 #include "../../assets/sdf.fs.h"
 
 bool shouldQuit = false;
-Font currentFont;
+Font defaultFont;
 Shader sdfShader;
 
 static int close(lua_State* L)
 {
+    UnloadShader(sdfShader);
+
     CloseWindow();
 
     return 0;
@@ -162,7 +164,7 @@ static int init(lua_State* L)
 
     SetExitKey(KEY_NULL);
 
-    currentFont = LoadFont_Noto();
+    defaultFont = LoadFont_Noto();
 
     Image icon;
     icon.data = ICON_DATA;
