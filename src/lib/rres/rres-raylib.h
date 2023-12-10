@@ -201,25 +201,25 @@ void *LoadDataFromResource(rresResourceChunk chunk, unsigned int *size)
 char *LoadTextFromResource(rresResourceChunk chunk)
 {
     char *text = NULL;
-    int codeLang = 0;
+    unsigned int codeLang = 0;
 
     if (rresGetDataType(chunk.info.type) == RRES_DATA_TEXT)       // Text data
     {
-        text = LoadTextFromResourceChunk(chunk, (unsigned int*)&codeLang);
+        text = LoadTextFromResourceChunk(chunk, &codeLang);
 
         // TODO: Consider text code language to load shader or code scripts
     }
     else if (rresGetDataType(chunk.info.type) == RRES_DATA_RAW)   // Raw text file
     {
         unsigned int size = 0;
-        text = (char*)LoadDataFromResourceChunk(chunk, &size);
+        text = (char *)LoadDataFromResourceChunk(chunk, &size);
     }
     else if (rresGetDataType(chunk.info.type) == RRES_DATA_LINK)  // Link to external file
     {
         // Get raw data from external linked file
         unsigned int dataSize = 0;
         void *data = LoadDataFromResourceLink(chunk, &dataSize);
-        text = (char*)data;
+        text = (char *)data;
     }
 
     return text;
@@ -237,7 +237,7 @@ Image LoadImageFromResource(rresResourceChunk chunk)
     else if (rresGetDataType(chunk.info.type) == RRES_DATA_RAW)       // Raw image file
     {
         unsigned int dataSize = 0;
-        unsigned char *data = (unsigned char*)LoadDataFromResourceChunk(chunk, &dataSize);
+        unsigned char *data = (unsigned char *)LoadDataFromResourceChunk(chunk, &dataSize);
 
         image = LoadImageFromMemory(GetExtensionFromProps(chunk.data.props[1], chunk.data.props[2]), data, dataSize);
 
@@ -252,7 +252,7 @@ Image LoadImageFromResource(rresResourceChunk chunk)
         // Load image from linked file data
         // NOTE: Function checks internally if the file extension is supported to
         // properly load the data, if it fails it logs the result and image.data = NULL
-        image = LoadImageFromMemory(GetFileExtension((const char*)chunk.data.raw), (const unsigned char*)data, dataSize);
+        image = LoadImageFromMemory(GetFileExtension((char *)chunk.data.raw), (unsigned char *)data, dataSize);
     }
 
     return image;
@@ -281,7 +281,7 @@ Wave LoadWaveFromResource(rresResourceChunk chunk)
     else if (rresGetDataType(chunk.info.type) == RRES_DATA_RAW)   // Raw wave file
     {
         unsigned int dataSize = 0;
-        unsigned char *data = (unsigned char*)LoadDataFromResourceChunk(chunk, &dataSize);
+        unsigned char *data = (unsigned char *)LoadDataFromResourceChunk(chunk, &dataSize);
 
         wave = LoadWaveFromMemory(GetExtensionFromProps(chunk.data.props[1], chunk.data.props[2]), data, dataSize);
 
@@ -296,7 +296,7 @@ Wave LoadWaveFromResource(rresResourceChunk chunk)
         // Load wave from linked file data
         // NOTE: Function checks internally if the file extension is supported to
         // properly load the data, if it fails it logs the result and wave.data = NULL
-        wave = LoadWaveFromMemory(GetFileExtension((const char*)chunk.data.raw), (const unsigned char*)data, dataSize);
+        wave = LoadWaveFromMemory(GetFileExtension((char *)chunk.data.raw), (unsigned char *)data, dataSize);
     }
 
     return wave;
@@ -360,7 +360,7 @@ Font LoadFontFromResource(rresResourceMulti multi)
         if (rresGetDataType(multi.chunks[0].info.type) == RRES_DATA_RAW)      // Raw font file
         {
             unsigned int dataSize = 0;
-            unsigned char *rawData = (unsigned char*)LoadDataFromResourceChunk(multi.chunks[0], &dataSize);
+            unsigned char *rawData = (unsigned char *)LoadDataFromResourceChunk(multi.chunks[0], &dataSize);
 
             font = LoadFontFromMemory(GetExtensionFromProps(multi.chunks[0].data.props[1], multi.chunks[0].data.props[2]), rawData, dataSize, 32, NULL, 0);
 
@@ -376,7 +376,7 @@ Font LoadFontFromResource(rresResourceMulti multi)
             // NOTE 1: Loading font at 32px base size and default charset (95 glyphs)
             // NOTE 2: Function checks internally if the file extension is supported to
             // properly load the data, if it fails it logs the result and font.texture.id = 0
-            font = LoadFontFromMemory(GetFileExtension((const char*)multi.chunks[0].data.raw), (const unsigned char*)rawData, dataSize, 32, NULL, 0);
+            font = LoadFontFromMemory(GetFileExtension((char *)multi.chunks[0].data.raw), (unsigned char *)rawData, dataSize, 32, NULL, 0);
 
             RRES_FREE(rawData);
         }
@@ -537,7 +537,7 @@ int UnpackResourceChunk(rresResourceChunk *chunk)
 
     switch (chunk->info.cipherType)
     {
-        case RRES_CIPHER_NONE: decryptedData = (unsigned char*)chunk->data.raw; break;
+        case RRES_CIPHER_NONE: decryptedData = (unsigned char *)chunk->data.raw; break;
 #if defined(RRES_SUPPORT_ENCRYPTION_AES)
         case RRES_CIPHER_AES:
         {
@@ -735,7 +735,7 @@ int UnpackResourceChunk(rresResourceChunk *chunk)
             {
                 int uncompDataSize = 0;
                 uncompData = (unsigned char *)RRES_CALLOC(chunk->info.baseSize, 1);
-                uncompDataSize = LZ4_decompress_safe((const char*)decryptedData, (char*)uncompData, chunk->info.packedSize, chunk->info.baseSize);
+                uncompDataSize = LZ4_decompress_safe((char *)decryptedData, (char *)uncompData, chunk->info.packedSize, chunk->info.baseSize);
 
                 if ((uncompData != NULL) && (uncompDataSize > 0))     // Decompression successful
                 {
@@ -759,7 +759,7 @@ int UnpackResourceChunk(rresResourceChunk *chunk)
                 qoi_desc desc = { 0 };
 
                 // TODO: WARNING: Possible issue with allocators: QOI_MALLOC() vs RRES_MALLOC()
-                uncompData = (unsigned char*)qoi_decode(decryptedData, chunk->info.packedSize, &desc, 0);
+                uncompData = (unsigned char *)qoi_decode(decryptedData, chunk->info.packedSize, &desc, 0);
                 uncompDataSize = (desc.width*desc.height*desc.channels) + 20;   // Add the 20 bytes of (propCount + props[4])
 
                 if ((uncompData != NULL) && (uncompDataSize > 0))     // Decompression successful
@@ -822,32 +822,32 @@ int UnpackResourceChunk(rresResourceChunk *chunk)
 // Load data chunk: RRES_DATA_LINK
 static void *LoadDataFromResourceLink(rresResourceChunk chunk, unsigned int *size)
 {
-    unsigned char fullFilePath[2048] = { 0 };
+    char fullFilePath[2048] = { 0 };
     void *data = NULL;
     *size = 0;
 
     // Get external link filepath
-    unsigned char *linkFilePath = (unsigned char*)RL_CALLOC(chunk.data.props[0], 1);
+    char *linkFilePath = (char *)RL_CALLOC(chunk.data.props[0], 1);
     if (linkFilePath != NULL) memcpy(linkFilePath, chunk.data.raw, chunk.data.props[0]);
 
     // Get base directory to append filepath if not provided by user
     if (baseDir == NULL) baseDir = GetApplicationDirectory();
 
-    strcpy((char*)fullFilePath, baseDir);
-    strcat((char*)fullFilePath, (char*)linkFilePath);
+    strcpy(fullFilePath, baseDir);
+    strcat(fullFilePath, linkFilePath);
 
     RRES_LOG("RRES: %c%c%c%c: Data file linked externally: %s\n", chunk.info.type[0], chunk.info.type[1], chunk.info.type[2], chunk.info.type[3], linkFilePath);
 
-    if (FileExists((const char*)fullFilePath))
+    if (FileExists(fullFilePath))
     {
         // Load external file as raw data
         // NOTE: We check if file is a text file to allow automatic line-endings processing
-        if (IsFileExtension((const char*)linkFilePath, ".txt;.md;.vs;.fs;.info;.c;.h;.json;.xml;.glsl"))     // Text file
+        if (IsFileExtension(linkFilePath, ".txt;.md;.vs;.fs;.info;.c;.h;.json;.xml;.glsl"))     // Text file
         {
-            data = LoadFileText((const char*)fullFilePath);
-            *size = TextLength((const char*)data);
+            data = LoadFileText(fullFilePath);
+            *size = TextLength((char *)data);
         }
-        else data = LoadFileData((const char*)fullFilePath, (int*)size);
+        else data = LoadFileData(fullFilePath, (int *)size);
 
         if ((data != NULL) && (*size > 0)) RRES_LOG("RRES: %c%c%c%c: External linked file loaded successfully\n", chunk.info.type[0], chunk.info.type[1], chunk.info.type[2], chunk.info.type[3]);
     }
@@ -877,11 +877,11 @@ static void *LoadDataFromResourceChunk(rresResourceChunk chunk, unsigned int *si
 // NOTE: This chunk can be used for shaders or other text data elements (materials?)
 static char *LoadTextFromResourceChunk(rresResourceChunk chunk, unsigned int *codeLang)
 {
-    void *text = NULL;
+    char *text = NULL;
 
     if ((chunk.info.compType == RRES_COMP_NONE) && (chunk.info.cipherType == RRES_CIPHER_NONE))
     {
-        text = (char *)RL_CALLOC(chunk.data.props[0] + 1, 1);    // We add NULL terminator, just in case
+        text = (char *)RL_CALLOC(chunk.data.props[0] + 1, 1);   // We add NULL terminator, just in case
         if (text != NULL) memcpy(text, chunk.data.raw, chunk.data.props[0]);
 
         // TODO: We got some extra text properties, in case they could be useful for users:
@@ -891,7 +891,7 @@ static char *LoadTextFromResourceChunk(rresResourceChunk chunk, unsigned int *co
     }
     else RRES_LOG("RRES: %c%c%c%c: WARNING: Data must be decompressed/decrypted\n", chunk.info.type[0], chunk.info.type[1], chunk.info.type[2], chunk.info.type[3]);
 
-    return (char*)text;
+    return text;
 }
 
 // Load data chunk: RRES_DATA_IMAGE
@@ -1027,7 +1027,7 @@ static unsigned int *ComputeMD5(unsigned char *data, int size)
 
     int newDataSize = ((((size + 8)/64) + 1)*64) - 8;
 
-    unsigned char *msg = (unsigned char*)RL_CALLOC(newDataSize + 64, 1);   // Also appends "0" bits (we alloc also 64 extra bytes...)
+    unsigned char *msg = (unsigned char *)RL_CALLOC(newDataSize + 64, 1);   // Also appends "0" bits (we alloc also 64 extra bytes...)
     memcpy(msg, data, size);
     msg[size] = 128;                 // Write the "1" bit
 

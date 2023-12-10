@@ -100,6 +100,114 @@ static int getInfo(lua_State* L)
     return 1;
 }
 
+static int loadFont(lua_State* L)
+{
+    const char* rresFilename = luaL_checkstring(L, 1);
+    const char* filename = luaL_checkstring(L, 2);
+
+    if (!FileExists(rresFilename)) {
+        return luaL_error(L, "RRES file %s does not exist.", rresFilename);
+    }
+
+    rresCentralDir dir = rresLoadCentralDirectory(rresFilename);
+
+    if (dir.count == 0) {
+        return luaL_error(L, "RRES file %s does not contain a central directory.", rresFilename);
+    }
+
+    unsigned int id = rresGetResourceId(dir, filename);
+    rresResourceMulti multi = rresLoadResourceMulti(rresFilename, id);
+
+    int result;
+
+    for (unsigned int i = 0; i < multi.count; i++) {
+        result = UnpackResourceChunk(&multi.chunks[i]);
+
+        if (result != 0) {
+            rresUnloadResourceMulti(multi);
+            rresUnloadCentralDirectory(dir);
+        }
+
+        if (result == 1) {
+            return luaL_error(L, "Resource %s uses an unsupported encryption algorithm.", filename);
+        } else if (result == 2) {
+            return luaL_error(L, "Resource %s cannot be decrypted with provided password.", filename);
+        } else if (result == 3) {
+            return luaL_error(L, "Resource %s uses an unsupported compression algorithm.", filename);
+        } else if (result == 4) {
+            return luaL_error(L, "Resource %s cannot be decompressed.", filename);
+        }
+    }
+
+    Font font = LoadFontFromResource(multi);
+
+    rresUnloadResourceMulti(multi);
+    rresUnloadCentralDirectory(dir);
+
+    void* ud = lua_newuserdata(L, sizeof(Font));
+    memcpy(ud, &font, sizeof(Font));
+    luaL_setmetatable(L, "Font");
+
+    return 1;
+}
+
+static int loadSound(lua_State* L)
+{
+    const char* rresFilename = luaL_checkstring(L, 1);
+    const char* filename = luaL_checkstring(L, 2);
+
+    if (!FileExists(rresFilename)) {
+        return luaL_error(L, "RRES file %s does not exist.", rresFilename);
+    }
+
+    rresCentralDir dir = rresLoadCentralDirectory(rresFilename);
+
+    if (dir.count == 0) {
+        return luaL_error(L, "RRES file %s does not contain a central directory.", rresFilename);
+    }
+
+    unsigned int id = rresGetResourceId(dir, filename);
+    rresResourceChunk chunk = rresLoadResourceChunk(rresFilename, id);
+
+    int result = UnpackResourceChunk(&chunk);
+
+    if (result != 0) {
+        rresUnloadResourceChunk(chunk);
+        rresUnloadCentralDirectory(dir);
+    }
+
+    if (result == 1) {
+        return luaL_error(L, "Resource %s uses an unsupported encryption algorithm.", filename);
+    } else if (result == 2) {
+        return luaL_error(L, "Resource %s cannot be decrypted with provided password.", filename);
+    } else if (result == 3) {
+        return luaL_error(L, "Resource %s uses an unsupported compression algorithm.", filename);
+    } else if (result == 4) {
+        return luaL_error(L, "Resource %s cannot be decompressed.", filename);
+    }
+
+    Wave wave = LoadWaveFromResource(chunk);
+
+    if (wave.data == NULL) {
+        rresUnloadResourceChunk(chunk);
+        rresUnloadCentralDirectory(dir);
+
+        return luaL_error(L, "Resource %s could not be loaded.", filename);
+    }
+
+    Sound sound = LoadSoundFromWave(wave);
+    UnloadWave(wave);
+
+    rresUnloadResourceChunk(chunk);
+    rresUnloadCentralDirectory(dir);
+
+    void* ud = lua_newuserdata(L, sizeof(Sound));
+    memcpy(ud, &sound, sizeof(Sound));
+    luaL_setmetatable(L, "Sound");
+
+    return 1;
+}
+
 static int loadText(lua_State* L)
 {
     const char* rresFilename = luaL_checkstring(L, 1);
@@ -204,6 +312,8 @@ static int loadTexture(lua_State* L)
 
 static const luaL_Reg functions[] = {
     { "getInfo", getInfo },
+    { "loadFont", loadFont },
+    { "loadSound", loadSound },
     { "loadText", loadText },
     { "loadTexture", loadTexture },
     { NULL, NULL }
