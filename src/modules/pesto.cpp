@@ -69,7 +69,6 @@ static const luaL_Reg modules[] = {
     { "pesto.log", luaopen_log },
     { "pesto.math", luaopen_pmath },
     { "pesto.mouse", luaopen_mouse },
-    { "pesto.physics", luaopen_physics },
     { "pesto.rres", luaopen_rres },
     { "pesto.system", luaopen_system },
     { "pesto.window", luaopen_window },

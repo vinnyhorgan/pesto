@@ -10,10 +10,6 @@ if(MSVC)
     add_compile_options(/wd4005 /wd4018 /wd4996)
 endif()
 
-set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "")
-set(BOX2D_BUILD_UNIT_TESTS OFF CACHE BOOL "")
-add_subdirectory(deps/box2d)
-
 add_subdirectory(deps/luajit)
 include_directories(deps/luajit/src)
 
@@ -41,7 +37,7 @@ else()
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-target_link_libraries(${PROJECT_NAME} box2d libluajit raylib)
+target_link_libraries(${PROJECT_NAME} libluajit raylib)
 
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} ws2_32)
@@ -56,7 +52,7 @@ endif()
 if(MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "pestoc")
     add_executable(pesto_win ${SOURCES})
-    target_link_libraries(pesto_win box2d libluajit raylib ws2_32)
+    target_link_libraries(pesto_win libluajit raylib ws2_32)
     target_link_options(pesto_win PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
     set_target_properties(pesto_win PROPERTIES OUTPUT_NAME "pesto")
 endif()

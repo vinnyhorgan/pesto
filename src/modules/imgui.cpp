@@ -492,6 +492,13 @@ static const luaL_Reg functions[] = {
     { "sameLine", sameLine },
     { "setNextWindowPos", setNextWindowPos },
     { "setNextWindowSize", setNextWindowSize },
+    { "beginMainMenuBar", beginMainMenuBar },
+    { "endMainMenuBar", endMainMenuBar },
+    { "beginMenuBar", beginMenuBar },
+    { "endMenuBar", endMenuBar },
+    { "beginMenu", beginMenu },
+    { "endMenu", endMenu },
+    { "menuItem", menuItem },
     { NULL, NULL }
 };
 
