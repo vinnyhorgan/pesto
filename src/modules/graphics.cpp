@@ -226,7 +226,24 @@ static int line(lua_State* L)
     int y1 = (int)luaL_checkinteger(L, 2);
     int x2 = (int)luaL_checkinteger(L, 3);
     int y2 = (int)luaL_checkinteger(L, 4);
-    DrawLine(x1, y1, x2, y2, currentColor);
+    float thickness = (float)luaL_optnumber(L, 5, 1);
+    DrawLineEx({ (float)x1, (float)y1 }, { (float)x2, (float)y2 }, thickness, currentColor);
+
+    return 0;
+}
+
+static int lineBezier(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x1 = (int)luaL_checkinteger(L, 1);
+    int y1 = (int)luaL_checkinteger(L, 2);
+    int x2 = (int)luaL_checkinteger(L, 3);
+    int y2 = (int)luaL_checkinteger(L, 4);
+    float thickness = (float)luaL_optnumber(L, 5, 1);
+    DrawLineBezier({ (float)x1, (float)y1 }, { (float)x2, (float)y2 }, thickness, currentColor);
 
     return 0;
 }
@@ -411,7 +428,8 @@ static int polygonLines(lua_State* L)
     int sides = (int)luaL_checkinteger(L, 3);
     float radius = (float)luaL_checknumber(L, 4);
     float rotation = (float)luaL_checknumber(L, 5);
-    DrawPolyLines({ (float)x, (float)y }, sides, radius, rotation, currentColor);
+    float thickness = (float)luaL_optnumber(L, 6, 1);
+    DrawPolyLinesEx({ (float)x, (float)y }, sides, radius, rotation, thickness, currentColor);
 
     return 0;
 }
@@ -426,7 +444,10 @@ static int rectangle(lua_State* L)
     int y = (int)luaL_checkinteger(L, 2);
     int width = (int)luaL_checkinteger(L, 3);
     int height = (int)luaL_checkinteger(L, 4);
-    DrawRectangle(x, y, width, height, currentColor);
+    float rotation = (float)luaL_optnumber(L, 5, 0);
+    int ox = (int)luaL_optinteger(L, 6, 0);
+    int oy = (int)luaL_optinteger(L, 7, 0);
+    DrawRectanglePro({ (float)x, (float)y, (float)width, (float)height }, { (float)ox, (float)oy }, rotation, currentColor);
 
     return 0;
 }
@@ -441,7 +462,8 @@ static int rectangleLines(lua_State* L)
     int y = (int)luaL_checkinteger(L, 2);
     int width = (int)luaL_checkinteger(L, 3);
     int height = (int)luaL_checkinteger(L, 4);
-    DrawRectangleLines(x, y, width, height, currentColor);
+    float thickness = (float)luaL_optnumber(L, 5, 1);
+    DrawRectangleLinesEx({ (float)x, (float)y, (float)width, (float)height }, thickness, currentColor);
 
     return 0;
 }
@@ -609,6 +631,7 @@ static const luaL_Reg functions[] = {
     { "getDelta", getDelta },
     { "getFPS", getFPS },
     { "line", line },
+    { "lineBezier", lineBezier },
     { "loadCamera", loadCamera },
     { "loadCanvas", loadCanvas },
     { "loadFont", loadFont },
