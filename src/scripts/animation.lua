@@ -1,4 +1,4 @@
--- State implementation based on anim8 <3
+-- Animation implementation based on anim8 <3
 local anim8 = {}
 
 local Grid = {}
@@ -30,7 +30,7 @@ local function createFrame(self, x, y)
 end
 
 local function getGridKey(...)
-    return table.concat({...}, "-")
+    return table.concat({ ... }, "-")
 end
 
 local function getOrCreateFrame(self, x, y)
@@ -57,7 +57,7 @@ local function parseInterval(str)
 end
 
 function Grid:getFrames(...)
-    local result, args = {}, {...}
+    local result, args = {}, { ... }
     local minx, maxx, stepx, miny, maxy, stepy
 
     for i = 1, #args, 2 do
@@ -92,20 +92,20 @@ local function newGrid(frameWidth, frameHeight, imageWidth, imageHeight, left, t
 
     local grid =
         setmetatable(
-        {
-            frameWidth = frameWidth,
-            frameHeight = frameHeight,
-            imageWidth = imageWidth,
-            imageHeight = imageHeight,
-            left = left,
-            top = top,
-            border = border,
-            width = math.floor(imageWidth / frameWidth),
-            height = math.floor(imageHeight / frameHeight),
-            _key = key
-        },
-        Gridmt
-    )
+            {
+                frameWidth = frameWidth,
+                frameHeight = frameHeight,
+                imageWidth = imageWidth,
+                imageHeight = imageHeight,
+                left = left,
+                top = top,
+                border = border,
+                width = math.floor(imageWidth / frameWidth),
+                height = math.floor(imageHeight / frameHeight),
+                _key = key
+            },
+            Gridmt
+        )
     return grid
 end
 
@@ -141,7 +141,7 @@ local function parseDurations(durations, frameCount)
     if #result < frameCount then
         error(
             "The durations table has length of " ..
-                tostring(#result) .. ", but it should be >= " .. tostring(frameCount)
+            tostring(#result) .. ", but it should be >= " .. tostring(frameCount)
         )
     end
 
@@ -149,7 +149,7 @@ local function parseDurations(durations, frameCount)
 end
 
 local function parseIntervals(durations)
-    local result, time = {0}, 0
+    local result, time = { 0 }, 0
     for i = 1, #durations do
         time = time + durations[i]
         result[i + 1] = time
@@ -157,7 +157,7 @@ local function parseIntervals(durations)
     return result, time
 end
 
-local Animationmt = {__index = Animation}
+local Animationmt = { __index = Animation }
 local nop = function()
 end
 
@@ -262,7 +262,8 @@ end
 
 function Animation:draw(image, x, y, r, sx, sy, ox, oy)
     local frame, x, y, r, sx, sy, ox, oy = self:getFrameInfo(x, y, r, sx, sy, ox, oy)
-    pesto.graphics.drawPro(image, frame.x, frame.y, frame.width, frame.height, x, y, frame.width * 1, frame.height * 1, 0, 0, 0)
+    pesto.graphics.drawPro(image, frame.x, frame.y, frame.width, frame.height, x, y, frame.width * 1, frame.height * 1, 0,
+        0, 0)
 end
 
 function Animation:getFrameInfo(x, y, r, sx, sy, ox, oy)
