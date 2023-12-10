@@ -1,7 +1,7 @@
 -- Hot reload implementation based on rxi's lurker <3
 local reload = {}
 
-local callbacks = { "update", "draw" }
+local callbacks = { "update", "draw", "gui", "quit" }
 
 function reload.init()
     reload.path = "."
@@ -46,6 +46,8 @@ end
 function reload.onerror(e)
     reload.state = "error"
 
+    pesto.mouse.enable()
+
     for _, v in pairs(callbacks) do
         pesto[v] = function() end
     end
@@ -55,6 +57,7 @@ function reload.onerror(e)
     pesto.draw = function()
         pesto.graphics.clear(172, 57, 49, 255)
 
+        pesto.graphics.setColor(255, 255, 255)
         pesto.graphics.text("Reload error!", 10, 10)
         pesto.graphics.wrappedText(e .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(),
             pesto.window.getHeight())
@@ -120,11 +123,11 @@ function reload.hotswapfile(f)
     if reload.preswap(f) then
         pesto.log.debug("Hotswap of " .. f .. " aborted by preswap")
         reload.resetfile(f)
+
         return
     end
 
     local modname = reload.modname(f)
-
     local t, ok, err = pesto.util.time(pesto.util.hotswap, modname)
 
     if ok then
