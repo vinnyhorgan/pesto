@@ -101,10 +101,14 @@ local function draw_layer_object(self)
         for i = 1, self._tilesLen do
             local quad = cache.quads[self.tileset.uid][self.tiles[i].t]
 
-            cache.tilesets[self.tileset.uid]:drawPro(quad.x, quad.y, quad.w, quad.h,
+            cache.tilesets[self.tileset.uid]:drawRec(
+                quad.x, quad.y, quad.w, quad.h,
                 self.x + self.tiles[i].px[1] + self._offsetX[self.tiles[i].f],
                 self.y + self.tiles[i].px[2] + self._offsetY[self.tiles[i].f],
-                quad.w * flipX[self.tiles[i].f], quad.h * flipY[self.tiles[i].f], 0, 0, 0)
+                0,
+                flipX[self.tiles[i].f],
+                flipY[self.tiles[i].f]
+            )
         end
 
         pesto.graphics.setColor(oldColor[1], oldColor[2], oldColor[3], oldColor[4])

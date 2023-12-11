@@ -256,17 +256,15 @@ function Animation:resume()
 end
 
 function Animation:draw(image, x, y, r, sx, sy, ox, oy)
-    local frame, fx, fy, fr, fsx, fsy, fox, foy = self:getFrameInfo(x, y, r, sx, sy, ox, oy)
-
-    image:drawPro(frame.x, frame.y, frame.w, frame.h, fx, fy, frame.w * fsx, frame.h * fsy, fox, foy, fr)
+    image:drawRec(self:getFrameInfo(x, y, r, sx, sy, ox, oy))
 end
 
 function Animation:getFrameInfo(x, y, r, sx, sy, ox, oy)
-    r, sx, sy, ox, oy = r or 0, sx or 1, sy or 1, ox or 0, oy or 0
-
     local frame = self.frames[self.position]
 
     if self.flippedH or self.flippedV then
+        r, sx, sy, ox, oy = r or 0, sx or 1, sy or 1, ox or 0, oy or 0
+
         if self.flippedH then
             sx = sx * -1
             ox = frame.w - ox
@@ -278,7 +276,7 @@ function Animation:getFrameInfo(x, y, r, sx, sy, ox, oy)
         end
     end
 
-    return frame, x, y, r, sx, sy, ox, oy
+    return frame.x, frame.y, frame.w, frame.h, x, y, r, sx, sy, ox, oy
 end
 
 function Animation:getDimensions()

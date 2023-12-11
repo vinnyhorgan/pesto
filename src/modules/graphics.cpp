@@ -680,30 +680,63 @@ static int drawTexture(lua_State* L)
     Texture texture = *(Texture*)luaL_checkudata(L, 1, "Texture");
     int x = (int)luaL_checkinteger(L, 2);
     int y = (int)luaL_checkinteger(L, 3);
-    DrawTexture(texture, x, y, currentColor);
+    float rotation = (float)luaL_optnumber(L, 4, 0);
+    float scaleX = (float)luaL_optnumber(L, 5, 1);
+    float scaleY = (float)luaL_optnumber(L, 6, 1);
+    float originX = (float)luaL_optnumber(L, 7, 0);
+    float originY = (float)luaL_optnumber(L, 8, 0);
+
+    Rectangle source = { 0, 0, (float)texture.width, (float)texture.height };
+
+    if (scaleX < 0) {
+        source.width = -source.width;
+    }
+
+    if (scaleY < 0) {
+        source.height = -source.height;
+    }
+
+    float absScaleX = scaleX < 0 ? -scaleX : scaleX;
+    float absScaleY = scaleY < 0 ? -scaleY : scaleY;
+
+    DrawTexturePro(texture, source, { (float)x, (float)y, (float)texture.width * absScaleX, (float)texture.height * absScaleY }, { originX, originY }, rotation, currentColor);
 
     return 0;
 }
 
-static int drawProTexture(lua_State* L)
+static int drawRecTexture(lua_State* L)
 {
     if (!safe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
     Texture texture = *(Texture*)luaL_checkudata(L, 1, "Texture");
-    float srcX = (float)luaL_checknumber(L, 2);
-    float srcY = (float)luaL_checknumber(L, 3);
-    float srcW = (float)luaL_checknumber(L, 4);
-    float srcH = (float)luaL_checknumber(L, 5);
-    float destX = (float)luaL_checknumber(L, 6);
-    float destY = (float)luaL_checknumber(L, 7);
-    float destW = (float)luaL_checknumber(L, 8);
-    float destH = (float)luaL_checknumber(L, 9);
-    float originX = (float)luaL_checknumber(L, 10);
-    float originY = (float)luaL_checknumber(L, 11);
-    float rotation = (float)luaL_checknumber(L, 12);
-    DrawTexturePro(texture, { srcX, srcY, srcW, srcH }, { destX, destY, destW, destH }, { originX, originY }, rotation, currentColor);
+    int recX = (int)luaL_checkinteger(L, 2);
+    int recY = (int)luaL_checkinteger(L, 3);
+    int recWidth = (int)luaL_checkinteger(L, 4);
+    int recHeight = (int)luaL_checkinteger(L, 5);
+    int x = (int)luaL_checkinteger(L, 6);
+    int y = (int)luaL_checkinteger(L, 7);
+    float rotation = (float)luaL_optnumber(L, 8, 0);
+    float scaleX = (float)luaL_optnumber(L, 9, 1);
+    float scaleY = (float)luaL_optnumber(L, 10, 1);
+    float originX = (float)luaL_optnumber(L, 11, 0);
+    float originY = (float)luaL_optnumber(L, 12, 0);
+
+    Rectangle source = { (float)recX, (float)recY, (float)recWidth, (float)recHeight };
+
+    if (scaleX < 0) {
+        source.width = -source.width;
+    }
+
+    if (scaleY < 0) {
+        source.height = -source.height;
+    }
+
+    float absScaleX = scaleX < 0 ? -scaleX : scaleX;
+    float absScaleY = scaleY < 0 ? -scaleY : scaleY;
+
+    DrawTexturePro(texture, source, { (float)x, (float)y, (float)recWidth * absScaleX, (float)recHeight * absScaleY }, { originX, originY }, rotation, currentColor);
 
     return 0;
 }
@@ -769,7 +802,7 @@ static const luaL_Reg textureMethods[] = {
     { "__gc", gcTexture },
     { "__tostring", tostringTexture },
     { "draw", drawTexture },
-    { "drawPro", drawProTexture },
+    { "drawRec", drawRecTexture },
     { "isReady", isReadyTexture },
     { "setFilter", setFilterTexture },
     { "setWrap", setWrapTexture },
@@ -812,30 +845,26 @@ static int drawCanvas(lua_State* L)
     RenderTexture canvas = *(RenderTexture*)luaL_checkudata(L, 1, "Canvas");
     int x = (int)luaL_checkinteger(L, 2);
     int y = (int)luaL_checkinteger(L, 3);
-    DrawTexture(canvas.texture, x, y, currentColor);
+    float rotation = (float)luaL_optnumber(L, 4, 0);
+    float scaleX = (float)luaL_optnumber(L, 5, 1);
+    float scaleY = (float)luaL_optnumber(L, 6, 1);
+    float originX = (float)luaL_optnumber(L, 7, 0);
+    float originY = (float)luaL_optnumber(L, 8, 0);
 
-    return 0;
-}
+    Rectangle source = { 0, 0, (float)canvas.texture.width, (float)canvas.texture.height };
 
-static int drawProCanvas(lua_State* L)
-{
-    if (!safe) {
-        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    if (scaleX < 0) {
+        source.width = -source.width;
     }
 
-    RenderTexture canvas = *(RenderTexture*)luaL_checkudata(L, 1, "Canvas");
-    float srcX = (float)luaL_checknumber(L, 2);
-    float srcY = (float)luaL_checknumber(L, 3);
-    float srcW = (float)luaL_checknumber(L, 4);
-    float srcH = (float)luaL_checknumber(L, 5);
-    float destX = (float)luaL_checknumber(L, 6);
-    float destY = (float)luaL_checknumber(L, 7);
-    float destW = (float)luaL_checknumber(L, 8);
-    float destH = (float)luaL_checknumber(L, 9);
-    float originX = (float)luaL_checknumber(L, 10);
-    float originY = (float)luaL_checknumber(L, 11);
-    float rotation = (float)luaL_checknumber(L, 12);
-    DrawTexturePro(canvas.texture, { srcX, srcY, srcW, srcH }, { destX, destY, destW, destH }, { originX, originY }, rotation, currentColor);
+    if (scaleY < 0) {
+        source.height = -source.height;
+    }
+
+    float absScaleX = scaleX < 0 ? -scaleX : scaleX;
+    float absScaleY = scaleY < 0 ? -scaleY : scaleY;
+
+    DrawTexturePro(canvas.texture, source, { (float)x, (float)y, (float)canvas.texture.width * absScaleX, (float)canvas.texture.height * absScaleY }, { originX, originY }, rotation, currentColor);
 
     return 0;
 }
@@ -914,7 +943,6 @@ static const luaL_Reg canvasMethods[] = {
     { "__tostring", tostringCanvas },
     { "beginDrawing", beginDrawingCanvas },
     { "draw", drawCanvas },
-    { "drawPro", drawProCanvas },
     { "endDrawing", endDrawingCanvas },
     { "isReady", isReadyCanvas },
     { "setFilter", setFilterCanvas },

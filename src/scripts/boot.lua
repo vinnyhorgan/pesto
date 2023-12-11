@@ -138,10 +138,8 @@ function pesto.run()
         pesto.graphics.clear(config.borderColor[1], config.borderColor[2], config.borderColor[3], config.borderColor[4])
 
         if config.letterbox then
-            target:drawPro(0, 0, config.gameWidth, -config.gameHeight,
-                (pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5,
-                (pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5,
-                config.gameWidth * scale, config.gameHeight * scale, 0, 0, 0)
+            target:draw((pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5,
+                (pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5, 0, scale, -scale)
         else
             pesto.graphics.clear()
 
