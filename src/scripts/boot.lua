@@ -2,11 +2,17 @@
 local config = {
     debug = true,
     version = "0.1",
-    title = "Pesto",
+    title = "Pesto Project",
+    icon = nil,
     width = 800,
     height = 600,
+    targetFPS = 60,
     resizable = true,
+    minWidth = 1,
+    minHeight = 1,
+    fullscreen = false,
     letterbox = true,
+    letterboxFilter = "point",
     gameWidth = 800,
     gameHeight = 600,
     borderColor = { 119, 173, 120, 255 }
@@ -40,8 +46,6 @@ function pesto.init()
     pesto.timer = require("tick")
     pesto.ecs = require("tiny")
 
-    -- Luasocket is left as is for now
-
     -- Scripts
     pesto.state = require("pesto.state")
     pesto.reload = require("pesto.reload")
@@ -50,27 +54,37 @@ function pesto.init()
 
     local directory = arg[1]
 
-    if not directory then
-        error("No directory specified!")
+    if directory then
+        if not pesto.filesystem.isDirectory(directory) then
+            error("Directory does not exist!")
+        end
+
+        pesto.filesystem.changeDirectory(directory)
+
+        if pesto.filesystem.isFile("conf.lua") then
+            require("conf")
+
+            if pesto.conf then pesto.conf(config) end
+        end
     end
 
-    if not pesto.filesystem.isDirectory(directory) then
-        error("Directory does not exist!")
+    pesto.window.init(config.width, config.height, config.title)
+    pesto.window.setTargetFPS(config.targetFPS)
+
+    if config.icon then
+        local icon = pesto.graphics.loadTexture(config.icon)
+        pesto.window.setIcon(icon)
     end
 
-    pesto.filesystem.changeDirectory(directory)
+    pesto.window.setResizable(config.resizable)
+    pesto.window.setMinSize(config.minWidth, config.minHeight)
 
-    if not pesto.filesystem.isFile("main.lua") then
-        error("No main.lua found!")
+    if config.fullscreen then
+        pesto.window.toggleFullscreen()
     end
 
-    package.path = package.path .. ";" .. directory .. "/?.lua"
-
-    if pesto.filesystem.isFile("conf.lua") then
-        require("conf")
-    end
-
-    if pesto.conf then pesto.conf(config) end
+    pesto.audio.init()
+    pesto.imgui.init()
 
     local major, minor = pesto.getVersion()
 
@@ -78,21 +92,21 @@ function pesto.init()
         pesto.log.warn("Version mismatch!")
     end
 
-    pesto.window.init(config.width, config.height, config.title)
-    pesto.window.setTargetFPS(60)
-
-    pesto.audio.init()
-    pesto.imgui.init()
-
-    if config.resizable then
-        pesto.window.setResizable(true)
-    end
-
     if config.debug then
         pesto.reload.init()
     end
 
-    require("main")
+    if directory then
+        if not pesto.filesystem.isFile("main.lua") then
+            error("No main.lua found!")
+        end
+
+        package.path = package.path .. ";" .. directory .. "/?.lua"
+
+        require("main")
+    else
+        require("pesto.manager")
+    end
 end
 
 function pesto.run()
@@ -100,7 +114,7 @@ function pesto.run()
 
     if config.letterbox then
         target = pesto.graphics.loadCanvas(config.gameWidth, config.gameHeight)
-        target:setFilter("point")
+        target:setFilter(config.letterboxFilter)
     end
 
     while true do
@@ -109,8 +123,6 @@ function pesto.run()
                 break
             end
         end
-
-        local scale = math.min(pesto.window.getWidth() / config.gameWidth, pesto.window.getHeight() / config.gameHeight)
 
         local dt = pesto.graphics.getDelta()
 
@@ -133,13 +145,24 @@ function pesto.run()
             if pesto.draw then pesto.draw() end
 
             target:endDrawing()
-        end
 
-        pesto.graphics.clear(config.borderColor[1], config.borderColor[2], config.borderColor[3], config.borderColor[4])
+            local scale = math.min(pesto.window.getWidth() / config.gameWidth,
+                pesto.window.getHeight() / config.gameHeight)
 
-        if config.letterbox then
+            pesto.mouse.setOffset(-(pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5,
+                -(pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5)
+            pesto.mouse.setScale(1 / scale, 1 / scale)
+
+            pesto.graphics.clear(config.borderColor[1], config.borderColor[2], config.borderColor[3],
+                config.borderColor[4])
+
+            local r, g, b, a = pesto.graphics.getColor()
+            pesto.graphics.setColor(255, 255, 255)
+
             target:draw((pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5,
                 (pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5, 0, scale, -scale)
+
+            pesto.graphics.setColor(r, g, b, a)
         else
             pesto.graphics.clear()
 
@@ -163,15 +186,17 @@ end
 function pesto.errhand(msg)
     pesto.log.error(msg)
 
-    if not pesto.window.isReady() then
-        pesto.window.init(800, 600, "Pesto Error")
-        pesto.window.setTargetFPS(60)
-    end
+    pesto.window.init(config.width, config.height, config.title)
+    pesto.window.setTargetFPS(config.targetFPS)
+
+    pesto.mouse.enable()
 
     while not pesto.window.shouldClose() do
         pesto.graphics.beginDrawing()
 
-        pesto.graphics.clear(119, 173, 120, 255)
+        pesto.graphics.clear(119, 173, 120)
+
+        pesto.graphics.setColor(255, 255, 255)
 
         pesto.graphics.text("Error", 10, 10)
         pesto.graphics.wrappedText(msg .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(),

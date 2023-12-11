@@ -45,11 +45,12 @@ void generateHeaders()
 
     // Font can't be generated without opengl context
 
-    generateHeader("src/scripts/boot.lua");
-    generateHeader("src/scripts/state.lua");
-    generateHeader("src/scripts/reload.lua");
     generateHeader("src/scripts/animation.lua");
+    generateHeader("src/scripts/boot.lua");
     generateHeader("src/scripts/ldtk.lua");
+    generateHeader("src/scripts/manager.lua");
+    generateHeader("src/scripts/reload.lua");
+    generateHeader("src/scripts/state.lua");
 
     generateHeader("src/lib/lua/astar.lua");
     generateHeader("src/lib/lua/brinevector.lua");

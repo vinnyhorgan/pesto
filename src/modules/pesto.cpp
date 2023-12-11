@@ -5,6 +5,7 @@
 #include "../scripts/animation.lua.h"
 #include "../scripts/boot.lua.h"
 #include "../scripts/ldtk.lua.h"
+#include "../scripts/manager.lua.h"
 #include "../scripts/reload.lua.h"
 #include "../scripts/state.lua.h"
 
@@ -34,6 +35,15 @@ static int luaopen_boot(lua_State* L)
 static int luaopen_ldtk(lua_State* L)
 {
     if (luaL_loadbuffer(L, (const char*)LDTK_DATA, sizeof(LDTK_DATA), "ldtk.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+static int luaopen_manager(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)MANAGER_DATA, sizeof(MANAGER_DATA), "manager.lua") == 0) {
         lua_call(L, 0, 1);
     }
 
@@ -102,6 +112,7 @@ static const luaL_Reg modules[] = {
     { "pesto.animation", luaopen_animation },
     { "pesto.boot", luaopen_boot },
     { "pesto.ldtk", luaopen_ldtk },
+    { "pesto.manager", luaopen_manager },
     { "pesto.reload", luaopen_reload },
     { "pesto.state", luaopen_state },
     { NULL, NULL }
