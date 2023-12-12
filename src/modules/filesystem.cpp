@@ -11,6 +11,20 @@ static int changeDirectory(lua_State* L)
     return 1;
 }
 
+static int copy(lua_State* L)
+{
+    const char* src = luaL_checkstring(L, 1);
+    const char* dest = luaL_checkstring(L, 2);
+
+    try {
+        std::filesystem::copy(src, dest, std::filesystem::copy_options::recursive);
+    } catch (const std::exception& e) {
+        return luaL_error(L, "Failed to copy file: %s", e.what());
+    }
+
+    return 0;
+}
+
 static int createDirectory(lua_State* L)
 {
     const char* dirpath = luaL_checkstring(L, 1);
@@ -187,6 +201,20 @@ static int remove(lua_State* L)
     return 1;
 }
 
+static int rename(lua_State* L)
+{
+    const char* src = luaL_checkstring(L, 1);
+    const char* dest = luaL_checkstring(L, 2);
+
+    try {
+        std::filesystem::rename(src, dest);
+    } catch (const std::exception& e) {
+        return luaL_error(L, "Failed to rename file: %s", e.what());
+    }
+
+    return 0;
+}
+
 static int write(lua_State* L)
 {
     const char* filename = luaL_checkstring(L, 1);
@@ -199,6 +227,7 @@ static int write(lua_State* L)
 
 static const luaL_Reg functions[] = {
     { "changeDirectory", changeDirectory },
+    { "copy", copy },
     { "createDirectory", createDirectory },
     { "exists", exists },
     { "getApplicationDirectory", getApplicationDirectory },
@@ -213,6 +242,7 @@ static const luaL_Reg functions[] = {
     { "isFileDropped", isFileDropped },
     { "read", read },
     { "remove", remove },
+    { "rename", rename },
     { "write", write },
     { NULL, NULL }
 };
