@@ -12,7 +12,7 @@ local config = {
     minHeight = 1,
     fullscreen = false,
     letterbox = true,
-    letterboxFilter = "point",
+    letterboxFilter = "bilinear",
     gameWidth = 800,
     gameHeight = 600,
     borderColor = { 119, 173, 120, 255 }
@@ -66,6 +66,13 @@ function pesto.init()
 
             if pesto.conf then pesto.conf(config) end
         end
+    else
+        local major, minor, patch, codename = pesto.getVersion()
+
+        config.debug = false
+        config.title = "Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename .. " Manager"
+        config.resizable = false
+        config.letterbox = false
     end
 
     pesto.window.init(config.width, config.height, config.title)
@@ -94,6 +101,7 @@ function pesto.init()
 
     if config.debug then
         pesto.reload.init()
+        pesto.log.debug("Running in debug mode.")
     end
 
     if directory then

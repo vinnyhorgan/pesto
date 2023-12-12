@@ -59,17 +59,15 @@ static int getDirectoryItems(lua_State* L)
 
     FilePathList result = LoadDirectoryFilesEx(basepath, filter, scanSubdirs);
 
-    if (result.count > 0) {
-        lua_newtable(L);
+    lua_newtable(L);
 
+    if (result.count > 0) {
         for (int i = 0; i < (int)result.count; i++) {
             lua_pushstring(L, result.paths[i]);
             lua_rawseti(L, -2, i + 1);
         }
 
         UnloadDirectoryFiles(result);
-    } else {
-        lua_pushnil(L);
     }
 
     return 1;
@@ -79,17 +77,15 @@ static int getDroppedItems(lua_State* L)
 {
     FilePathList result = LoadDroppedFiles();
 
-    if (result.count > 0) {
-        lua_newtable(L);
+    lua_newtable(L);
 
+    if (result.count > 0) {
         for (int i = 0; i < (int)result.count; i++) {
             lua_pushstring(L, result.paths[i]);
             lua_rawseti(L, -2, i + 1);
         }
 
         UnloadDroppedFiles(result);
-    } else {
-        lua_pushnil(L);
     }
 
     return 1;

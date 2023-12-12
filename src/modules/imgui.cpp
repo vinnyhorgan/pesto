@@ -34,6 +34,9 @@ static int init(lua_State* L)
 {
     rlImGuiSetup(true);
 
+    ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = NULL;
+
     return 0;
 }
 
