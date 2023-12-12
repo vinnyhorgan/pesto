@@ -87,6 +87,15 @@ static int getDirectoryItems(lua_State* L)
     return 1;
 }
 
+static int getDirectoryPath(lua_State* L)
+{
+    const char* filepath = luaL_checkstring(L, 1);
+    const char* result = GetDirectoryPath(filepath);
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
 static int getDroppedItems(lua_State* L)
 {
     FilePathList result = LoadDroppedFiles();
@@ -105,20 +114,20 @@ static int getDroppedItems(lua_State* L)
     return 1;
 }
 
+static int getFilename(lua_State* L)
+{
+    const char* filepath = luaL_checkstring(L, 1);
+    const char* result = GetFileName(filepath);
+    lua_pushstring(L, result);
+
+    return 1;
+}
+
 static int getLastModified(lua_State* L)
 {
     const char* filename = luaL_checkstring(L, 1);
     long result = GetFileModTime(filename);
     lua_pushinteger(L, result);
-
-    return 1;
-}
-
-static int getRealDirectory(lua_State* L)
-{
-    const char* filepath = luaL_checkstring(L, 1);
-    const char* result = GetDirectoryPath(filepath);
-    lua_pushstring(L, result);
 
     return 1;
 }
@@ -232,9 +241,10 @@ static const luaL_Reg functions[] = {
     { "exists", exists },
     { "getApplicationDirectory", getApplicationDirectory },
     { "getDirectoryItems", getDirectoryItems },
+    { "getDirectoryPath", getDirectoryPath },
     { "getDroppedItems", getDroppedItems },
+    { "getFilename", getFilename },
     { "getLastModified", getLastModified },
-    { "getRealDirectory", getRealDirectory },
     { "getSize", getSize },
     { "getWorkingDirectory", getWorkingDirectory },
     { "isDirectory", isDirectory },

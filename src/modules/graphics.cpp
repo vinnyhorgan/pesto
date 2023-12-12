@@ -468,6 +468,41 @@ static int rectangleLines(lua_State* L)
     return 0;
 }
 
+static int rectangleRounded(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    int width = (int)luaL_checkinteger(L, 3);
+    int height = (int)luaL_checkinteger(L, 4);
+    float roundness = (float)luaL_checknumber(L, 5);
+    int segments = (int)luaL_checkinteger(L, 6);
+    DrawRectangleRounded({ (float)x, (float)y, (float)width, (float)height }, roundness, segments, currentColor);
+
+    return 0;
+}
+
+static int rectangleRoundedLines(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    int x = (int)luaL_checkinteger(L, 1);
+    int y = (int)luaL_checkinteger(L, 2);
+    int width = (int)luaL_checkinteger(L, 3);
+    int height = (int)luaL_checkinteger(L, 4);
+    float roundness = (float)luaL_checknumber(L, 5);
+    int segments = (int)luaL_checkinteger(L, 6);
+    float thickness = (float)luaL_optnumber(L, 7, 1);
+    DrawRectangleRoundedLines({ (float)x, (float)y, (float)width, (float)height }, roundness, segments, thickness, currentColor);
+
+    return 0;
+}
+
 static int ring(lua_State* L)
 {
     if (!safe) {
@@ -644,6 +679,8 @@ static const luaL_Reg functions[] = {
     { "polygonLines", polygonLines },
     { "rectangle", rectangle },
     { "rectangleLines", rectangleLines },
+    { "rectangleRounded", rectangleRounded },
+    { "rectangleRoundedLines", rectangleRoundedLines },
     { "ring", ring },
     { "ringLines", ringLines },
     { "sector", sector },
