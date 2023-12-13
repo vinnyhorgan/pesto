@@ -1,6 +1,3 @@
-local noto = pesto.graphics.loadFont("noto.ttf", 48)
-local middleNoto = pesto.graphics.loadFont("noto.ttf", 24)
-
 local icon, github, love, lua, raylib = pesto.graphics.loadLogos()
 icon:setFilter("bilinear")
 
@@ -74,7 +71,7 @@ end
 function AnimatedLetter:draw()
     pesto.graphics.setColor(self.color[1], self.color[2], self.color[3])
 
-    noto:draw(self.letter, self.x, self.currentY)
+    pesto.graphics.textBig(self.letter, self.x, self.currentY)
 end
 
 local function animatedText(text, x, y)
@@ -146,8 +143,8 @@ function pesto.draw()
         pesto.graphics.setColor(255, 255, 255)
     end
 
-    local width = middleNoto:measure("Project List")
-    middleNoto:draw("Project List", 125 - width / 2, 100)
+    local width = pesto.graphics.measureMedium("Project List")
+    pesto.graphics.textMedium("Project List", 125 - width / 2, 100)
 
     if currentPage == "newProject" then
         pesto.graphics.setColor(37, 59, 44)
@@ -155,8 +152,8 @@ function pesto.draw()
         pesto.graphics.setColor(255, 255, 255)
     end
 
-    width = middleNoto:measure("New Project")
-    middleNoto:draw("New Project", 125 - width / 2, 150)
+    width = pesto.graphics.measureMedium("New Project")
+    pesto.graphics.textMedium("New Project", 125 - width / 2, 150)
 
     if currentPage == "templates" then
         pesto.graphics.setColor(37, 59, 44)
@@ -164,8 +161,8 @@ function pesto.draw()
         pesto.graphics.setColor(255, 255, 255)
     end
 
-    width = middleNoto:measure("Templates")
-    middleNoto:draw("Templates", 125 - width / 2, 200)
+    width = pesto.graphics.measureMedium("Templates")
+    pesto.graphics.textMedium("Templates", 125 - width / 2, 200)
 
     if currentPage == "about" then
         pesto.graphics.setColor(37, 59, 44)
@@ -173,8 +170,8 @@ function pesto.draw()
         pesto.graphics.setColor(255, 255, 255)
     end
 
-    width = middleNoto:measure("About")
-    middleNoto:draw("About", 125 - width / 2, 250)
+    width = pesto.graphics.measureMedium("About")
+    pesto.graphics.textMedium("About", 125 - width / 2, 250)
 
     pesto.graphics.clear(31, 49, 47)
 
@@ -183,7 +180,7 @@ function pesto.draw()
         pesto.graphics.rectangleRounded(290, 150, 630, 350, 0.05, 10)
         pesto.graphics.setColor(255, 255, 255)
 
-        noto:draw("Project List", 290, 40)
+        pesto.graphics.textBig("Project List", 290, 40)
 
         for i, project in ipairs(projects) do
             if pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 290, 120 + 70 * i - 15, 630, 60) then
@@ -192,8 +189,8 @@ function pesto.draw()
                 pesto.graphics.setColor(255, 255, 255)
             end
 
-            width = middleNoto:measure(project)
-            middleNoto:draw(project, 290 + 630 / 2 - width / 2, 120 + 70 * i)
+            width = pesto.graphics.measureMedium(project)
+            pesto.graphics.textMedium(project, 290 + 630 / 2 - width / 2, 120 + 70 * i)
 
             pesto.graphics.line(330, 120 + 70 * i - 15 + 60, 880, 120 + 70 * i - 15 + 60)
 
@@ -209,14 +206,14 @@ function pesto.draw()
             end
         end
     elseif currentPage == "newProject" then
-        noto:draw("New Project", 290, 40)
+        pesto.graphics.textBig("New Project", 290, 40)
     elseif currentPage == "templates" then
-        noto:draw("Templates", 290, 40)
+        pesto.graphics.textBig("Templates", 290, 40)
     elseif currentPage == "about" then
-        noto:draw("About", 290, 40)
+        pesto.graphics.textBig("About", 290, 40)
 
-        width = middleNoto:measure("By Vinny Horgan with love <3")
-        middleNoto:draw("By Vinny Horgan with love <3", 290 + 630 / 2 - width / 2, 250)
+        width = pesto.graphics.measureMedium("By Vinny Horgan with love <3")
+        pesto.graphics.textMedium("By Vinny Horgan with love <3", 290 + 630 / 2 - width / 2, 250)
 
         github:draw(290 + 630 / 2 - github:getWidth() / 2, 300)
 
@@ -224,19 +221,21 @@ function pesto.draw()
             pesto.system.openURL("https://github.com/vinnyhorgan/pesto")
         end
 
-        width = middleNoto:measure("Also thanks to these amazing people:")
-        middleNoto:draw("Also thanks to these amazing people:", 290 + 630 / 2 - width / 2, 370)
+        width = pesto.graphics.measureMedium("Also thanks to these amazing people:")
+        pesto.graphics.textMedium("Also thanks to these amazing people:", 290 + 630 / 2 - width / 2, 370)
 
         love:draw(290, 420)
         lua:draw(290 + 100, 420)
         raylib:draw(290 + 200, 420)
     end
 
-    for _, leaf in pairs(leaves) do
-        leaf:draw()
-    end
-
     for _, letter in pairs(letters) do
         letter:draw()
+    end
+
+    pesto.graphics.setColor(255, 255, 255)
+
+    for _, leaf in pairs(leaves) do
+        leaf:draw()
     end
 end

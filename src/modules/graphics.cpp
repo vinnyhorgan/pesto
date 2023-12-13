@@ -439,6 +439,36 @@ static int loadTexture(lua_State* L)
     return 1;
 }
 
+static int measure(lua_State* L)
+{
+    const char* text = luaL_checkstring(L, 1);
+    Vector2 result = MeasureTextEx(defaultFont, text, (float)defaultFont.baseSize, 0);
+    lua_pushnumber(L, result.x);
+    lua_pushnumber(L, result.y);
+
+    return 2;
+}
+
+static int measureBig(lua_State* L)
+{
+    const char* text = luaL_checkstring(L, 1);
+    Vector2 result = MeasureTextEx(defaultFontBig, text, (float)defaultFontBig.baseSize, 0);
+    lua_pushnumber(L, result.x);
+    lua_pushnumber(L, result.y);
+
+    return 2;
+}
+
+static int measureMedium(lua_State* L)
+{
+    const char* text = luaL_checkstring(L, 1);
+    Vector2 result = MeasureTextEx(defaultFontMedium, text, (float)defaultFontMedium.baseSize, 0);
+    lua_pushnumber(L, result.x);
+    lua_pushnumber(L, result.y);
+
+    return 2;
+}
+
 static int pixel(lua_State* L)
 {
     if (!safe) {
@@ -671,6 +701,34 @@ static int text(lua_State* L)
     return 0;
 }
 
+static int textBig(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    const char* text = luaL_checkstring(L, 1);
+    int x = (int)luaL_checkinteger(L, 2);
+    int y = (int)luaL_checkinteger(L, 3);
+    DrawTextEx(defaultFontBig, text, { (float)x, (float)y }, (float)defaultFontBig.baseSize, 0, currentColor);
+
+    return 0;
+}
+
+static int textMedium(lua_State* L)
+{
+    if (!safe) {
+        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    }
+
+    const char* text = luaL_checkstring(L, 1);
+    int x = (int)luaL_checkinteger(L, 2);
+    int y = (int)luaL_checkinteger(L, 3);
+    DrawTextEx(defaultFontMedium, text, { (float)x, (float)y }, (float)defaultFontMedium.baseSize, 0, currentColor);
+
+    return 0;
+}
+
 static int triangle(lua_State* L)
 {
     if (!safe) {
@@ -749,6 +807,9 @@ static const luaL_Reg functions[] = {
     { "loadShader", loadShader },
     { "loadSvg", loadSvg },
     { "loadTexture", loadTexture },
+    { "measure", measure },
+    { "measureBig", measureBig },
+    { "measureMedium", measureMedium },
     { "pixel", pixel },
     { "polygon", polygon },
     { "polygonLines", polygonLines },
@@ -764,6 +825,8 @@ static const luaL_Reg functions[] = {
     { "setColor", setColor },
     { "setLineSpacing", setLineSpacing },
     { "text", text },
+    { "textBig", textBig },
+    { "textMedium", textMedium },
     { "triangle", triangle },
     { "triangleLines", triangleLines },
     { "wrappedText", wrappedText },

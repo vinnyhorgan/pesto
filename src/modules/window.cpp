@@ -6,12 +6,16 @@
 #include "../../assets/icon.png.h"
 #include "../../assets/love.png.h"
 #include "../../assets/lua.png.h"
-#include "../../assets/noto.ttf.h"
+#include "../../assets/notoBig.ttf.h"
+#include "../../assets/notoMedium.ttf.h"
+#include "../../assets/notoSmall.ttf.h"
 #include "../../assets/raylib.png.h"
 #include "../../assets/sdf.fs.h"
 
 bool shouldQuit = false;
 Font defaultFont;
+Font defaultFontMedium;
+Font defaultFontBig;
 Shader sdfShader;
 Texture icon;
 Texture githubLogo;
@@ -173,7 +177,9 @@ static int init(lua_State* L)
 
     SetExitKey(KEY_NULL);
 
-    defaultFont = LoadFont_Noto();
+    defaultFont = LoadFont_NotoSmall();
+    defaultFontMedium = LoadFont_NotoMedium();
+    defaultFontBig = LoadFont_NotoBig();
 
     sdfShader = LoadShaderFromMemory(0, (const char*)SDF_DATA);
 

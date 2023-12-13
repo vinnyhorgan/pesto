@@ -7,6 +7,8 @@
 // Global variables
 extern bool shouldQuit;
 extern Font defaultFont;
+extern Font defaultFontMedium;
+extern Font defaultFontBig;
 extern Shader sdfShader;
 extern Texture icon;
 extern Texture githubLogo;
