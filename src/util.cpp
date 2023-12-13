@@ -37,9 +37,25 @@ void generateHeaders()
 {
     SetTraceLogLevel(LOG_NONE);
 
+    Image github = LoadImage(PROJECT_PATH "assets/github.png");
+    ExportImageAsCode(github, PROJECT_PATH "assets/github.png.h");
+    UnloadImage(github);
+
     Image icon = LoadImage(PROJECT_PATH "assets/icon.png");
     ExportImageAsCode(icon, PROJECT_PATH "assets/icon.png.h");
     UnloadImage(icon);
+
+    Image love = LoadImage(PROJECT_PATH "assets/love.png");
+    ExportImageAsCode(love, PROJECT_PATH "assets/love.png.h");
+    UnloadImage(love);
+
+    Image lua = LoadImage(PROJECT_PATH "assets/lua.png");
+    ExportImageAsCode(lua, PROJECT_PATH "assets/lua.png.h");
+    UnloadImage(lua);
+
+    Image raylib = LoadImage(PROJECT_PATH "assets/raylib.png");
+    ExportImageAsCode(raylib, PROJECT_PATH "assets/raylib.png.h");
+    UnloadImage(raylib);
 
     generateHeader("assets/sdf.fs");
 

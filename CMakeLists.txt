@@ -16,6 +16,7 @@ include_directories(deps/luajit/src)
 set(OPENGL_VERSION 4.3 CACHE STRING "")
 set(CUSTOMIZE_BUILD ON CACHE BOOL "")
 set(SUPPORT_FILEFORMAT_JPG ON CACHE BOOL "")
+set(SUPPORT_FILEFORMAT_SVG ON CACHE BOOL "")
 add_subdirectory(deps/raylib)
 
 add_compile_definitions(NO_FONT_AWESOME PROJECT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")

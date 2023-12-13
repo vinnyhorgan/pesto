@@ -216,6 +216,32 @@ static int getFPS(lua_State* L)
     return 1;
 }
 
+static int hsvToRgb(lua_State* L)
+{
+    float hue = (float)luaL_checknumber(L, 1);
+    float saturation = (float)luaL_checknumber(L, 2);
+    float value = (float)luaL_checknumber(L, 3);
+
+    if (hue < 0.0f || hue > 360.0f) {
+        return luaL_error(L, "Hue must be between 0 and 360");
+    }
+
+    if (saturation < 0.0f || saturation > 1.0f) {
+        return luaL_error(L, "Saturation must be between 0 and 1");
+    }
+
+    if (value < 0.0f || value > 1.0f) {
+        return luaL_error(L, "Value must be between 0 and 1");
+    }
+
+    Color result = ColorFromHSV(hue, saturation, value);
+    lua_pushinteger(L, result.r);
+    lua_pushinteger(L, result.g);
+    lua_pushinteger(L, result.b);
+
+    return 3;
+}
+
 static int line(lua_State* L)
 {
     if (!safe) {
@@ -326,6 +352,31 @@ static int loadFontSDF(lua_State* L)
     luaL_setmetatable(L, "Font");
 
     return 1;
+}
+
+static int loadLogos(lua_State* L)
+{
+    void* ud1 = lua_newuserdata(L, sizeof(Texture));
+    memcpy(ud1, &icon, sizeof(Texture));
+    luaL_setmetatable(L, "Texture");
+
+    void* ud2 = lua_newuserdata(L, sizeof(Texture));
+    memcpy(ud2, &githubLogo, sizeof(Texture));
+    luaL_setmetatable(L, "Texture");
+
+    void* ud3 = lua_newuserdata(L, sizeof(Texture));
+    memcpy(ud3, &loveLogo, sizeof(Texture));
+    luaL_setmetatable(L, "Texture");
+
+    void* ud4 = lua_newuserdata(L, sizeof(Texture));
+    memcpy(ud4, &luaLogo, sizeof(Texture));
+    luaL_setmetatable(L, "Texture");
+
+    void* ud5 = lua_newuserdata(L, sizeof(Texture));
+    memcpy(ud5, &raylibLogo, sizeof(Texture));
+    luaL_setmetatable(L, "Texture");
+
+    return 5;
 }
 
 static int loadShader(lua_State* L)
@@ -503,6 +554,20 @@ static int rectangleRoundedLines(lua_State* L)
     return 0;
 }
 
+static int rgbToHsv(lua_State* L)
+{
+    unsigned char r = (unsigned char)luaL_checkinteger(L, 1);
+    unsigned char g = (unsigned char)luaL_checkinteger(L, 2);
+    unsigned char b = (unsigned char)luaL_checkinteger(L, 3);
+    Color color = { r, g, b, 255 };
+    Vector3 result = ColorToHSV(color);
+    lua_pushnumber(L, result.x);
+    lua_pushnumber(L, result.y);
+    lua_pushnumber(L, result.z);
+
+    return 3;
+}
+
 static int ring(lua_State* L)
 {
     if (!safe) {
@@ -673,12 +738,14 @@ static const luaL_Reg functions[] = {
     { "getColor", getColor },
     { "getDelta", getDelta },
     { "getFPS", getFPS },
+    { "hsvToRgb", hsvToRgb },
     { "line", line },
     { "lineBezier", lineBezier },
     { "loadCamera", loadCamera },
     { "loadCanvas", loadCanvas },
     { "loadFont", loadFont },
     { "loadFontSDF", loadFontSDF },
+    { "loadLogos", loadLogos },
     { "loadShader", loadShader },
     { "loadSvg", loadSvg },
     { "loadTexture", loadTexture },
@@ -689,6 +756,7 @@ static const luaL_Reg functions[] = {
     { "rectangleLines", rectangleLines },
     { "rectangleRounded", rectangleRounded },
     { "rectangleRoundedLines", rectangleRoundedLines },
+    { "rgbToHsv", rgbToHsv },
     { "ring", ring },
     { "ringLines", ringLines },
     { "sector", sector },
@@ -849,6 +917,8 @@ static const luaL_Reg textureMethods[] = {
     { "__tostring", tostringTexture },
     { "draw", drawTexture },
     { "drawRec", drawRecTexture },
+    { "getHeight", getHeightTexture },
+    { "getWidth", getWidthTexture },
     { "isReady", isReadyTexture },
     { "setFilter", setFilterTexture },
     { "setWrap", setWrapTexture },
@@ -990,6 +1060,8 @@ static const luaL_Reg canvasMethods[] = {
     { "beginDrawing", beginDrawingCanvas },
     { "draw", drawCanvas },
     { "endDrawing", endDrawingCanvas },
+    { "getHeight", getHeightCanvas },
+    { "getWidth", getWidthCanvas },
     { "isReady", isReadyCanvas },
     { "setFilter", setFilterCanvas },
     { "setWrap", setWrapCanvas },

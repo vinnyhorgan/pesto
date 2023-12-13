@@ -2,13 +2,22 @@
 
 #include "../util.h"
 
+#include "../../assets/github.png.h"
 #include "../../assets/icon.png.h"
+#include "../../assets/love.png.h"
+#include "../../assets/lua.png.h"
 #include "../../assets/noto.ttf.h"
+#include "../../assets/raylib.png.h"
 #include "../../assets/sdf.fs.h"
 
 bool shouldQuit = false;
 Font defaultFont;
 Shader sdfShader;
+Texture icon;
+Texture githubLogo;
+Texture loveLogo;
+Texture luaLogo;
+Texture raylibLogo;
 
 static int close(lua_State* L)
 {
@@ -166,16 +175,54 @@ static int init(lua_State* L)
 
     defaultFont = LoadFont_Noto();
 
-    Image icon;
-    icon.data = ICON_DATA;
-    icon.width = ICON_WIDTH;
-    icon.height = ICON_HEIGHT;
-    icon.format = ICON_FORMAT;
-    icon.mipmaps = 1;
-
-    SetWindowIcon(icon);
-
     sdfShader = LoadShaderFromMemory(0, (const char*)SDF_DATA);
+
+    Image iconImage;
+    iconImage.data = ICON_DATA;
+    iconImage.width = ICON_WIDTH;
+    iconImage.height = ICON_HEIGHT;
+    iconImage.format = ICON_FORMAT;
+    iconImage.mipmaps = 1;
+
+    SetWindowIcon(iconImage);
+
+    icon = LoadTextureFromImage(iconImage);
+
+    Image githubImage;
+    githubImage.data = GITHUB_DATA;
+    githubImage.width = GITHUB_WIDTH;
+    githubImage.height = GITHUB_HEIGHT;
+    githubImage.format = GITHUB_FORMAT;
+    githubImage.mipmaps = 1;
+
+    githubLogo = LoadTextureFromImage(githubImage);
+
+    Image loveImage;
+    loveImage.data = LOVE_DATA;
+    loveImage.width = LOVE_WIDTH;
+    loveImage.height = LOVE_HEIGHT;
+    loveImage.format = LOVE_FORMAT;
+    loveImage.mipmaps = 1;
+
+    loveLogo = LoadTextureFromImage(loveImage);
+
+    Image luaImage;
+    luaImage.data = LUA_DATA;
+    luaImage.width = LUA_WIDTH;
+    luaImage.height = LUA_HEIGHT;
+    luaImage.format = LUA_FORMAT;
+    luaImage.mipmaps = 1;
+
+    luaLogo = LoadTextureFromImage(luaImage);
+
+    Image raylibImage;
+    raylibImage.data = RAYLIB_DATA;
+    raylibImage.width = RAYLIB_WIDTH;
+    raylibImage.height = RAYLIB_HEIGHT;
+    raylibImage.format = RAYLIB_FORMAT;
+    raylibImage.mipmaps = 1;
+
+    raylibLogo = LoadTextureFromImage(raylibImage);
 
     return 0;
 }
