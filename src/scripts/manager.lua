@@ -89,6 +89,8 @@ end
 
 local currentPage = "projectList"
 local scroll = 0
+local name = ""
+local selected = false
 
 function pesto.draw()
     -- Sidebar
@@ -209,10 +211,11 @@ function pesto.draw()
             pesto.graphics.line(290 + 40, scroll + 150 + 60 * i - 15 + 60, 880, scroll + 150 + 60 * i - 15 + 60)
 
             if pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 290 + 40, scroll + 150 + 60 * i - 10, 550, 50) and pesto.mouse.isPressed(0) then
-                --package.path = "projects/" .. project .. "/?.lua;" .. package.path
-                --package.loaded.main = nil
-                --pesto.filesystem.changeDirectory("projects/" .. project)
-                --require("main")
+                package.path = "projects/" .. project .. "/?.lua;" .. package.path
+                pesto.filesystem.changeDirectory("projects/" .. project)
+                pesto.update = nil
+                pesto.draw = nil
+                require("main")
             end
 
             if pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 290 + 40, scroll + 150 + 60 * i - 10, 550, 50) and pesto.mouse.isPressed(1) then
@@ -225,6 +228,75 @@ function pesto.draw()
         pesto.graphics.endScissorMode()
     elseif currentPage == "newProject" then
         pesto.graphics.textBig("New Project", 290, 40)
+
+        width = pesto.graphics.measureMedium("Name")
+        pesto.graphics.textMedium("Name", 250 + 710 / 2 - width / 2, 150)
+
+        if pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 250 + 710 / 2 - 150, 200, 300, 50) then
+            pesto.mouse.setCursor("ibeam")
+
+            if pesto.mouse.isPressed(0) then
+                selected = true
+            end
+        else
+            pesto.mouse.setCursor("arrow")
+
+            if pesto.mouse.isPressed(0) then
+                selected = false
+            end
+        end
+
+        pesto.graphics.setColor(50, 79, 59)
+        pesto.graphics.rectangleRounded(250 + 710 / 2 - 150, 200, 300, 50, 0.2, 10)
+        pesto.graphics.setColor(255, 255, 255)
+
+        if selected then
+            pesto.graphics.rectangleRoundedLines(250 + 710 / 2 - 150, 200, 300, 50, 0.1, 10, 2)
+
+            local key = pesto.keyboard.getCharPressed()
+
+            while key > 0 do
+                if key >= 32 and key <= 125 and #name < 25 then
+                    name = name .. string.char(key)
+                end
+
+                key = pesto.keyboard.getCharPressed()
+            end
+
+            if pesto.keyboard.isPressed("backspace") then
+                name = string.sub(name, 1, -2)
+            end
+        end
+
+        width = pesto.graphics.measureMedium(name)
+        pesto.graphics.textMedium(name, 250 + 710 / 2 - width / 2, 210)
+
+        if pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 250 + 710 / 2 - 100, 300, 200, 50) and pesto.mouse.isPressed(0) then
+            if #name > 0 then
+                pesto.filesystem.createDirectory("projects/" .. name)
+                pesto.filesystem.write("projects/" .. name .. "/main.lua",
+                    "function pesto.draw()\n    pesto.graphics.text(\"Hello, World!\", 10, 10)\nend")
+
+                projects = {}
+
+                for _, item in pairs(pesto.filesystem.getDirectoryItems("projects")) do
+                    if pesto.filesystem.isDirectory(item) and pesto.filesystem.exists(item .. "/main.lua") then
+                        table.insert(projects, pesto.filesystem.getFilename(item))
+                    end
+                end
+
+                name = ""
+
+                currentPage = "projectList"
+            end
+        end
+
+        pesto.graphics.setColor(50, 79, 59)
+        pesto.graphics.rectangleRounded(250 + 710 / 2 - 100, 300, 200, 50, 0.2, 10)
+        pesto.graphics.setColor(255, 255, 255)
+
+        width = pesto.graphics.measureMedium("Create")
+        pesto.graphics.textMedium("Create", 250 + 710 / 2 - width / 2, 310)
     elseif currentPage == "templates" then
         pesto.graphics.textBig("Templates", 290, 40)
         pesto.graphics.textBig("Coming Soon", 290, 150)
