@@ -54,13 +54,30 @@ function reload.onerror(e)
 
     pesto.update = reload.update
 
+    local trace = debug.traceback()
+    local err = {}
+
+    table.insert(err, "Error\n")
+    table.insert(err, e .. "\n\n")
+
+    for l in string.gmatch(trace, "(.-)\n") do
+        if not string.match(l, "boot.lua") then
+            l = string.gsub(l, "stack traceback:", "Traceback\n")
+            table.insert(err, l)
+        end
+    end
+
+    local p = table.concat(err, "\n")
+
+    p = string.gsub(p, "\t", "")
+    p = string.gsub(p, "%[string \"(.-)\"%]", "%1")
+
     pesto.draw = function()
-        pesto.graphics.clear(172, 57, 49, 255)
+        pesto.graphics.clear(50, 59, 79, 255)
 
         pesto.graphics.setColor(255, 255, 255)
-        pesto.graphics.text("Reload error!", 10, 10)
-        pesto.graphics.wrappedText(e .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(),
-            pesto.window.getHeight())
+
+        pesto.graphics.text(p, 70, 70)
     end
 end
 

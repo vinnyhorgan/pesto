@@ -584,6 +584,14 @@ static int setColor(lua_State* L)
     return 0;
 }
 
+static int setLineSpacing(lua_State* L)
+{
+    int spacing = (int)luaL_checkinteger(L, 1);
+    SetTextLineSpacing(spacing);
+
+    return 0;
+}
+
 static int text(lua_State* L)
 {
     if (!safe) {
@@ -686,6 +694,7 @@ static const luaL_Reg functions[] = {
     { "sector", sector },
     { "sectorLines", sectorLines },
     { "setColor", setColor },
+    { "setLineSpacing", setLineSpacing },
     { "text", text },
     { "triangle", triangle },
     { "triangleLines", triangleLines },

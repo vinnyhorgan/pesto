@@ -4,8 +4,8 @@ local config = {
     version = "0.1",
     title = "Pesto Project",
     icon = nil,
-    width = 800,
-    height = 600,
+    width = 960,
+    height = 540,
     targetFPS = 60,
     resizable = true,
     minWidth = 1,
@@ -13,9 +13,9 @@ local config = {
     fullscreen = false,
     letterbox = true,
     letterboxFilter = "bilinear",
-    gameWidth = 800,
-    gameHeight = 600,
-    borderColor = { 119, 173, 120, 255 }
+    gameWidth = 960,
+    gameHeight = 540,
+    borderColor = { 50, 79, 59, 255 }
 }
 
 function pesto.init()
@@ -197,18 +197,35 @@ function pesto.errhand(msg)
     pesto.window.init(config.width, config.height, config.title)
     pesto.window.setTargetFPS(config.targetFPS)
 
+    pesto.window.setResizable(false)
     pesto.mouse.enable()
+
+    local trace = debug.traceback()
+    local err = {}
+
+    table.insert(err, "Error\n")
+    table.insert(err, msg .. "\n\n")
+
+    for l in string.gmatch(trace, "(.-)\n") do
+        if not string.match(l, "boot.lua") then
+            l = string.gsub(l, "stack traceback:", "Traceback\n")
+            table.insert(err, l)
+        end
+    end
+
+    local p = table.concat(err, "\n")
+
+    p = string.gsub(p, "\t", "")
+    p = string.gsub(p, "%[string \"(.-)\"%]", "%1")
 
     while not pesto.window.shouldClose() do
         pesto.graphics.beginDrawing()
 
-        pesto.graphics.clear(119, 173, 120)
+        pesto.graphics.clear(50, 79, 59)
 
         pesto.graphics.setColor(255, 255, 255)
 
-        pesto.graphics.text("Error", 10, 10)
-        pesto.graphics.wrappedText(msg .. "\n\n" .. debug.traceback(), 10, 50, pesto.window.getWidth(),
-            pesto.window.getHeight())
+        pesto.graphics.text(p, 70, 70)
 
         pesto.graphics.endDrawing()
     end
