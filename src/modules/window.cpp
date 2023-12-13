@@ -17,11 +17,11 @@ Font defaultFont;
 Font defaultFontMedium;
 Font defaultFontBig;
 Shader sdfShader;
-Texture icon;
-Texture githubLogo;
-Texture loveLogo;
-Texture luaLogo;
-Texture raylibLogo;
+Image icon;
+Image githubLogo;
+Image loveLogo;
+Image luaLogo;
+Image raylibLogo;
 
 static int close(lua_State* L)
 {
@@ -183,52 +183,37 @@ static int init(lua_State* L)
 
     sdfShader = LoadShaderFromMemory(0, (const char*)SDF_DATA);
 
-    Image iconImage;
-    iconImage.data = ICON_DATA;
-    iconImage.width = ICON_WIDTH;
-    iconImage.height = ICON_HEIGHT;
-    iconImage.format = ICON_FORMAT;
-    iconImage.mipmaps = 1;
+    icon.data = ICON_DATA;
+    icon.width = ICON_WIDTH;
+    icon.height = ICON_HEIGHT;
+    icon.format = ICON_FORMAT;
+    icon.mipmaps = 1;
 
-    SetWindowIcon(iconImage);
+    SetWindowIcon(icon);
 
-    icon = LoadTextureFromImage(iconImage);
+    githubLogo.data = GITHUB_DATA;
+    githubLogo.width = GITHUB_WIDTH;
+    githubLogo.height = GITHUB_HEIGHT;
+    githubLogo.format = GITHUB_FORMAT;
+    githubLogo.mipmaps = 1;
 
-    Image githubImage;
-    githubImage.data = GITHUB_DATA;
-    githubImage.width = GITHUB_WIDTH;
-    githubImage.height = GITHUB_HEIGHT;
-    githubImage.format = GITHUB_FORMAT;
-    githubImage.mipmaps = 1;
+    loveLogo.data = LOVE_DATA;
+    loveLogo.width = LOVE_WIDTH;
+    loveLogo.height = LOVE_HEIGHT;
+    loveLogo.format = LOVE_FORMAT;
+    loveLogo.mipmaps = 1;
 
-    githubLogo = LoadTextureFromImage(githubImage);
+    luaLogo.data = LUA_DATA;
+    luaLogo.width = LUA_WIDTH;
+    luaLogo.height = LUA_HEIGHT;
+    luaLogo.format = LUA_FORMAT;
+    luaLogo.mipmaps = 1;
 
-    Image loveImage;
-    loveImage.data = LOVE_DATA;
-    loveImage.width = LOVE_WIDTH;
-    loveImage.height = LOVE_HEIGHT;
-    loveImage.format = LOVE_FORMAT;
-    loveImage.mipmaps = 1;
-
-    loveLogo = LoadTextureFromImage(loveImage);
-
-    Image luaImage;
-    luaImage.data = LUA_DATA;
-    luaImage.width = LUA_WIDTH;
-    luaImage.height = LUA_HEIGHT;
-    luaImage.format = LUA_FORMAT;
-    luaImage.mipmaps = 1;
-
-    luaLogo = LoadTextureFromImage(luaImage);
-
-    Image raylibImage;
-    raylibImage.data = RAYLIB_DATA;
-    raylibImage.width = RAYLIB_WIDTH;
-    raylibImage.height = RAYLIB_HEIGHT;
-    raylibImage.format = RAYLIB_FORMAT;
-    raylibImage.mipmaps = 1;
-
-    raylibLogo = LoadTextureFromImage(raylibImage);
+    raylibLogo.data = RAYLIB_DATA;
+    raylibLogo.width = RAYLIB_WIDTH;
+    raylibLogo.height = RAYLIB_HEIGHT;
+    raylibLogo.format = RAYLIB_FORMAT;
+    raylibLogo.mipmaps = 1;
 
     return 0;
 }

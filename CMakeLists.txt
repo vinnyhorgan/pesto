@@ -7,7 +7,7 @@ set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE)
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS _WINSOCK_DEPRECATED_NO_WARNINGS)
-    add_compile_options(/wd4005 /wd4018 /wd4996)
+    add_compile_options(/wd4005 /wd4018 /wd4090 /wd4244 /wd4996)
 endif()
 
 add_subdirectory(deps/luajit)

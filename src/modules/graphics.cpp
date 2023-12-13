@@ -356,24 +356,34 @@ static int loadFontSDF(lua_State* L)
 
 static int loadLogos(lua_State* L)
 {
+    Texture iconTexture = LoadTextureFromImage(icon);
+
     void* ud1 = lua_newuserdata(L, sizeof(Texture));
-    memcpy(ud1, &icon, sizeof(Texture));
+    memcpy(ud1, &iconTexture, sizeof(Texture));
     luaL_setmetatable(L, "Texture");
+
+    Texture githubTexture = LoadTextureFromImage(githubLogo);
 
     void* ud2 = lua_newuserdata(L, sizeof(Texture));
-    memcpy(ud2, &githubLogo, sizeof(Texture));
+    memcpy(ud2, &githubTexture, sizeof(Texture));
     luaL_setmetatable(L, "Texture");
+
+    Texture loveTexture = LoadTextureFromImage(loveLogo);
 
     void* ud3 = lua_newuserdata(L, sizeof(Texture));
-    memcpy(ud3, &loveLogo, sizeof(Texture));
+    memcpy(ud3, &loveTexture, sizeof(Texture));
     luaL_setmetatable(L, "Texture");
+
+    Texture luaTexture = LoadTextureFromImage(luaLogo);
 
     void* ud4 = lua_newuserdata(L, sizeof(Texture));
-    memcpy(ud4, &luaLogo, sizeof(Texture));
+    memcpy(ud4, &luaTexture, sizeof(Texture));
     luaL_setmetatable(L, "Texture");
 
+    Texture raylibTexture = LoadTextureFromImage(raylibLogo);
+
     void* ud5 = lua_newuserdata(L, sizeof(Texture));
-    memcpy(ud5, &raylibLogo, sizeof(Texture));
+    memcpy(ud5, &raylibTexture, sizeof(Texture));
     luaL_setmetatable(L, "Texture");
 
     return 5;

@@ -10,11 +10,11 @@ extern Font defaultFont;
 extern Font defaultFontMedium;
 extern Font defaultFontBig;
 extern Shader sdfShader;
-extern Texture icon;
-extern Texture githubLogo;
-extern Texture loveLogo;
-extern Texture luaLogo;
-extern Texture raylibLogo;
+extern Image icon;
+extern Image githubLogo;
+extern Image loveLogo;
+extern Image luaLogo;
+extern Image raylibLogo;
 
 int luaopen_pesto(lua_State* L);
 
