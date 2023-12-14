@@ -22,6 +22,7 @@
 #include "../scripts/external/tiny.lua.h"
 
 extern "C" {
+#include <http.h>
 #include <lutf8lib.h>
 }
 
@@ -206,6 +207,7 @@ static const luaL_Reg modules[] = {
     { "tick", luaopen_tick },
     { "tiny", luaopen_tiny },
     { "utf8", luaopen_utf8 },
+    { "http", luaopen_http },
     // Scripts
     { "pesto.animation", luaopen_animation },
     { "pesto.boot", luaopen_boot },

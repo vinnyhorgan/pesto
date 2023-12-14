@@ -20,6 +20,7 @@ set(SUPPORT_FILEFORMAT_SVG ON CACHE BOOL "")
 add_subdirectory(deps/raylib)
 
 include_directories(deps/fastnoiselite)
+include_directories(deps/http)
 include_directories(deps/imgui)
 include_directories(deps/rlimgui)
 include_directories(deps/rres)
@@ -28,6 +29,7 @@ include_directories(deps/utf8)
 add_compile_definitions(NO_FONT_AWESOME PROJECT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
 
 set(LIB_SOURCES
+    "deps/http/http.c"
     "deps/imgui/imgui_demo.cpp"
     "deps/imgui/imgui_draw.cpp"
     "deps/imgui/imgui_tables.cpp"
@@ -37,13 +39,13 @@ set(LIB_SOURCES
     "deps/utf8/lutf8lib.c"
 )
 
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp")
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${LIB_SOURCES})
 target_link_libraries(${PROJECT_NAME} libluajit raylib)
 
 if(WIN32)
-    target_link_libraries(${PROJECT_NAME} ws2_32)
+    target_link_libraries(${PROJECT_NAME} ws2_32 wininet)
 endif()
 
 if(APPLE)
@@ -55,7 +57,7 @@ endif()
 if(MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "pestoc")
     add_executable(pesto_win ${SOURCES} ${LIB_SOURCES})
-    target_link_libraries(pesto_win libluajit raylib ws2_32)
+    target_link_libraries(pesto_win libluajit raylib ws2_32 wininet)
     target_link_options(pesto_win PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
     set_target_properties(pesto_win PROPERTIES OUTPUT_NAME "pesto")
 endif()
