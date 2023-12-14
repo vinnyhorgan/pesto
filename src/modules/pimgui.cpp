@@ -2,8 +2,8 @@
 
 #include "../util.h"
 
-#include "../lib/imgui/imgui.h"
-#include "../lib/imgui/rlImGui.h"
+#include <imgui.h>
+#include <rlImGui.h>
 
 static bool safe = false;
 

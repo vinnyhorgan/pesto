@@ -229,7 +229,7 @@ static void EnableScissor(float x, float y, float width, float height)
     rlEnableScissorTest();
     ImGuiIO& io = ImGui::GetIO();
     rlScissor((int)(x * io.DisplayFramebufferScale.x),
-        int((GetScreenHeight() - (int)(y + height)) * io.DisplayFramebufferScale.y),
+        int((io.DisplaySize.y - (int)(y + height)) * io.DisplayFramebufferScale.y),
         (int)(width * io.DisplayFramebufferScale.x),
         (int)(height * io.DisplayFramebufferScale.y));
 }
@@ -616,8 +616,11 @@ void ImGui_ImplRaylib_Shutdown()
     ImGuiIO& io =ImGui::GetIO();
     Texture2D* fontTexture = (Texture2D*)io.Fonts->TexID;
 
-    if (fontTexture && fontTexture->id != 0)
-	UnloadTexture(*fontTexture);
+    if (fontTexture)
+    {
+        UnloadTexture(*fontTexture);
+        MemFree(fontTexture);
+    }
 
     io.Fonts->TexID = 0;
 }
