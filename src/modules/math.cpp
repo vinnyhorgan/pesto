@@ -1,7 +1,7 @@
 #include "api.h"
 
 #define FNL_IMPL
-#include "../lib/fastnoiselite/FastNoiseLite.h"
+#include <FastNoiseLite.h>
 
 static fnl_state fnlState = fnlCreateState();
 

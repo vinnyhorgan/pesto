@@ -1,11 +1,11 @@
 #include "api.h"
 
 #define RRES_IMPLEMENTATION
-#include "../lib/rres/rres.h"
+#include <rres.h>
 
 #define RRES_RAYLIB_IMPLEMENTATION
 #define RRES_SUPPORT_COMPRESSION_LZ4
-#include "../lib/rres/rres-raylib.h"
+#include <rres-raylib.h>
 
 static const char* getCompressionName(int compType)
 {
