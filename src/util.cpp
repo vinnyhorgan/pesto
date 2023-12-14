@@ -79,17 +79,6 @@ void generateHeaders()
     generateHeader("src/lib/lua/signal.lua");
     generateHeader("src/lib/lua/tick.lua");
     generateHeader("src/lib/lua/tiny.lua");
-
-    generateHeader("src/lib/luasocket/ftp.lua");
-    generateHeader("src/lib/luasocket/headers.lua");
-    generateHeader("src/lib/luasocket/http.lua");
-    generateHeader("src/lib/luasocket/ltn12.lua");
-    generateHeader("src/lib/luasocket/mbox.lua");
-    generateHeader("src/lib/luasocket/mime.lua");
-    generateHeader("src/lib/luasocket/smtp.lua");
-    generateHeader("src/lib/luasocket/socket.lua");
-    generateHeader("src/lib/luasocket/tp.lua");
-    generateHeader("src/lib/luasocket/url.lua");
 }
 
 // From raylib examples

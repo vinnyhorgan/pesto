@@ -45,16 +45,4 @@ int luaopen_signal(lua_State* L);
 int luaopen_tick(lua_State* L);
 int luaopen_tiny(lua_State* L);
 
-// Luasocket
-int luaopen_ftp(lua_State* L);
-int luaopen_headers(lua_State* L);
-int luaopen_http(lua_State* L);
-int luaopen_ltn12(lua_State* L);
-int luaopen_mbox(lua_State* L);
-int luaopen_mime(lua_State* L);
-int luaopen_smtp(lua_State* L);
-int luaopen_socket(lua_State* L);
-int luaopen_tp(lua_State* L);
-int luaopen_url(lua_State* L);
-
 #endif

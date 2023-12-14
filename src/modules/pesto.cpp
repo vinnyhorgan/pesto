@@ -9,11 +9,6 @@
 #include "../scripts/reload.lua.h"
 #include "../scripts/state.lua.h"
 
-extern "C" {
-#include "../lib/luasocket/luasocket.h"
-#include "../lib/luasocket/mime.h"
-}
-
 static int luaopen_animation(lua_State* L)
 {
     if (luaL_loadbuffer(L, (const char*)ANIMATION_DATA, sizeof(ANIMATION_DATA), "animation.lua") == 0) {
@@ -94,20 +89,6 @@ static const luaL_Reg modules[] = {
     { "signal", luaopen_signal },
     { "tick", luaopen_tick },
     { "tiny", luaopen_tiny },
-    // Luasocket (C core)
-    { "socket.core", luaopen_socket_core },
-    { "mime.core", luaopen_mime_core },
-    // Luasocket
-    { "socket.ftp", luaopen_ftp },
-    { "socket.headers", luaopen_headers },
-    { "socket.http", luaopen_http },
-    { "ltn12", luaopen_ltn12 },
-    { "mbox", luaopen_mbox },
-    { "mime", luaopen_mime },
-    { "socket.smtp", luaopen_smtp },
-    { "socket", luaopen_socket },
-    { "socket.tp", luaopen_tp },
-    { "socket.url", luaopen_url },
     // Scripts
     { "pesto.animation", luaopen_animation },
     { "pesto.boot", luaopen_boot },
