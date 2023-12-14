@@ -9,6 +9,18 @@
 #include "../scripts/reload.lua.h"
 #include "../scripts/state.lua.h"
 
+#include "../scripts/external/astar.lua.h"
+#include "../scripts/external/brinevector.lua.h"
+#include "../scripts/external/bump.lua.h"
+#include "../scripts/external/classic.lua.h"
+#include "../scripts/external/flux.lua.h"
+#include "../scripts/external/inspect.lua.h"
+#include "../scripts/external/json.lua.h"
+#include "../scripts/external/lume.lua.h"
+#include "../scripts/external/signal.lua.h"
+#include "../scripts/external/tick.lua.h"
+#include "../scripts/external/tiny.lua.h"
+
 static int luaopen_animation(lua_State* L)
 {
     if (luaL_loadbuffer(L, (const char*)ANIMATION_DATA, sizeof(ANIMATION_DATA), "animation.lua") == 0) {
@@ -57,6 +69,106 @@ static int luaopen_reload(lua_State* L)
 static int luaopen_state(lua_State* L)
 {
     if (luaL_loadbuffer(L, (const char*)STATE_DATA, sizeof(STATE_DATA), "state.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+// Lua libraries
+int luaopen_astar(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)ASTAR_DATA, sizeof(ASTAR_DATA), "astar.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_brinevector(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)BRINEVECTOR_DATA, sizeof(BRINEVECTOR_DATA), "brinevector.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_bump(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)BUMP_DATA, sizeof(BUMP_DATA), "bump.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_classic(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)CLASSIC_DATA, sizeof(CLASSIC_DATA), "classic.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_flux(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)FLUX_DATA, sizeof(FLUX_DATA), "flux.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_inspect(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)INSPECT_DATA, sizeof(INSPECT_DATA), "inspect.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_json(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)JSON_DATA, sizeof(JSON_DATA), "json.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_lume(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)LUME_DATA, sizeof(LUME_DATA), "lume.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_signal(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)SIGNAL_DATA, sizeof(SIGNAL_DATA), "signal.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_tick(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)TICK_DATA, sizeof(TICK_DATA), "tick.lua") == 0) {
+        lua_call(L, 0, 1);
+    }
+
+    return 1;
+}
+
+int luaopen_tiny(lua_State* L)
+{
+    if (luaL_loadbuffer(L, (const char*)TINY_DATA, sizeof(TINY_DATA), "tiny.lua") == 0) {
         lua_call(L, 0, 1);
     }
 

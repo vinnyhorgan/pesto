@@ -68,17 +68,17 @@ void generateHeaders()
     generateHeader("src/scripts/reload.lua");
     generateHeader("src/scripts/state.lua");
 
-    generateHeader("src/lib/lua/astar.lua");
-    generateHeader("src/lib/lua/brinevector.lua");
-    generateHeader("src/lib/lua/bump.lua");
-    generateHeader("src/lib/lua/classic.lua");
-    generateHeader("src/lib/lua/flux.lua");
-    generateHeader("src/lib/lua/inspect.lua");
-    generateHeader("src/lib/lua/json.lua");
-    generateHeader("src/lib/lua/lume.lua");
-    generateHeader("src/lib/lua/signal.lua");
-    generateHeader("src/lib/lua/tick.lua");
-    generateHeader("src/lib/lua/tiny.lua");
+    generateHeader("src/scripts/external/astar.lua");
+    generateHeader("src/scripts/external/brinevector.lua");
+    generateHeader("src/scripts/external/bump.lua");
+    generateHeader("src/scripts/external/classic.lua");
+    generateHeader("src/scripts/external/flux.lua");
+    generateHeader("src/scripts/external/inspect.lua");
+    generateHeader("src/scripts/external/json.lua");
+    generateHeader("src/scripts/external/lume.lua");
+    generateHeader("src/scripts/external/signal.lua");
+    generateHeader("src/scripts/external/tick.lua");
+    generateHeader("src/scripts/external/tiny.lua");
 }
 
 // From raylib examples
