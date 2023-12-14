@@ -45,6 +45,7 @@ function pesto.init()
     pesto.signal = require("signal")
     pesto.timer = require("tick")
     pesto.ecs = require("tiny")
+    pesto.utf8 = require("utf8")
 
     -- Scripts
     pesto.state = require("pesto.state")

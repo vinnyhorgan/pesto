@@ -21,6 +21,10 @@
 #include "../scripts/external/tick.lua.h"
 #include "../scripts/external/tiny.lua.h"
 
+extern "C" {
+#include <lutf8lib.h>
+}
+
 static int luaopen_animation(lua_State* L)
 {
     if (luaL_loadbuffer(L, (const char*)ANIMATION_DATA, sizeof(ANIMATION_DATA), "animation.lua") == 0) {
@@ -201,6 +205,7 @@ static const luaL_Reg modules[] = {
     { "signal", luaopen_signal },
     { "tick", luaopen_tick },
     { "tiny", luaopen_tiny },
+    { "utf8", luaopen_utf8 },
     // Scripts
     { "pesto.animation", luaopen_animation },
     { "pesto.boot", luaopen_boot },
