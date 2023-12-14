@@ -1523,7 +1523,7 @@ static const luaL_Reg cameraMethods[] = {
     { NULL, NULL }
 };
 
-int luaopen_graphics(lua_State* L)
+int luaopen_pesto_graphics(lua_State* L)
 {
     luaL_newmetatable(L, "Texture");
     lua_pushvalue(L, -1);

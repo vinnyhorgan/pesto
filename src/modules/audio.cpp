@@ -342,7 +342,7 @@ static const luaL_Reg streamMethods[] = {
     { NULL, NULL }
 };
 
-int luaopen_audio(lua_State* L)
+int luaopen_pesto_audio(lua_State* L)
 {
     luaL_newmetatable(L, "Sound");
     lua_pushvalue(L, -1);

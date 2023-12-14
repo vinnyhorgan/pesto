@@ -319,7 +319,7 @@ static const luaL_Reg functions[] = {
     { NULL, NULL }
 };
 
-int luaopen_rres(lua_State* L)
+int luaopen_pesto_rres(lua_State* L)
 {
     lua_getglobal(L, "pesto");
 

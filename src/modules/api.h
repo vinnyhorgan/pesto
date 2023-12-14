@@ -19,18 +19,18 @@ extern Image raylibLogo;
 int luaopen_pesto(lua_State* L);
 
 // Pesto modules
-int luaopen_audio(lua_State* L);
-int luaopen_filesystem(lua_State* L);
-int luaopen_gamepad(lua_State* L);
-int luaopen_graphics(lua_State* L);
-int luaopen_imgui(lua_State* L);
-int luaopen_keyboard(lua_State* L);
-int luaopen_log(lua_State* L);
-int luaopen_pmath(lua_State* L); // luaopen_math conflicts with lua internals
-int luaopen_mouse(lua_State* L);
-int luaopen_rres(lua_State* L);
-int luaopen_system(lua_State* L);
-int luaopen_window(lua_State* L);
+int luaopen_pesto_audio(lua_State* L);
+int luaopen_pesto_filesystem(lua_State* L);
+int luaopen_pesto_gamepad(lua_State* L);
+int luaopen_pesto_graphics(lua_State* L);
+int luaopen_pesto_imgui(lua_State* L);
+int luaopen_pesto_keyboard(lua_State* L);
+int luaopen_pesto_log(lua_State* L);
+int luaopen_pesto_math(lua_State* L);
+int luaopen_pesto_mouse(lua_State* L);
+int luaopen_pesto_rres(lua_State* L);
+int luaopen_pesto_system(lua_State* L);
+int luaopen_pesto_window(lua_State* L);
 
 // Lua libraries
 int luaopen_astar(lua_State* L);

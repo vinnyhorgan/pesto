@@ -181,7 +181,10 @@ static int init(lua_State* L)
     defaultFontMedium = LoadFont_NotoMedium();
     defaultFontBig = LoadFont_NotoBig();
 
-    sdfShader = LoadShaderFromMemory(0, (const char*)SDF_DATA);
+    char* sdfCode = (char*)SDF_DATA;
+    sdfCode[SDF_DATA_SIZE - 1] = '\0';
+
+    sdfShader = LoadShaderFromMemory(0, sdfCode);
 
     icon.data = ICON_DATA;
     icon.width = ICON_WIDTH;
@@ -478,7 +481,7 @@ static const luaL_Reg functions[] = {
     { NULL, NULL }
 };
 
-int luaopen_window(lua_State* L)
+int luaopen_pesto_window(lua_State* L)
 {
     lua_getglobal(L, "pesto");
 

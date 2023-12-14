@@ -160,7 +160,7 @@ static const luaL_Reg functions[] = {
     { NULL, NULL }
 };
 
-int luaopen_log(lua_State* L)
+int luaopen_pesto_log(lua_State* L)
 {
     // We set internal errors to warning to avoid spamming the console
     // Users can set their own log level

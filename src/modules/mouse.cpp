@@ -206,7 +206,7 @@ static const luaL_Reg functions[] = {
     { NULL, NULL }
 };
 
-int luaopen_mouse(lua_State* L)
+int luaopen_pesto_mouse(lua_State* L)
 {
     lua_getglobal(L, "pesto");
 

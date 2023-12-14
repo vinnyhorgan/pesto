@@ -505,7 +505,7 @@ static const luaL_Reg functions[] = {
     { NULL, NULL }
 };
 
-int luaopen_imgui(lua_State* L)
+int luaopen_pesto_imgui(lua_State* L)
 {
     lua_getglobal(L, "pesto");
 

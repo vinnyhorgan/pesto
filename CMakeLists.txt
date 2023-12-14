@@ -24,6 +24,8 @@ include_directories(deps/imgui)
 include_directories(deps/rlimgui)
 include_directories(deps/rres)
 
+add_compile_definitions(NO_FONT_AWESOME PROJECT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
+
 set(IMGUI_SOURCES
     "deps/imgui/imgui_demo.cpp"
     "deps/imgui/imgui_draw.cpp"
@@ -32,8 +34,6 @@ set(IMGUI_SOURCES
     "deps/imgui/imgui.cpp"
     "deps/rlimgui/rlImGui.cpp"
 )
-
-add_compile_definitions(NO_FONT_AWESOME PROJECT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp")
 
@@ -52,7 +52,7 @@ endif()
 
 if(MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "pestoc")
-    add_executable(pesto_win ${SOURCES})
+    add_executable(pesto_win ${SOURCES} ${IMGUI_SOURCES})
     target_link_libraries(pesto_win libluajit raylib ws2_32)
     target_link_options(pesto_win PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
     set_target_properties(pesto_win PROPERTIES OUTPUT_NAME "pesto")
