@@ -271,7 +271,7 @@ function pesto.draw()
         width = pesto.graphics.measureMedium(name)
         pesto.graphics.textMedium(name, 250 + 710 / 2 - width / 2, 210)
 
-        if pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 250 + 710 / 2 - 100, 300, 200, 50) and pesto.mouse.isPressed(0) then
+        if pesto.keyboard.isPressed("enter") or pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 250 + 710 / 2 - 100, 300, 200, 50) and pesto.mouse.isPressed(0) then
             if #name > 0 then
                 pesto.filesystem.createDirectory("projects/" .. name)
                 pesto.filesystem.write("projects/" .. name .. "/main.lua",
