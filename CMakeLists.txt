@@ -10,6 +10,9 @@ if(MSVC)
     add_compile_options(/wd4005 /wd4018 /wd4090 /wd4244 /wd4996)
 endif()
 
+add_subdirectory(deps/enet)
+include_directories(deps/enet/include)
+
 add_subdirectory(deps/luajit)
 include_directories(deps/luajit/src)
 
@@ -20,29 +23,29 @@ set(SUPPORT_FILEFORMAT_SVG ON CACHE BOOL "")
 add_subdirectory(deps/raylib)
 
 include_directories(deps/fastnoiselite)
-include_directories(deps/http)
 include_directories(deps/imgui)
+include_directories(deps/lua)
 include_directories(deps/rlimgui)
 include_directories(deps/rres)
-include_directories(deps/utf8)
 
 add_compile_definitions(NO_FONT_AWESOME PROJECT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
 
 set(LIB_SOURCES
-    "deps/http/http.c"
+    "deps/lua/enet.c"
+    "deps/lua/http.c"
     "deps/imgui/imgui_demo.cpp"
     "deps/imgui/imgui_draw.cpp"
     "deps/imgui/imgui_tables.cpp"
     "deps/imgui/imgui_widgets.cpp"
     "deps/imgui/imgui.cpp"
     "deps/rlimgui/rlImGui.cpp"
-    "deps/utf8/lutf8lib.c"
+    "deps/lua/lutf8lib.c"
 )
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${LIB_SOURCES})
-target_link_libraries(${PROJECT_NAME} libluajit raylib)
+target_link_libraries(${PROJECT_NAME} libluajit raylib enet)
 
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} ws2_32 wininet)
@@ -57,7 +60,7 @@ endif()
 if(MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "pestoc")
     add_executable(pesto_win ${SOURCES} ${LIB_SOURCES})
-    target_link_libraries(pesto_win libluajit raylib ws2_32 wininet)
+    target_link_libraries(pesto_win libluajit raylib enet ws2_32 wininet)
     target_link_options(pesto_win PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
     set_target_properties(pesto_win PROPERTIES OUTPUT_NAME "pesto")
 endif()
