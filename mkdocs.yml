@@ -4,6 +4,8 @@ site_author: Vinny Horgan
 copyright: Copyright © 2023 Vinny Horgan
 nav:
   - Introduction: "index.md"
+  - Features: "features.md"
+  - Getting Started: "getting_started.md"
   - Modules:
     - pesto: "modules/pesto.md"
     - pesto.audio: "modules/audio.md"
