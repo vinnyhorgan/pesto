@@ -21,7 +21,7 @@
 #include "../scripts/external/tick.lua.h"
 #include "../scripts/external/tiny.lua.h"
 
-#include <deps.h>
+#include <luadeps.h>
 
 static int luaopen_animation(lua_State* L)
 {

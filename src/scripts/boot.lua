@@ -178,6 +178,9 @@ function pesto.run()
             if pesto.draw then pesto.draw() end
         end
 
+        pesto.mouse.setOffset(0, 0)
+        pesto.mouse.setScale(1, 1)
+
         pesto.imgui.beginDrawing()
 
         if pesto.gui then pesto.gui() end
