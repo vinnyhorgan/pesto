@@ -14,8 +14,6 @@ If you are unsure just install [VS Code](https://code.visualstudio.com/).
 
 ![Manager](assets/manager.gif)
 
-## Hello World
-
 You should now have a basic hello world program which you can run by clicking it in the "Project List" tab!
 
 ## Develop

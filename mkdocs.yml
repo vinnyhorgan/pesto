@@ -7,6 +7,8 @@ nav:
   - Features: "features.md"
   - Getting Started: "getting_started.md"
   - Building: "building.md"
+  - Examples:
+    - Hello, World!: "examples/hello_world.md"
   - Modules:
     - pesto: "modules/pesto.md"
     - pesto.animation: "modules/animation.md"
