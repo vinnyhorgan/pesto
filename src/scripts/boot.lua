@@ -45,13 +45,12 @@ function pesto.init()
     pesto.signal = require("signal")
     pesto.timer = require("tick")
     pesto.ecs = require("tiny")
-    pesto.utf8 = require("utf8")
 
     -- Scripts
-    pesto.state = require("pesto.state")
-    pesto.reload = require("pesto.reload")
     pesto.animation = require("pesto.animation")
     pesto.ldtk = require("pesto.ldtk")
+    pesto.reload = require("pesto.reload")
+    pesto.state = require("pesto.state")
 
     local directory = arg[1]
 
