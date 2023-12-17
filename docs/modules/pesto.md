@@ -1,36 +1,39 @@
 # pesto
 
-The `pesto` table is the only global exposed to every Pesto program. It contains a set of **modules** and **callbacks**.
+The `pesto` table is the only global exposed to every Pesto program.
+It contains a set of **modules** and **callbacks**.
 
 ## Modules
 
 Modules allow the programmer to do all sorts of things, from drawing stuff on the screen to checking keys on a keyboard.
 Each one encapsulates a certain functionality, these are the modules Pesto exposes:
 
-- [**pesto.animation**](animation.md)
-- [**pesto.astar**](astar.md)
-- [**pesto.audio**](audio.md)
-- [**pesto.collision**](collision.md)
-- [**pesto.ecs**](ecs.md)
-- [**pesto.filesystem**](filesystem.md)
-- [**pesto.gamepad**](gamepad.md)
-- [**pesto.graphics**](graphics.md)
-- [**pesto.imgui**](imgui.md)
-- [**pesto.inspect**](inspect.md)
-- [**pesto.json**](json.md)
-- [**pesto.keyboard**](keyboard.md)
-- [**pesto.ldtk**](ldtk.md)
-- [**pesto.log**](log.md)
-- [**pesto.math**](math.md)
-- [**pesto.mouse**](mouse.md)
-- [**pesto.reload**](reload.md)
-- [**pesto.rres**](rres.md)
-- [**pesto.signal**](signal.md)
-- [**pesto.state**](state.md)
-- [**pesto.system**](system.md)
-- [**pesto.tween**](tween.md)
-- [**pesto.util**](util.md)
-- [**pesto.window**](window.md)
+| Name                                | Description                                  |
+| ----------------------------------- | :------------------------------------------: |
+| [`pesto.animation`](animation.md)   | Sprite animation.                            |
+| [`pesto.astar`](astar.md)           | A* Pathfinding.                              |
+| [`pesto.audio`](audio.md)           | Audio playing and streaming.                 |
+| [`pesto.collision`](collision.md)   | AABB collision detection and response.       |
+| [`pesto.ecs`](ecs.md)               | Entity component system.                     |
+| [`pesto.filesystem`](filesystem.md) | Filesystem access.                           |
+| [`pesto.gamepad`](gamepad.md)       | Gamepad support.                             |
+| [`pesto.graphics`](graphics.md)     | Everything related to drawing on the screen. |
+| [`pesto.imgui`](imgui.md)           | ImGUI library.                               |
+| [`pesto.inspect`](inspect.md)       | Pretty-printing of tables.                   |
+| [`pesto.json`](json.md)             | JSON parsing and serialization.              |
+| [`pesto.keyboard`](keyboard.md)     | Keyboard support.                            |
+| [`pesto.ldtk`](ldtk.md)             | LDTK map editor support.                     |
+| [`pesto.log`](log.md)               | Logging.                                     |
+| [`pesto.math`](math.md)             | Random and noise.                            |
+| [`pesto.mouse`](mouse.md)           | Mouse support.                               |
+| [`pesto.reload`](reload.md)         | Hot code reloading.                          |
+| [`pesto.rres`](rres.md)             | Resource loading.                            |
+| [`pesto.signal`](signal.md)         | Observer pattern.                            |
+| [`pesto.state`](state.md)           | State management.                            |
+| [`pesto.system`](system.md)         | System management.                           |
+| [`pesto.tween`](tween.md)           | Tweening.                                    |
+| [`pesto.util`](util.md)             | Various utilities.                           |
+| [`pesto.window`](window.md)         | Window management.                           |
 
 ## Callbacks
 

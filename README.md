@@ -1,30 +1,41 @@
-# Pesto 🍃
+# Pesto ![icon](docs/assets/favicon.png)
 
-Pesto is a tiny, lightweight, and fast game framework written in C++, utilizing Lua for scripting. It's designed to be cross-platform and is dependent on two main libraries: Raylib, an exceptional C library for graphics and input, and LuaJIT, a high-performance implementation of Lua. Pesto's architecture and design principles are heavily influenced by the fantastic Love2D framework.
+> **A tiny lua framework.**
 
-## Introduction
+Pesto can be used to create any type of program with ease, thanks to its simple [Lua](https://www.lua.org/) interface.
+Programs written in it are lightweight, fast, and cross-platform.
+Pesto's main dependency is the amazing [Raylib](https://www.raylib.com/), and is heavily influenced by the [Love2D](https://love2d.org/) framework.
 
-Pesto aims to offer a simpler and more lightweight alternative to Love2D while staying true to the "Keep It Simple, Stupid" (KISS) principle. The primary motivation behind Pesto's creation was a desire for a lightweight project that emphasized readability, simplicity, and educational value. It aims to be self-contained, minimizing external dependencies and providing a more comprehensive feature set compared to the basic functionality of Love2D.
+The primary motivation behind Pesto's creation was a desire for a lightweight project that emphasized readability, simplicity, and educational value.
+It aims to be self-contained, minimizing external dependencies and providing a more comprehensive feature set compared to the basic functionality of Love2D.
 
 The word "Pesto" originates from my favorite Italian sauce, the country i'm from 😋.
 
+![](docs/assets/manager.gif)
+
+![](docs/assets/bunnymark.png)
+
 ## Features
 
-- **Cross-Platform**: Built in C++ without significant dependencies, Pesto can support all platforms that Raylib supports, making it highly versatile.
-- **Lightweight**: With a focus on simplicity and a small footprint, Pesto remains fast and efficient.
-- **Lua Scripting**: Utilizes Lua for scripting, offering flexibility and ease of use in designing and developing games.
-- **Readable Source Code**: Emphasizes readability and simplicity intentionally for educational purposes and easy understanding.
-- **Inspired by Love2D**: Draws inspiration from Love2D's ease of use while aiming to be more self-contained.
+- **Simplicity**: Pesto offers a straightforward API for easy development.
+- **Lightweight and Fast**: It's a speedy, single executable framework powered by LuaJIT.
+- **Cross-Platform**: Supports various platforms, reducing compatibility issues.
+- **Lua Scripting**: Utilizes Lua scripting for flexible development.
+- **Versatility**: Beyond games, it's suitable for various applications and tools.
+- **Self-Contained**: Includes essential modules, reducing reliance on external libraries.
+- **Educational**: Designed to aid learning and experimentation due to its understandable codebase.
+- **Community-Driven**: Encourages contributions with clear guidelines and support.
+- **Comprehensive Documentation**: Provides detailed, user-friendly documentation with many examples for beginners.
 
 ## Getting Started
 
-To start using Pesto, grab the latest release and refer to the documentation available on the [Pesto website](https://vinnyhorgan.github.io/pesto).
+To get started using Pesto follow the instructions on the [docs](https://vinnyhorgan.github.io/pesto/getting_started/).
 
-Here is a simple example:
+Here is the simplest possible program:
 
-```lua
+``` lua
 function pesto.draw()
-    pesto.graphics.print("Hello, World!")
+    pesto.graphics.text("Hello, World!", 0, 0)
 end
 ```
 
@@ -32,22 +43,27 @@ end
 
 You can build Pesto from source using CMake. Make sure to clone the project and its submodules, and then follow these steps:
 
-```console
+```
 mkdir build
 cd build
 cmake ..
-cmake --build .
+cmake --build . --config Release
 ```
 
-## Differences with Love2D
+More details can be found in the [docs](https://vinnyhorgan.github.io/pesto/building/).
 
-- **Lightweight & Simplified**: While Love2D is a robust framework, Pesto aims to be more streamlined and less reliant on additional third-party libraries.
-- **Maintained Ecosystem**: Leveraging modern libraries, Pesto harnesses the existing ecosystem, staying current with contemporary development practices.
-- **Self-Contained Functionality**: Strives to offer a more comprehensive feature set without the need for excessive external dependencies.
+## Acknowledgments
 
-## Contribution
+Thanks to all these amazing people:
 
-Contributions to Pesto are welcome! Feel free to contribute by submitting bug reports, feature requests, or pull requests. Please adhere to the project's guidelines when contributing to maintain consistency and ease of integration.
+- [Raylib](https://www.raylib.com/)
+- [LuaJIT](https://luajit.org/)
+- [Love2D](https://love2d.org/)
+- [Lovr](https://lovr.org/)
+- [ImGui](https://github.com/ocornut/imgui)
+- [Enet](https://github.com/lsalzman/enet)
+- [Awesome Love2D](https://github.com/love2d-community/awesome-love2d/)
+- [MkDocs](https://www.mkdocs.org/)
 
 ## License
 

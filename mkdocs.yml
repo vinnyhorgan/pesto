@@ -4,7 +4,6 @@ site_author: Vinny Horgan
 copyright: Copyright © 2023 Vinny Horgan
 nav:
   - Introduction: "index.md"
-  - Features: "features.md"
   - Getting Started: "getting_started.md"
   - Building: "building.md"
   - Examples:
