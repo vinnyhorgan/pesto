@@ -72,7 +72,6 @@ function pesto.init()
         config.debug = false
         config.title = "Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename .. " Manager"
         config.resizable = false
-        config.letterbox = false
     end
 
     pesto.window.init(config.width, config.height, config.title)
@@ -126,6 +125,16 @@ function pesto.run()
     end
 
     while true do
+        local scale
+
+        if config.letterbox then
+            scale = math.min(pesto.window.getWidth() / config.gameWidth, pesto.window.getHeight() / config.gameHeight)
+
+            pesto.mouse.setOffset(-(pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5,
+                -(pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5)
+            pesto.mouse.setScale(1 / scale, 1 / scale)
+        end
+
         if pesto.window.shouldClose() then
             if not pesto.quit or not pesto.quit() then
                 break
@@ -153,13 +162,6 @@ function pesto.run()
             if pesto.draw then pesto.draw() end
 
             target:endDrawing()
-
-            local scale = math.min(pesto.window.getWidth() / config.gameWidth,
-                pesto.window.getHeight() / config.gameHeight)
-
-            pesto.mouse.setOffset(-(pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5,
-                -(pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5)
-            pesto.mouse.setScale(1 / scale, 1 / scale)
 
             pesto.graphics.clear(config.borderColor[1], config.borderColor[2], config.borderColor[3],
                 config.borderColor[4])
@@ -201,7 +203,6 @@ function pesto.errhand(msg)
     pesto.window.setTargetFPS(config.targetFPS)
 
     pesto.window.setResizable(false)
-    pesto.mouse.enable()
 
     local trace = debug.traceback()
     local err = {}
@@ -221,14 +222,26 @@ function pesto.errhand(msg)
     p = string.gsub(p, "\t", "")
     p = string.gsub(p, "%[string \"(.-)\"%]", "%1")
 
+    local target = pesto.graphics.loadCanvas(config.width, config.height)
+    target:setFilter("bilinear")
+
     while not pesto.window.shouldClose() do
+        local scale = math.min(pesto.window.getWidth() / config.width, pesto.window.getHeight() / config.height)
+
         pesto.graphics.beginDrawing()
+
+        target:beginDrawing()
 
         pesto.graphics.clear(50, 79, 59)
 
         pesto.graphics.setColor(255, 255, 255)
 
         pesto.graphics.text(p, 70, 70)
+
+        target:endDrawing()
+
+        target:draw((pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5,
+            (pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5, 0, scale, -scale)
 
         pesto.graphics.endDrawing()
     end
