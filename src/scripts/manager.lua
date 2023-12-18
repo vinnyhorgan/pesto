@@ -160,8 +160,10 @@ function pesto.draw()
     pesto.graphics.textMedium("Templates", 250 / 2 - width / 2, 250)
 
     if pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 20, 300 - 6, 210, 40) and pesto.mouse.isPressed(0) then
-        currentPage = "about"
-        animatedText("Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename, 280, 150)
+        if currentPage ~= "about" then
+            currentPage = "about"
+            animatedText("Pesto " .. major .. "." .. minor .. "." .. patch .. " " .. codename, 280, 150)
+        end
     end
 
     if currentPage == "about" then
@@ -211,11 +213,15 @@ function pesto.draw()
             pesto.graphics.line(290 + 40, scroll + 150 + 60 * i - 15 + 60, 880, scroll + 150 + 60 * i - 15 + 60)
 
             if pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 290 + 40, scroll + 150 + 60 * i - 10, 550, 50) and pesto.mouse.isPressed(0) then
-                package.path = "projects/" .. project .. "/?.lua;" .. package.path
-                pesto.filesystem.changeDirectory("projects/" .. project)
-                pesto.update = nil
-                pesto.draw = nil
-                require("main")
+                if pesto.system.getOS() == "windows" then
+                    if pesto.filesystem.exists(pesto.filesystem.getApplicationDirectory() .. "\\pesto.exe") then
+                        os.execute("start /b " ..
+                            pesto.filesystem.getApplicationDirectory() .. "\\pesto.exe projects\\" .. project)
+                    elseif pesto.filesystem.exists(pesto.filesystem.getApplicationDirectory() .. "\\pestoc.exe") then
+                        os.execute("start /b " ..
+                            pesto.filesystem.getApplicationDirectory() .. "\\pestoc.exe projects\\" .. project)
+                    end
+                end
             end
 
             if pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 290 + 40, scroll + 150 + 60 * i - 10, 550, 50) and pesto.mouse.isPressed(1) then
@@ -276,6 +282,8 @@ function pesto.draw()
                 pesto.filesystem.createDirectory("projects/" .. name)
                 pesto.filesystem.write("projects/" .. name .. "/main.lua",
                     "function pesto.draw()\n    pesto.graphics.text(\"Hello, World!\", 10, 10)\nend")
+                pesto.filesystem.write("projects/" .. name .. "/conf.lua",
+                    "function pesto.conf(config)\n    -- Change configurations here!\nend")
 
                 projects = {}
 
