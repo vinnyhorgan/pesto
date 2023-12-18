@@ -198,6 +198,8 @@ function pesto.draw()
             scroll = scroll - 20
         end
 
+        scroll = pesto.util.clamp(scroll, #projects * -60 + 150, 0)
+
         pesto.graphics.beginScissorMode(290, 190, 960 - 250 - 80, 540 - 150 - 40 - 80)
 
         for i, project in pairs(projects) do
@@ -214,13 +216,15 @@ function pesto.draw()
 
             if pesto.graphics.checkCollisionPointRec(pesto.mouse.getX(), pesto.mouse.getY(), 290 + 40, scroll + 150 + 60 * i - 10, 550, 50) and pesto.mouse.isPressed(0) then
                 if pesto.system.getOS() == "windows" then
-                    if pesto.filesystem.exists(pesto.filesystem.getApplicationDirectory() .. "\\pesto.exe") then
+                    if pesto.filesystem.exists(pesto.filesystem.getApplicationDirectory() .. "/pesto.exe") then
                         os.execute("start /b " ..
                             pesto.filesystem.getApplicationDirectory() .. "\\pesto.exe projects\\" .. project)
-                    elseif pesto.filesystem.exists(pesto.filesystem.getApplicationDirectory() .. "\\pestoc.exe") then
+                    elseif pesto.filesystem.exists(pesto.filesystem.getApplicationDirectory() .. "/pestoc.exe") then
                         os.execute("start /b " ..
                             pesto.filesystem.getApplicationDirectory() .. "\\pestoc.exe projects\\" .. project)
                     end
+                else
+                    os.execute(pesto.filesystem.getApplicationDirectory() .. "/pesto projects/" .. project)
                 end
             end
 
@@ -294,6 +298,8 @@ function pesto.draw()
                 end
 
                 name = ""
+
+                pesto.mouse.setCursor("arrow")
 
                 currentPage = "projectList"
             end
