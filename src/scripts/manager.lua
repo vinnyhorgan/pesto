@@ -198,7 +198,7 @@ function pesto.draw()
             scroll = scroll - 20
         end
 
-        scroll = pesto.util.clamp(scroll, #projects * -60 + 150, 0)
+        scroll = pesto.util.clamp(scroll, #projects * -60, 0)
 
         pesto.graphics.beginScissorMode(290, 190, 960 - 250 - 80, 540 - 150 - 40 - 80)
 
