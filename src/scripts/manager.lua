@@ -224,7 +224,7 @@ function pesto.draw()
                             pesto.filesystem.getApplicationDirectory() .. "\\pestoc.exe projects\\" .. project)
                     end
                 else
-                    os.execute(pesto.filesystem.getApplicationDirectory() .. "/pesto projects/" .. project)
+                    os.execute(pesto.filesystem.getApplicationDirectory() .. "/pesto projects/" .. project .. " &")
                 end
             end
 

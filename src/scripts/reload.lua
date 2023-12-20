@@ -46,8 +46,6 @@ end
 function reload.onerror(e)
     reload.state = "error"
 
-    pesto.mouse.enable()
-
     for _, v in pairs(callbacks) do
         pesto[v] = function() end
     end

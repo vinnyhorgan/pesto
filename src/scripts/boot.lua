@@ -240,8 +240,8 @@ function pesto.errhand(msg)
 
         target:endDrawing()
 
-        target:draw((pesto.window.getWidth() - (config.gameWidth * scale)) * 0.5,
-            (pesto.window.getHeight() - (config.gameHeight * scale)) * 0.5, 0, scale, -scale)
+        target:draw((pesto.window.getWidth() - (config.width * scale)) * 0.5,
+            (pesto.window.getHeight() - (config.height * scale)) * 0.5, 0, scale, -scale)
 
         pesto.graphics.endDrawing()
     end
