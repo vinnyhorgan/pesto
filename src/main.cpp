@@ -7,7 +7,7 @@
 int main(int argc, char* argv[])
 {
 #ifndef NDEBUG
-    generateHeaders(); // Remove before release
+    generateHeaders();
 #endif
 
     int retval = 0;
@@ -31,6 +31,8 @@ int main(int argc, char* argv[])
 
     preload(L, luaopen_pesto, "pesto");
     require(L, "pesto");
+
+    lua_pop(L, 1);
 
     require(L, "pesto.boot");
 

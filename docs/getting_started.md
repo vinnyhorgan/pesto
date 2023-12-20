@@ -12,7 +12,7 @@ This should have created a folder called `projects` next to the Pesto executable
 Inside you will find the project folder, which you can open in your text editor of choice.
 If you are unsure just install [VS Code](https://code.visualstudio.com/).
 
-![Manager](assets/manager.gif)
+![](assets/manager.gif)
 
 You should now have a basic hello world program which you can run by clicking it in the "Project List" tab!
 

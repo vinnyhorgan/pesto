@@ -119,7 +119,7 @@ end
 
 ### pesto.getVersion
 
-Gets the current version of Pesto.
+Returns the current version of Pesto.
 
 ```
 major, minor, patch, codename = pesto.getVersion()

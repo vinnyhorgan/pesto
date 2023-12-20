@@ -1,4 +1,4 @@
-# Pesto ![icon](docs/assets/favicon.png)
+# Pesto ![](docs/assets/favicon.png)
 
 > **A tiny lua framework.**
 
