@@ -1,188 +1,208 @@
--- ======================================================================
--- Copyright (c) 2012 RapidFire Studio Limited 
--- All Rights Reserved. 
--- http://www.rapidfirestudio.com
+--[[
+    Lua star example - Run with love (https://love2d.org/)
+    Copyright 2018 Wesley Werner <wesley.werner@gmail.com>
 
--- Permission is hereby granted, free of charge, to any person obtaining
--- a copy of this software and associated documentation files (the
--- "Software"), to deal in the Software without restriction, including
--- without limitation the rights to use, copy, modify, merge, publish,
--- distribute, sublicense, and/or sell copies of the Software, and to
--- permit persons to whom the Software is furnished to do so, subject to
--- the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
--- The above copyright notice and this permission notice shall be
--- included in all copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
--- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
--- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
--- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
--- IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
--- CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
--- TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
--- SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--- ======================================================================
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-module ( "astar", package.seeall )
+    References:
+    https://en.wikipedia.org/wiki/A*_search_algorithm
+    https://www.redblobgames.com/pathfinding/a-star/introduction.html
+    https://www.raywenderlich.com/4946/introduction-to-a-pathfinding
+]]--
 
-----------------------------------------------------------------
--- local variables
-----------------------------------------------------------------
+--- Provides easy A* path finding.
+-- @module lua-star
 
-local INF = 1/0
-local cachedPaths = nil
+local module = {}
 
-----------------------------------------------------------------
--- local functions
-----------------------------------------------------------------
-
-function dist ( x1, y1, x2, y2 )
-	
-	return math.sqrt ( math.pow ( x2 - x1, 2 ) + math.pow ( y2 - y1, 2 ) )
+--- Clears all cached paths.
+function module:clearCached()
+    module.cache = nil
 end
 
-function dist_between ( nodeA, nodeB )
-
-	return dist ( nodeA.x, nodeA.y, nodeB.x, nodeB.y )
+-- (Internal) Returns a unique key for the start and end points.
+local function keyOf(start, goal)
+    return string.format("%d,%d>%d,%d", start.x, start.y, goal.x, goal.y)
 end
 
-function heuristic_cost_estimate ( nodeA, nodeB )
-
-	return dist ( nodeA.x, nodeA.y, nodeB.x, nodeB.y )
+-- (Internal) Returns the cached path for start and end points.
+local function getCached(start, goal)
+    if module.cache then
+        local key = keyOf(start, goal)
+        return module.cache[key]
+    end
 end
 
-function is_valid_node ( node, neighbor )
-
-	return true
+-- (Internal) Saves a path to the cache.
+local function saveCached(start, goal, path)
+    module.cache = module.cache or { }
+    local key = keyOf(start, goal)
+    module.cache[key] = path
 end
 
-function lowest_f_score ( set, f_score )
-
-	local lowest, bestNode = INF, nil
-	for _, node in ipairs ( set ) do
-		local score = f_score [ node ]
-		if score < lowest then
-			lowest, bestNode = score, node
-		end
-	end
-	return bestNode
+-- (Internal) Return the distance between two points.
+-- This method doesn't bother getting the square root of s, it is faster
+-- and it still works for our use.
+local function distance(x1, y1, x2, y2)
+  local dx = x1 - x2
+  local dy = y1 - y2
+  local s = dx * dx + dy * dy
+  return s
 end
 
-function neighbor_nodes ( theNode, nodes )
-
-	local neighbors = {}
-	for _, node in ipairs ( nodes ) do
-		if theNode ~= node and is_valid_node ( theNode, node ) then
-			table.insert ( neighbors, node )
-		end
-	end
-	return neighbors
+-- (Internal) Clamp a value to a range.
+local function clamp(x, min, max)
+  return x < min and min or (x > max and max or x)
 end
 
-function not_in ( set, theNode )
+-- (Internal) Return the score of a node.
+-- G is the cost from START to this node.
+-- H is a heuristic cost, in this case the distance from this node to the goal.
+-- Returns F, the sum of G and H.
+local function calculateScore(previous, node, goal)
 
-	for _, node in ipairs ( set ) do
-		if node == theNode then return false end
-	end
-	return true
+    local G = previous.score + 1
+    local H = distance(node.x, node.y, goal.x, goal.y)
+    return G + H, G, H
+
 end
 
-function remove_node ( set, theNode )
-
-	for i, node in ipairs ( set ) do
-		if node == theNode then 
-			set [ i ] = set [ #set ]
-			set [ #set ] = nil
-			break
-		end
-	end	
+-- (Internal) Returns true if the given list contains the specified item.
+local function listContains(list, item)
+    for _, test in ipairs(list) do
+        if test.x == item.x and test.y == item.y then
+            return true
+        end
+    end
+    return false
 end
 
-function unwind_path ( flat_path, map, current_node )
-
-	if map [ current_node ] then
-		table.insert ( flat_path, 1, map [ current_node ] ) 
-		return unwind_path ( flat_path, map, map [ current_node ] )
-	else
-		return flat_path
-	end
+-- (Internal) Returns the item in the given list.
+local function listItem(list, item)
+    for _, test in ipairs(list) do
+        if test.x == item.x and test.y == item.y then
+            return test
+        end
+    end
 end
 
-----------------------------------------------------------------
--- pathfinding functions
-----------------------------------------------------------------
+-- (Internal) Requests adjacent map values around the given node.
+local function getAdjacent(width, height, node, positionIsOpenFunc, includeDiagonals)
 
-function a_star ( start, goal, nodes, valid_node_func )
+    local result = { }
 
-	local closedset = {}
-	local openset = { start }
-	local came_from = {}
+    local positions = {
+        { x = 0, y = -1 },  -- top
+        { x = -1, y = 0 },  -- left
+        { x = 0, y = 1 },   -- bottom
+        { x = 1, y = 0 },   -- right
+    }
 
-	if valid_node_func then is_valid_node = valid_node_func end
+    if includeDiagonals then
+        local diagonalMovements = {
+            { x = -1, y = -1 },   -- top left
+            { x = 1, y = -1 },   -- top right
+            { x = -1, y = 1 },   -- bot left
+            { x = 1, y = 1 },   -- bot right
+        }
 
-	local g_score, f_score = {}, {}
-	g_score [ start ] = 0
-	f_score [ start ] = g_score [ start ] + heuristic_cost_estimate ( start, goal )
+        for _, value in ipairs(diagonalMovements) do
+            table.insert(positions, value)
+        end
+    end
 
-	while #openset > 0 do
-	
-		local current = lowest_f_score ( openset, f_score )
-		if current == goal then
-			local path = unwind_path ( {}, came_from, goal )
-			table.insert ( path, goal )
-			return path
-		end
+    for _, point in ipairs(positions) do
+        local px = clamp(node.x + point.x, 1, width)
+        local py = clamp(node.y + point.y, 1, height)
+        local value = positionIsOpenFunc( px, py )
+        if value then
+            table.insert( result, { x = px, y = py  } )
+        end
+    end
 
-		remove_node ( openset, current )		
-		table.insert ( closedset, current )
-		
-		local neighbors = neighbor_nodes ( current, nodes )
-		for _, neighbor in ipairs ( neighbors ) do 
-			if not_in ( closedset, neighbor ) then
-			
-				local tentative_g_score = g_score [ current ] + dist_between ( current, neighbor )
-				 
-				if not_in ( openset, neighbor ) or tentative_g_score < g_score [ neighbor ] then 
-					came_from 	[ neighbor ] = current
-					g_score 	[ neighbor ] = tentative_g_score
-					f_score 	[ neighbor ] = g_score [ neighbor ] + heuristic_cost_estimate ( neighbor, goal )
-					if not_in ( openset, neighbor ) then
-						table.insert ( openset, neighbor )
-					end
-				end
-			end
-		end
-	end
-	return nil -- no valid path
+    return result
+
 end
 
-----------------------------------------------------------------
--- exposed functions
-----------------------------------------------------------------
+-- Returns the path from start to goal, or false if no path exists.
+function module:find(width, height, start, goal, positionIsOpenFunc, useCache, excludeDiagonalMoving)
 
-function clear_cached_paths ()
+    if useCache then
+        local cachedPath = getCached(start, goal)
+        if cachedPath then
+            return cachedPath
+        end
+    end
 
-	cachedPaths = nil
+    local success = false
+    local open = { }
+    local closed = { }
+
+    start.score = 0
+    start.G = 0
+    start.H = distance(start.x, start.y, goal.x, goal.y)
+    start.parent = { x = 0, y = 0 }
+    table.insert(open, start)
+
+    while not success and #open > 0 do
+
+        -- sort by score: high to low
+        table.sort(open, function(a, b) return a.score > b.score end)
+
+        local current = table.remove(open)
+
+        table.insert(closed, current)
+
+        success = listContains(closed, goal)
+
+        if not success then
+
+            local adjacentList = getAdjacent(width, height, current, positionIsOpenFunc, not excludeDiagonalMoving)
+
+            for _, adjacent in ipairs(adjacentList) do
+
+                if not listContains(closed, adjacent) then
+
+                    if not listContains(open, adjacent) then
+
+                        adjacent.score = calculateScore(current, adjacent, goal)
+                        adjacent.parent = current
+                        table.insert(open, adjacent)
+
+                    end
+
+                end
+
+            end
+
+        end
+
+    end
+
+    if not success then
+        return false
+    end
+
+    -- traverse the parents from the last point to get the path
+    local node = listItem(closed, closed[#closed])
+    local path = { }
+
+    while node do
+
+        table.insert(path, 1, { x = node.x, y = node.y } )
+        node = listItem(closed, node.parent)
+
+    end
+
+    saveCached(start, goal, path)
+
+    -- reverse the closed list to get the solution
+    return path
+
 end
 
-function distance ( x1, y1, x2, y2 )
-	
-	return dist ( x1, y1, x2, y2 )
-end
-
-function path ( start, goal, nodes, ignore_cache, valid_node_func )
-
-	if not cachedPaths then cachedPaths = {} end
-	if not cachedPaths [ start ] then
-		cachedPaths [ start ] = {}
-	elseif cachedPaths [ start ] [ goal ] and not ignore_cache then
-		return cachedPaths [ start ] [ goal ]
-	end
-
-      local resPath = a_star ( start, goal, nodes, valid_node_func )
-      if not cachedPaths [ start ] [ goal ] and not ignore_cache then
-              cachedPaths [ start ] [ goal ] = resPath
-      end
-
-	return resPath
-end
+return module

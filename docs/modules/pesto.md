@@ -35,6 +35,26 @@ Each one encapsulates a certain functionality, these are the modules Pesto expos
 | [`pesto.util`](util.md)             | Various utilities.                           |
 | [`pesto.window`](window.md)         | Window management.                           |
 
+### Objects
+
+Objects are like classes in other languages.
+`Object` can be extended to enable [oop](https://en.wikipedia.org/wiki/Object-oriented_programming) in Pesto.
+
+| Name                             | Description                       |
+| ---------------------------------| :-------------------------------: |
+| [`Object`](../objects/object.md) | Base class for all Pesto objects. |
+| [`Vector`](../objects/vector.md) | Fast vector class.                |
+
+### Extra modules
+
+Pesto also bundles some extra modules which need to be loaded by the user.
+
+| Name                               | Description              |
+| ---------------------------------- | :----------------------: |
+| [`enet`](../extra_modules/enet.md) | UDP networking.          |
+| [`http`](../extra_modules/http.md) | HTTP requests.           |
+| [`utf8`](../extra_modules/utf8.md) | UTF-8 string processing. |
+
 ## Callbacks
 
 Callbacks are functions you can override and get called by the framework at a specific time.
