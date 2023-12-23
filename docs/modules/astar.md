@@ -1,24 +1,9 @@
 # pesto.astar
 
 The `pesto.astar` module provides an implementation of the [A*](https://en.wikipedia.org/wiki/A*_search_algorithm) pathfinding algorithm.
+It is based on the [lua-star](https://github.com/wesleywerner/lua-star) library.
 
 ## Functions
-
-### pesto.astar:clearCached
-
-Clears all cached paths.
-
-```
-pesto.astar:clearCached()
-```
-
-**Arguments**
-
-None
-
-**Returns**
-
-None
 
 ### pesto.astar:find
 
@@ -45,3 +30,19 @@ path = pesto.astar:find(width, height, start, goal, isWalkable, useCache, exclud
 | Name     | Type   | Description                                                    |
 | -------- | ------ | -------------------------------------------------------------- |
 | `path`   | table  | The path from `start` to `goal`. (`false` if no path is found) |
+
+### pesto.astar:clearCached
+
+Clears all cached paths.
+
+```
+pesto.astar:clearCached()
+```
+
+**Arguments**
+
+None
+
+**Returns**
+
+None
