@@ -15,11 +15,11 @@ animation = pesto.animation.newAnimation(frames, durations, [onLoop])
 
 **Arguments**
 
-| Name        | Type           | Description                                               |
-| ----------- | -------------- | --------------------------------------------------------- |
-| `frames`    | table          | The frames to animate.                                    |
-| `durations` | number | table | The duration of each frame.                               |
-| `onLoop`    | function       | The function to call when the animation loops. (optional) |
+| Name        | Type         | Description                                               |
+| ----------- | ------------ | --------------------------------------------------------- |
+| `frames`    | table        | The frames to animate.                                    |
+| `durations` | number/table | The duration of each frame.                               |
+| `onLoop`    | function     | The function to call when the animation loops. (optional) |
 
 - `frames` is a table of frames, you can provide your own, but using the [Grid](#grid) object is very convenient.
 - When `durations` is a number, it represents the duration of all frames in the animation.
