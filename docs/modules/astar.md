@@ -31,6 +31,21 @@ path = pesto.astar:find(width, height, start, goal, isWalkable, useCache, exclud
 | -------- | ------ | -------------------------------------------------------------- |
 | `path`   | table  | The path from `start` to `goal`. (`false` if no path is found) |
 
+``` lua
+function isWalkable(x, y)
+    -- Should return true if the position is open to walk
+    return map[x][y] == walkable
+end
+
+local path = pesto.astar:find(width, height, start, goal, isWalkable, useCache, excludeDiagonal)
+
+if path then
+    for _, p in ipairs(path) do
+        print(p.x, p.y)
+    end
+end
+```
+
 ### pesto.astar:clearCached
 
 Clears all cached paths.

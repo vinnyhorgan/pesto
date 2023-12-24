@@ -74,7 +74,7 @@ It allows you to define "gaps" between your frames in the image.
 
 ## Animation
 
-Animation objects are groups of frames that are interchanged at a specific time.
+Animations are groups of frames that are interchanged every now and then.
 
 ### Animation:update
 
@@ -276,7 +276,13 @@ None
 
 ## Grid
 
-Grid objects are just a convenient way of getting frames from a sprite.
+Grids have only one purpose: to build groups of quads of the same size as easily as possible.
+In order to do this, they need to know only 2 things: the size of each quad and the size of the image they will be applied to.
+Each size is a width and a height, and those are the first 4 parameters of `pesto.animation.newGrid`.
+
+Grids are just a convenient way of getting frames from a sprite.
+Frames are assumed to be distributed in rows and columns.
+Frame 1,1 is the one in the first row, first column.
 
 ### Grid:getFrames
 

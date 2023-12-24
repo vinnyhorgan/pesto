@@ -267,6 +267,8 @@ None
 ## Stream
 
 A Stream object represents an audio stream loaded into memory.
+It is better to use a Stream when dealing with large audio files.
+It avoids loading the entire file into memory.
 
 ### Stream:getLength
 
