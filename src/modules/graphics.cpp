@@ -5,11 +5,12 @@
 #include "../util.h"
 
 static bool safe = false;
+static bool canvasSafe = false;
 static Color currentColor = WHITE;
 
 static int beginBlendMode(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -44,7 +45,7 @@ static int beginDrawing(lua_State* L)
 
 static int beginScissorMode(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -89,7 +90,7 @@ static int checkCollisionRecs(lua_State* L)
 
 static int circle(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -103,7 +104,7 @@ static int circle(lua_State* L)
 
 static int circleLines(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -117,7 +118,7 @@ static int circleLines(lua_State* L)
 
 static int clear(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -132,7 +133,7 @@ static int clear(lua_State* L)
 
 static int ellipse(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -147,7 +148,7 @@ static int ellipse(lua_State* L)
 
 static int ellipseLines(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -162,7 +163,7 @@ static int ellipseLines(lua_State* L)
 
 static int endBlendMode(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -181,7 +182,7 @@ static int endDrawing(lua_State* L)
 
 static int endScissorMode(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -244,7 +245,7 @@ static int hsvToRgb(lua_State* L)
 
 static int line(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -260,7 +261,7 @@ static int line(lua_State* L)
 
 static int lineBezier(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -481,7 +482,7 @@ static int measureMedium(lua_State* L)
 
 static int pixel(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -494,7 +495,7 @@ static int pixel(lua_State* L)
 
 static int polygon(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -510,7 +511,7 @@ static int polygon(lua_State* L)
 
 static int polygonLines(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -527,7 +528,7 @@ static int polygonLines(lua_State* L)
 
 static int rectangle(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -545,7 +546,7 @@ static int rectangle(lua_State* L)
 
 static int rectangleLines(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -561,7 +562,7 @@ static int rectangleLines(lua_State* L)
 
 static int rectangleRounded(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -578,7 +579,7 @@ static int rectangleRounded(lua_State* L)
 
 static int rectangleRoundedLines(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -610,7 +611,7 @@ static int rgbToHsv(lua_State* L)
 
 static int ring(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -628,7 +629,7 @@ static int ring(lua_State* L)
 
 static int ringLines(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -646,7 +647,7 @@ static int ringLines(lua_State* L)
 
 static int sector(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -663,7 +664,7 @@ static int sector(lua_State* L)
 
 static int sectorLines(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -699,7 +700,7 @@ static int setLineSpacing(lua_State* L)
 
 static int text(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -713,7 +714,7 @@ static int text(lua_State* L)
 
 static int textBig(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -727,7 +728,7 @@ static int textBig(lua_State* L)
 
 static int textMedium(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -741,7 +742,7 @@ static int textMedium(lua_State* L)
 
 static int triangle(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -758,7 +759,7 @@ static int triangle(lua_State* L)
 
 static int triangleLines(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -775,7 +776,7 @@ static int triangleLines(lua_State* L)
 
 static int wrappedText(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -860,7 +861,7 @@ static int tostringTexture(lua_State* L)
 
 static int drawTexture(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -893,7 +894,7 @@ static int drawTexture(lua_State* L)
 
 static int drawRecTexture(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -1015,19 +1016,20 @@ static int tostringCanvas(lua_State* L)
 
 static int beginDrawingCanvas(lua_State* L)
 {
-    if (!safe) {
-        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
+    if (canvasSafe) {
+        return luaL_error(L, "Can't draw on a canvas while in another canvas.");
     }
 
     RenderTexture canvas = *(RenderTexture*)luaL_checkudata(L, 1, "Canvas");
     BeginTextureMode(canvas);
+    canvasSafe = true;
 
     return 0;
 }
 
 static int drawCanvas(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -1036,7 +1038,7 @@ static int drawCanvas(lua_State* L)
     int y = (int)luaL_checkinteger(L, 3);
     float rotation = (float)luaL_optnumber(L, 4, 0);
     float scaleX = (float)luaL_optnumber(L, 5, 1);
-    float scaleY = (float)luaL_optnumber(L, 6, 1);
+    float scaleY = (float)luaL_optnumber(L, 6, -1);
     float originX = (float)luaL_optnumber(L, 7, 0);
     float originY = (float)luaL_optnumber(L, 8, 0);
 
@@ -1060,12 +1062,9 @@ static int drawCanvas(lua_State* L)
 
 static int endDrawingCanvas(lua_State* L)
 {
-    if (!safe) {
-        return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
-    }
-
     RenderTexture canvas = *(RenderTexture*)luaL_checkudata(L, 1, "Canvas");
     EndTextureMode();
+    canvasSafe = false;
 
     return 0;
 }
@@ -1158,7 +1157,7 @@ static int tostringFont(lua_State* L)
 
 static int draw(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -1176,7 +1175,7 @@ static int draw(lua_State* L)
 
 static int drawSDF(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -1198,7 +1197,7 @@ static int drawSDF(lua_State* L)
 
 static int drawWrapped(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -1261,7 +1260,7 @@ static int tostringShader(lua_State* L)
 
 static int beginDrawingShader(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -1273,7 +1272,7 @@ static int beginDrawingShader(lua_State* L)
 
 static int endDrawingShader(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -1378,7 +1377,7 @@ static int tostringCamera(lua_State* L)
 
 static int beginDrawingCamera(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
@@ -1390,7 +1389,7 @@ static int beginDrawingCamera(lua_State* L)
 
 static int endDrawingCamera(lua_State* L)
 {
-    if (!safe) {
+    if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
     }
 
