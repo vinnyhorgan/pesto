@@ -42,8 +42,8 @@ static int getY(lua_State* L)
 static int getWheelMove(lua_State* L)
 {
     Vector2 result = GetMouseWheelMoveV();
-    lua_pushnumber(L, result.x);
     lua_pushnumber(L, result.y);
+    lua_pushnumber(L, result.x);
 
     return 2;
 }

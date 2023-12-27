@@ -1427,8 +1427,8 @@ static int getZoomCamera(lua_State* L)
 static int moveCamera(lua_State* L)
 {
     Camera2D* camera = (Camera2D*)luaL_checkudata(L, 1, "Camera");
-    float x = (float)luaL_checknumber(L, 2);
-    float y = (float)luaL_checknumber(L, 3);
+    int x = (int)luaL_checkinteger(L, 2);
+    int y = (int)luaL_checkinteger(L, 3);
     camera->target = { camera->target.x + x, camera->target.y + y };
 
     return 0;
