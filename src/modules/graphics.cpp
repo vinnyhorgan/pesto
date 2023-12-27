@@ -277,14 +277,16 @@ static int lineBezier(lua_State* L)
 
 static int loadCamera(lua_State* L)
 {
-    int x = (int)luaL_checkinteger(L, 1);
-    int y = (int)luaL_checkinteger(L, 2);
-    float rotation = (float)luaL_optnumber(L, 3, 0);
-    float zoom = (float)luaL_optnumber(L, 4, 1);
+    float x = (float)luaL_checknumber(L, 1);
+    float y = (float)luaL_checknumber(L, 2);
+    float offsetX = (float)luaL_optnumber(L, 3, 0);
+    float offsetY = (float)luaL_optnumber(L, 4, 0);
+    float rotation = (float)luaL_optnumber(L, 5, 0);
+    float zoom = (float)luaL_optnumber(L, 6, 1);
 
     Camera2D result;
-    result.target = { (float)x, (float)y };
-    result.offset = { GetRenderWidth() / 2.0f, GetRenderHeight() / 2.0f };
+    result.target = { x, y };
+    result.offset = { offsetX, offsetY };
     result.rotation = rotation;
     result.zoom = zoom;
 
