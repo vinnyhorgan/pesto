@@ -357,6 +357,23 @@ static int loadFontSDF(lua_State* L)
     return 1;
 }
 
+static int loadSpriteFont(lua_State* L)
+{
+    const char* filename = luaL_checkstring(L, 1);
+
+    if (!FileExists(filename)) {
+        return luaL_error(L, "File %s does not exist.", filename);
+    }
+
+    Font result = LoadFont(filename);
+
+    void* ud = lua_newuserdata(L, sizeof(Font));
+    memcpy(ud, &result, sizeof(Font));
+    luaL_setmetatable(L, "Font");
+
+    return 1;
+}
+
 static int loadLogos(lua_State* L)
 {
     Texture iconTexture = LoadTextureFromImage(icon);
@@ -816,6 +833,7 @@ static const luaL_Reg functions[] = {
     { "loadCanvas", loadCanvas },
     { "loadFont", loadFont },
     { "loadFontSDF", loadFontSDF },
+    { "loadSpriteFont", loadSpriteFont },
     { "loadLogos", loadLogos },
     { "loadShader", loadShader },
     { "loadSvg", loadSvg },
@@ -1157,7 +1175,7 @@ static int tostringFont(lua_State* L)
     return 1;
 }
 
-static int draw(lua_State* L)
+static int drawFont(lua_State* L)
 {
     if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
@@ -1167,15 +1185,16 @@ static int draw(lua_State* L)
     const char* text = luaL_checkstring(L, 2);
     int x = (int)luaL_checkinteger(L, 3);
     int y = (int)luaL_checkinteger(L, 4);
-    float rotation = (float)luaL_optnumber(L, 5, 0);
-    int ox = (int)luaL_optinteger(L, 6, 0);
-    int oy = (int)luaL_optinteger(L, 7, 0);
-    DrawTextPro(font, text, { (float)x, (float)y }, { (float)ox, (float)oy }, rotation, (float)font.baseSize, 0, currentColor);
+    float spacing = (float)luaL_optnumber(L, 5, 0);
+    float rotation = (float)luaL_optnumber(L, 6, 0);
+    int ox = (int)luaL_optinteger(L, 7, 0);
+    int oy = (int)luaL_optinteger(L, 8, 0);
+    DrawTextPro(font, text, { (float)x, (float)y }, { (float)ox, (float)oy }, rotation, (float)font.baseSize, spacing, currentColor);
 
     return 0;
 }
 
-static int drawSDF(lua_State* L)
+static int drawSDFFont(lua_State* L)
 {
     if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
@@ -1186,18 +1205,19 @@ static int drawSDF(lua_State* L)
     int x = (int)luaL_checkinteger(L, 3);
     int y = (int)luaL_checkinteger(L, 4);
     float size = (float)luaL_checknumber(L, 5);
-    float rotation = (float)luaL_optnumber(L, 6, 0);
-    int ox = (int)luaL_optinteger(L, 7, 0);
-    int oy = (int)luaL_optinteger(L, 8, 0);
+    float spacing = (float)luaL_optnumber(L, 6, 0);
+    float rotation = (float)luaL_optnumber(L, 7, 0);
+    int ox = (int)luaL_optinteger(L, 8, 0);
+    int oy = (int)luaL_optinteger(L, 9, 0);
 
     BeginShaderMode(sdfShader);
-    DrawTextPro(font, text, { (float)x, (float)y }, { (float)ox, (float)oy }, rotation, size, 0, currentColor);
+    DrawTextPro(font, text, { (float)x, (float)y }, { (float)ox, (float)oy }, rotation, size, spacing, currentColor);
     EndShaderMode();
 
     return 0;
 }
 
-static int drawWrapped(lua_State* L)
+static int drawWrappedFont(lua_State* L)
 {
     if (!safe && !canvasSafe) {
         return luaL_error(L, "Some pesto.graphics calls can only be made in the pesto.draw callback.");
@@ -1209,7 +1229,8 @@ static int drawWrapped(lua_State* L)
     int y = (int)luaL_checkinteger(L, 4);
     int w = (int)luaL_checkinteger(L, 5);
     int h = (int)luaL_checkinteger(L, 6);
-    DrawTextBoxedSelectable(font, text, { (float)x, (float)y, (float)w, (float)h }, (float)font.baseSize, 0, true, currentColor, 0, 0, WHITE, WHITE);
+    float spacing = (float)luaL_optnumber(L, 7, 0);
+    DrawTextBoxedSelectable(font, text, { (float)x, (float)y, (float)w, (float)h }, (float)font.baseSize, spacing, true, currentColor, 0, 0, WHITE, WHITE);
 
     return 0;
 }
@@ -1237,9 +1258,9 @@ static int measureFont(lua_State* L)
 static const luaL_Reg fontMethods[] = {
     { "__gc", gcFont },
     { "__tostring", tostringFont },
-    { "draw", draw },
-    { "drawSDF", drawSDF },
-    { "drawWrapped", drawWrapped },
+    { "draw", drawFont },
+    { "drawSDF", drawSDFFont },
+    { "drawWrapped", drawWrappedFont },
     { "isReady", isReadyFont },
     { "measure", measureFont },
     { NULL, NULL }
