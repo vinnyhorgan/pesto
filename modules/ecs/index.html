@@ -1,0 +1,2674 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A tiny lua framework.">
+      
+      
+        <meta name="author" content="Vinny Horgan">
+      
+      
+      
+        <link rel="prev" href="../collision/">
+      
+      
+        <link rel="next" href="../filesystem/">
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+    
+    
+      
+        <title>pesto.ecs - Pesto Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pestoecs" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pesto Docs" class="md-header__button md-logo" aria-label="Pesto Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pesto Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              pesto.ecs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pesto Docs" class="md-nav__button md-logo" aria-label="Pesto Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8Z"/></svg>
+
+    </a>
+    Pesto Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting_started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Building
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/hello_world/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hello, World!
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Modules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pesto/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../animation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.animation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../astar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.astar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.audio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collision/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.collision
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    pesto.ecs
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    pesto.ecs
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filters
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsrequireall" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.requireAll
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsrequireany" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.requireAny
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsrejectall" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.rejectAll
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsrejectany" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.rejectAny
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.filter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Systems
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pestoecssystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsprocessingsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.processingSystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecssortedsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.sortedSystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecssortedprocessingsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.sortedProcessingSystem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worlds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Worlds
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worlds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.world
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsaddentity" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.addEntity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsaddsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.addSystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsadd" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.add
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsremoveentity" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.removeEntity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsremovesystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.removeSystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsremove" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.remove
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsrefresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.refresh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsupdate" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.update
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsclearentities" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.clearEntities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsclearsystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.clearSystems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsgetentitycount" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.getEntityCount
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsgetsystemcount" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.getSystemCount
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecssetsystemindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.setSystemIndex
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../filesystem/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.filesystem
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gamepad/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.gamepad
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.graphics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../imgui/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.imgui
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inspect/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.inspect
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../json/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.json
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../keyboard/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.keyboard
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ldtk/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.ldtk
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../math/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.math
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mouse/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.mouse
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reload/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.reload
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rres/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.rres
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../signal/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.signal
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../state/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.state
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../system/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.system
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tween/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.tween
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../util/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.util
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../window/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.window
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Objects
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Objects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../objects/object/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.Object
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../objects/vector/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pesto.Vector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Extra Modules
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Extra Modules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extra_modules/enet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    enet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extra_modules/http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    http
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extra_modules/utf8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    utf8
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filters
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsrequireall" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.requireAll
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsrequireany" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.requireAny
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsrejectall" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.rejectAll
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsrejectany" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.rejectAny
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.filter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Systems
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pestoecssystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsprocessingsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.processingSystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecssortedsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.sortedSystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecssortedprocessingsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.sortedProcessingSystem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worlds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Worlds
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worlds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.world
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsaddentity" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.addEntity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsaddsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.addSystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsadd" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.add
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsremoveentity" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.removeEntity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsremovesystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.removeSystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsremove" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.remove
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsrefresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.refresh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsupdate" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.update
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsclearentities" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.clearEntities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsclearsystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.clearSystems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsgetentitycount" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.getEntityCount
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecsgetsystemcount" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.getSystemCount
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pestoecssetsystemindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      pesto.ecs.setSystemIndex
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="pestoecs">pesto.ecs<a class="headerlink" href="#pestoecs" title="Permanent link">#</a></h1>
+<p>The <code>pesto.ecs</code> module provides a simple entity component system (<a href="https://en.wikipedia.org/wiki/Entity_component_system">ECS</a>).
+It is based on bakpakin's <a href="https://github.com/bakpakin/tiny-ecs">tiny-ecs</a> library.</p>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h2>
+<h2 id="filters">Filters<a class="headerlink" href="#filters" title="Permanent link">#</a></h2>
+<p>A Filter is a function that selects which Entities apply to a System.
+Filters take two parameters, the System and the Entity, and return a boolean value indicating if the Entity should be processed by the System.
+A truthy value includes the entity, while a falsey (<code>nil</code> or <code>false</code>) value excludes the entity.</p>
+<p>Filters must be added to Systems by setting the <code>filter</code> field of the System.
+Filter's returned by <code>pesto.ecs</code>'s Filter functions are immutable and can be used by multiple Systems.</p>
+<p>Filters can also be passed as arguments to other Filter constructors.
+This is a powerful way to create complex, custom Filters that select a very specific set of Entities.</p>
+<div class="language-lua highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">filter</span> <span class="o">=</span> <span class="n">pesto</span><span class="p">.</span><span class="n">ecs</span><span class="p">.</span><span class="n">requireAll</span><span class="p">(</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="n">pesto</span><span class="p">.</span><span class="n">ecs</span><span class="p">.</span><span class="n">rejectAny</span><span class="p">(</span><span class="s2">&quot;Player&quot;</span><span class="p">,</span> <span class="s2">&quot;Enemy&quot;</span><span class="p">))</span>
+</span></code></pre></div>
+<h3 id="pestoecsrequireall">pesto.ecs.requireAll<a class="headerlink" href="#pestoecsrequireall" title="Permanent link">#</a></h3>
+<p>Returns a Filter that selects Entities with all specified Components and Filters.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>filter = pesto.ecs.requireAll(...)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<p><code>pesto.ecs.requireAll</code> accepts an arbitrary number of parameters.
+They can be either strings (component names) or Filters.</p>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter</code></td>
+<td>function</td>
+<td>The constructed Filter.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsrequireany">pesto.ecs.requireAny<a class="headerlink" href="#pestoecsrequireany" title="Permanent link">#</a></h3>
+<p>Returns a Filter that selects Entities with at least one of the specified Components and Filters.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>filter = pesto.ecs.requireAny(...)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<p><code>pesto.ecs.requireAny</code> accepts an arbitrary number of parameters.
+They can be either strings (component names) or Filters.</p>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter</code></td>
+<td>function</td>
+<td>The constructed Filter.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsrejectall">pesto.ecs.rejectAll<a class="headerlink" href="#pestoecsrejectall" title="Permanent link">#</a></h3>
+<p>Returns a Filter that rejects Entities with all specified Components and Filters, and selects all other Entities.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>filter = pesto.ecs.rejectAll(...)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<p><code>pesto.ecs.rejectAll</code> accepts an arbitrary number of parameters.
+They can be either strings (component names) or Filters.</p>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter</code></td>
+<td>function</td>
+<td>The constructed Filter.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsrejectany">pesto.ecs.rejectAny<a class="headerlink" href="#pestoecsrejectany" title="Permanent link">#</a></h3>
+<p>Returns a Filter that rejects Entities with at least one of the specified Components and Filters, and selects all other Entities.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>filter = pesto.ecs.rejectAny(...)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<p><code>pesto.ecs.rejectAny</code> accepts an arbitrary number of parameters.
+They can be either strings (component names) or Filters.</p>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter</code></td>
+<td>function</td>
+<td>The constructed Filter.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsfilter">pesto.ecs.filter<a class="headerlink" href="#pestoecsfilter" title="Permanent link">#</a></h3>
+<p>Returns a Filter from a string.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>filter = pesto.ecs.filter(pattern)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pattern</code></td>
+<td>string</td>
+<td>The filter pattern.</td>
+</tr>
+</tbody>
+</table>
+<p>Syntax of <code>pattern</code> is as follows:</p>
+<ul>
+<li>Tokens are alphanumeric strings including underscores.</li>
+<li>Tokens can be separated by <code>|</code>, <code>&amp;</code>, or surrounded by parentheses.</li>
+<li>Tokens can be prefixed with <code>!</code>, and are then inverted.</li>
+</ul>
+<div class="language-lua highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="s2">&quot;a|b|c&quot;</span>          <span class="c1">-- Matches entities with an &quot;a&quot; OR &quot;b&quot; OR &quot;c&quot;.</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="s2">&quot;a&amp;!b&amp;c&quot;</span>         <span class="c1">-- Matches entities with an &quot;a&quot; AND NOT &quot;b&quot; AND &quot;c&quot;.</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s2">&quot;a|(b&amp;c&amp;d)|e&quot;</span>    <span class="c1">-- Matches &quot;a&quot; OR (&quot;b&quot; AND &quot;c&quot; AND &quot;d&quot;) OR &quot;e&quot;.</span>
+</span></code></pre></div>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter</code></td>
+<td>function</td>
+<td>The constructed Filter.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="systems">Systems<a class="headerlink" href="#systems" title="Permanent link">#</a></h2>
+<p>A System is a wrapper around function callbacks for manipulating Entities.
+Systems are implemented as tables that contain at least one method; an update function that takes parameters like so:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>function system:update(dt)
+</span></code></pre></div>
+<p>There are also a few other optional callbacks:</p>
+<ul>
+<li><code>function system:filter(entity)</code>: Returns true if this System should include this Entity, otherwise should return false.
+If this isn't specified, no Entities are included in the System.</li>
+<li><code>function system:onAdd(entity)</code>: Called when an Entity is added to the System.</li>
+<li><code>function system:onRemove(entity)</code>: Called when an Entity is removed from the System.</li>
+<li><code>function system:onModify(dt)</code>: Called when the System is modified by adding or removing Entities from the System.</li>
+<li><code>function system:onAddToWorld(world)</code>: Called when the System is added to the World, before any entities are added to the system.</li>
+<li><code>function system:onRemoveFromWorld(world)</code>: Called when the System is removed from the world, after all Entities are removed from the System.</li>
+<li><code>function system:preWrap(dt)</code>: Called on each system before update is called on any system.</li>
+<li><code>function system:postWrap(dt)</code>: Called on each system in reverse order after update is called on each system.</li>
+</ul>
+<p>For Filters, it is convenient to use <code>pesto.ecs.requireAll</code> or <code>pesto.ecs.requireAny</code>, but one can write their own filters as well.
+Set the Filter of a System like so:</p>
+<div class="language-lua highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">system</span><span class="p">.</span><span class="n">filter</span> <span class="o">=</span> <span class="n">pesto</span><span class="p">.</span><span class="n">ecs</span><span class="p">.</span><span class="n">requireAll</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>or</p>
+<div class="language-lua highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kr">function</span> <span class="nc">system</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="kr">return</span> <span class="n">entity</span><span class="p">.</span><span class="n">myRequiredComponentName</span> <span class="o">~=</span> <span class="kc">nil</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="kr">end</span>
+</span></code></pre></div>
+<p>All Systems also have a few important fields that are initialized when the system is added to the World.
+A few are important, and few should be less commonly used.</p>
+<ul>
+<li>The <code>world</code> field points to the World that the System belongs to.
+Useful for adding and removing Entities from the world dynamically via the System.</li>
+<li>The <code>active</code> flag is whether or not the System is updated automatically.
+Inactive Systems should be updated manually or not at all via <code>system:update(dt)</code>.
+Defaults to <code>true</code>.</li>
+<li>The <code>entities</code> field is an ordered list of Entities in the System.
+This list can be used to quickly iterate through all Entities in a System.</li>
+<li>The <code>interval</code> field is an optional field that makes Systems update at certain intervals using buffered time, regardless of World update frequency.
+For example, to make a System update once a second, set the System's interval to 1.</li>
+<li>The <code>index</code> field is the System's index in the World.
+Lower indexed Systems are processed before higher indices.
+The index is a read only field; to set the index, use <code>pesto.ecs.setSystemIndex(world, system)</code>.</li>
+<li>The <code>indices</code> field is a table of Entity keys to their indices in the entities list.
+Most Systems can ignore this.</li>
+<li>The <code>modified</code> flag is an indicator if the System has been modified in the last update.
+If so, the <code>onModify</code> callback will be called on the System in the next update, if it has one.
+This is usually managed by <code>pesto.ecs</code>, so users should mostly ignore this, too.</li>
+</ul>
+<h3 id="pestoecssystem">pesto.ecs.system<a class="headerlink" href="#pestoecssystem" title="Permanent link">#</a></h3>
+<p>Creates a new System or System class from the supplied table.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>system = pesto.ecs.system([table])
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>table</code></td>
+<td>table</td>
+<td>The table to create a System from. (optional)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system</code></td>
+<td>table</td>
+<td>The new System.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsprocessingsystem">pesto.ecs.processingSystem<a class="headerlink" href="#pestoecsprocessingsystem" title="Permanent link">#</a></h3>
+<p>Creates a new Processing System or Processing System class.
+Processing Systems process each entity individual, and are usually what is needed.
+Processing Systems have three extra callbacks besides those inheritted from vanilla Systems.</p>
+<div class="language-lua highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kr">function</span> <span class="nc">system</span><span class="p">:</span><span class="nf">preProcess</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>         <span class="c1">-- Called before iteration.</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kr">function</span> <span class="nc">system</span><span class="p">:</span><span class="nf">process</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>    <span class="c1">-- Process each entity.</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="kr">function</span> <span class="nc">system</span><span class="p">:</span><span class="nf">postProcess</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>        <span class="c1">-- Called after iteration.</span>
+</span></code></pre></div>
+<p>Processing Systems have their own <code>update</code> method, so don't implement a a custom <code>update</code> callback for Processing Systems.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>system = pesto.ecs.processingSystem([table])
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>table</code></td>
+<td>table</td>
+<td>The table to create a System from. (optional)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system</code></td>
+<td>table</td>
+<td>The new System.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecssortedsystem">pesto.ecs.sortedSystem<a class="headerlink" href="#pestoecssortedsystem" title="Permanent link">#</a></h3>
+<p>Creates a new Sorted System or Sorted System class.
+Sorted Systems sort their Entities according to a user-defined method, <code>system:compare(e1, e2)</code>, which should return <code>true</code> if <code>e1</code> should come before <code>e2</code> and <code>false</code> otherwise.
+Sorted Systems also override the default System's <code>onModify</code> callback, so be careful if defining a custom callback.
+However, for processing the sorted entities, consider <code>pesto.ecs.sortedProcessingSystem(table)</code>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>system = pesto.ecs.sortedSystem([table])
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>table</code></td>
+<td>table</td>
+<td>The table to create a System from. (optional)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system</code></td>
+<td>table</td>
+<td>The new System.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecssortedprocessingsystem">pesto.ecs.sortedProcessingSystem<a class="headerlink" href="#pestoecssortedprocessingsystem" title="Permanent link">#</a></h3>
+<p>Creates a new Sorted Processing System or Sorted Processing System class.
+Sorted Processing Systems have both the aspects of Processing Systems and Sorted Systems.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>system = pesto.ecs.sortedProcessingSystem([table])
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>table</code></td>
+<td>table</td>
+<td>The table to create a System from. (optional)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system</code></td>
+<td>table</td>
+<td>The new System.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="worlds">Worlds<a class="headerlink" href="#worlds" title="Permanent link">#</a></h2>
+<p>A World is a container that manages Entities and Systems.
+Typically, a program uses one World at a time.
+For all World functions except <code>pesto.ecs.world(...)</code>, object-oriented syntax can be used instead of the documented syntax.
+For example, <code>pesto.ecs.add(world, e1, e2, e3)</code> is the same as <code>world:add(e1, e2, e3)</code>.</p>
+<h3 id="pestoecsworld">pesto.ecs.world<a class="headerlink" href="#pestoecsworld" title="Permanent link">#</a></h3>
+<p>Creates a new World.
+Can optionally add default Systems and Entities.
+Returns the new World along with default Entities and Systems.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>world = pesto.ecs.world(...)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<p><code>pesto.ecs.world</code> accepts an arbitrary number of parameters.
+They can be Systems or Entities.</p>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The new World.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsaddentity">pesto.ecs.addEntity<a class="headerlink" href="#pestoecsaddentity" title="Permanent link">#</a></h3>
+<p>Adds an Entity to the world.
+Also call this on Entities that have changed Components such that they match different Filters.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>entity = pesto.ecs.addEntity(world, entity)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+<tr>
+<td><code>entity</code></td>
+<td>table</td>
+<td>The Entity to add.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entity</code></td>
+<td>table</td>
+<td>The added Entity.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsaddsystem">pesto.ecs.addSystem<a class="headerlink" href="#pestoecsaddsystem" title="Permanent link">#</a></h3>
+<p>Adds a System to the world.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>system = pesto.ecs.addSystem(world, system)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+<tr>
+<td><code>system</code></td>
+<td>table</td>
+<td>The System to add.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system</code></td>
+<td>table</td>
+<td>The added System.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsadd">pesto.ecs.add<a class="headerlink" href="#pestoecsadd" title="Permanent link">#</a></h3>
+<p>Shortcut for adding multiple Entities and Systems to the World.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>added = pesto.ecs.add(world, ...)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+</tbody>
+</table>
+<p><code>pesto.ecs.add</code> accepts an arbitrary number of parameters after the World.
+They can be Systems or Entities.</p>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>added</code></td>
+<td>table</td>
+<td>The added Entities and Systems.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsremoveentity">pesto.ecs.removeEntity<a class="headerlink" href="#pestoecsremoveentity" title="Permanent link">#</a></h3>
+<p>Removes an Entity from the World.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>entity = pesto.ecs.removeEntity(world, entity)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+<tr>
+<td><code>entity</code></td>
+<td>table</td>
+<td>The Entity to remove.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entity</code></td>
+<td>table</td>
+<td>The removed Entity.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsremovesystem">pesto.ecs.removeSystem<a class="headerlink" href="#pestoecsremovesystem" title="Permanent link">#</a></h3>
+<p>Removes a System from the world.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>system = pesto.ecs.removeSystem(world, system)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+<tr>
+<td><code>system</code></td>
+<td>table</td>
+<td>The System to remove.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system</code></td>
+<td>table</td>
+<td>The removed System.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsremove">pesto.ecs.remove<a class="headerlink" href="#pestoecsremove" title="Permanent link">#</a></h3>
+<p>Shortcut for removing multiple Entities and Systems from the World.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>removed = pesto.ecs.remove(world, ...)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+</tbody>
+</table>
+<p><code>pesto.ecs.remove</code> accepts an arbitrary number of parameters after the World.
+They can be Systems or Entities.</p>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>removed</code></td>
+<td>table</td>
+<td>The removed Entities and Systems.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsrefresh">pesto.ecs.refresh<a class="headerlink" href="#pestoecsrefresh" title="Permanent link">#</a></h3>
+<p>Manages Entities and Systems marked for deletion or addition.
+Call this before modifying Systems and Entities outside of a call to <code>pesto.ecs.update</code>.
+Do not call this within a call to <code>pesto.ecs.update</code>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>pesto.ecs.refresh(world)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<p>None</p>
+<h3 id="pestoecsupdate">pesto.ecs.update<a class="headerlink" href="#pestoecsupdate" title="Permanent link">#</a></h3>
+<p>Updates the World by <code>dt</code> (delta time).
+Takes an optional parameter, filter, which is a Filter that selects Systems from the World, and updates only those Systems.
+If filter is not supplied, all Systems are updated.
+Put this function in your main loop.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pesto.ecs.update(world, dt, [filter])
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+<tr>
+<td><code>dt</code></td>
+<td>number</td>
+<td>The delta time.</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td>table</td>
+<td>The Filter. (optional)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<p>None</p>
+<h3 id="pestoecsclearentities">pesto.ecs.clearEntities<a class="headerlink" href="#pestoecsclearentities" title="Permanent link">#</a></h3>
+<p>Removes all Entities from the World.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>pesto.ecs.clearEntities(world)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<p>None</p>
+<h3 id="pestoecsclearsystems">pesto.ecs.clearSystems<a class="headerlink" href="#pestoecsclearsystems" title="Permanent link">#</a></h3>
+<p>Removes all Systems from the World.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>pesto.ecs.clearSystems(world)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<p>None</p>
+<h3 id="pestoecsgetentitycount">pesto.ecs.getEntityCount<a class="headerlink" href="#pestoecsgetentitycount" title="Permanent link">#</a></h3>
+<p>Returns the number of Entities in the World.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>count = pesto.ecs.getEntityCount(world)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>count</code></td>
+<td>number</td>
+<td>The number of Entities.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecsgetsystemcount">pesto.ecs.getSystemCount<a class="headerlink" href="#pestoecsgetsystemcount" title="Permanent link">#</a></h3>
+<p>Returns the number of Systems in the World.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>count = pesto.ecs.getSystemCount(world)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>count</code></td>
+<td>number</td>
+<td>The number of Systems.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pestoecssetsystemindex">pesto.ecs.setSystemIndex<a class="headerlink" href="#pestoecssetsystemindex" title="Permanent link">#</a></h3>
+<p>Sets the <code>index</code> of a System in the World, and returns the old <code>index</code>.
+Changes the order in which they are processed, because lower indexed Systems are processed first.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>oldIndex = pesto.ecs.setSystemIndex(world, system, index)
+</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>world</code></td>
+<td>table</td>
+<td>The World.</td>
+</tr>
+<tr>
+<td><code>system</code></td>
+<td>table</td>
+<td>The System.</td>
+</tr>
+<tr>
+<td><code>index</code></td>
+<td>number</td>
+<td>The new index.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>oldIndex</code></td>
+<td>number</td>
+<td>The old index.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2023 Vinny Horgan
+    </div>
+  
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/vinnyhorgan/pesto" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+    
+  </body>
+</html>
